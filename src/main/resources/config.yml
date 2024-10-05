@@ -9,7 +9,6 @@ database:
 
 holograms:
   enabled: true
-  duration-in-seconds: 3
 
 energy:
   tick_rate: 10

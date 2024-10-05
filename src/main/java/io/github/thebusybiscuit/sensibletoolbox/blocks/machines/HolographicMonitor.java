@@ -1,5 +1,7 @@
 package io.github.thebusybiscuit.sensibletoolbox.blocks.machines;
 
+import eu.decentsoftware.holograms.api.DHAPI;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -8,14 +10,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
-import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
 import io.github.thebusybiscuit.sensibletoolbox.api.SensibleToolbox;
 import io.github.thebusybiscuit.sensibletoolbox.api.energy.EnergyNet;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
+
+import java.util.Arrays;
 
 public class HolographicMonitor extends BaseSTBBlock {
 
@@ -65,7 +65,6 @@ public class HolographicMonitor extends BaseSTBBlock {
         if (hologram == null) {
             return;
         }
-        this.hologram.clearLines();
 
         for (BlockFace f : STBUtil.getMainHorizontalFaces()) {
             EnergyNet net = SensibleToolbox.getEnergyNet(getRelativeLocation(f).getBlock());
@@ -79,7 +78,8 @@ public class HolographicMonitor extends BaseSTBBlock {
                     prefix = ChatColor.DARK_RED + "" + ChatColor.BOLD + "-";
                 }
 
-                this.hologram.appendTextLine(prefix + " " + ChatColor.GRAY + STBUtil.getCompactDouble(Double.valueOf(String.valueOf(stat).replace("-", ""))) + " SCU/t");
+                String line = prefix + " " + ChatColor.GRAY + STBUtil.getCompactDouble(Double.valueOf(String.valueOf(stat).replace("-", ""))) + " SCU/t";
+                DHAPI.setHologramLines(hologram, Arrays.asList(line));
                 break;
             }
         }
@@ -90,13 +90,16 @@ public class HolographicMonitor extends BaseSTBBlock {
         super.onBlockRegistered(l, isPlacing);
 
         onServerTick();
-        this.hologram = HologramsAPI.createHologram(SensibleToolboxPlugin.getInstance(), getLocation().add(0.5, 1.4, 0.5));
+        this.hologram = DHAPI.createHologram("holo_monitor_" + System.currentTimeMillis(), getLocation().add(0.5, 1.4, 0.5));
+        DHAPI.setHologramLines(hologram, Arrays.asList("Initializing...", "Awaiting data..."));
+        onServerTick();
     }
 
     @Override
     public void onBlockUnregistered(Location l) {
         super.onBlockUnregistered(l);
-
-        this.hologram.delete();
+        if (hologram != null) {
+            hologram.delete();
+        }
     }
 }

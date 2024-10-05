@@ -10,7 +10,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
-import io.github.thebusybiscuit.sensibletoolbox.items.NetheriteCombineHoe;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -95,6 +94,7 @@ import io.github.thebusybiscuit.sensibletoolbox.items.EnderLeash;
 import io.github.thebusybiscuit.sensibletoolbox.items.EnderTuner;
 import io.github.thebusybiscuit.sensibletoolbox.items.GoldCombineHoe;
 import io.github.thebusybiscuit.sensibletoolbox.items.IronCombineHoe;
+import io.github.thebusybiscuit.sensibletoolbox.items.NetheriteCombineHoe;
 import io.github.thebusybiscuit.sensibletoolbox.items.LandMarker;
 import io.github.thebusybiscuit.sensibletoolbox.items.MoistureChecker;
 import io.github.thebusybiscuit.sensibletoolbox.items.Multimeter;
@@ -178,7 +178,7 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
     private boolean protocolLibEnabled = false;
     private SoundMufflerListener soundMufflerListener;
     private boolean enabled = false;
-    private boolean holographicDisplays = false;
+    private boolean decentHolograms = false;
     private BukkitTask energyTask = null;
     private EnderStorageManager enderStorageManager;
     private STBItemRegistry itemRegistry;
@@ -217,7 +217,7 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
         }
 
         // try to hook other plugins
-        holographicDisplays = getServer().getPluginManager().isPluginEnabled("HolographicDisplays");
+        decentHolograms = getServer().getPluginManager().isPluginEnabled("DecentHolograms");
         setupProtocolLib();
 
         scuRelayIDTracker = new IDTracker<>(this, "scu_relay_id");
@@ -448,8 +448,10 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
             itemRegistry.registerItem(new SoundMuffler(), this, configPrefix, permissionNode);
         }
 
-        if (isHolographicDisplaysEnabled()) {
+        if (isDecentGologramsEnabled()) {
             itemRegistry.registerItem(new HolographicMonitor(), this, configPrefix, permissionNode);
+        } else {
+            LogUtils.warning("DecentHolograms not detected - holographic functions & machines disabled");
         }
     }
 
@@ -486,7 +488,7 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
             }
         } else {
             LogUtils.warning("ProtocolLib not detected - some functionality is reduced:");
-            LogUtils.warning("  No glowing items, Reduced particle effects, Sound Muffler item disabled");
+            LogUtils.warning("No glowing items, Reduced particle effects, Sound Muffler item disabled");
         }
     }
 
@@ -498,8 +500,8 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
         return protocolLibEnabled;
     }
 
-    public boolean isHolographicDisplaysEnabled() {
-        return holographicDisplays;
+    public boolean isDecentGologramsEnabled() {
+        return decentHolograms;
     }
 
     private void registerCommands() {

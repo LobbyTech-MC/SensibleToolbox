@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 
@@ -65,7 +66,8 @@ public class Multimeter extends BaseSTBItem {
 
     @Override
     public void onInteractItem(PlayerInteractEvent e) {
-        if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getHand() == EquipmentSlot.HAND) {
+            e.setCancelled(true);
             EnergyNet net = SensibleToolbox.getEnergyNet(e.getClickedBlock());
             Player p = e.getPlayer();
 
@@ -81,7 +83,6 @@ public class Multimeter extends BaseSTBItem {
                     STBUtil.complain(p);
                 }
             }
-            e.setCancelled(true);
         }
     }
 
@@ -90,7 +91,7 @@ public class Multimeter extends BaseSTBItem {
         String s2 = net.getSourceCount() == 1 ? "" : "s";
         String s3 = net.getSinkCount() == 1 ? "" : "s";
         String[] lines = new String[] { net.getSourceCount() + ChatColor.GOLD.toString() + " source" + s2 + ChatColor.WHITE + ", " + net.getSinkCount() + ChatColor.GOLD.toString() + " sink" + s3, net.getCableCount() + ChatColor.GOLD.toString() + " cable" + s1, String.format("Demand: " + ChatColor.GOLD + "%5.2f SCU/t", net.getDemand()), String.format("Supply: " + ChatColor.GOLD + "%5.2f SCU/t", net.getSupply()), };
-        HoloMessage.popup(p, clicked.getLocation(), lines);
+        HoloMessage.popup(p, clicked.getLocation(), 5, lines);
         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 2.0F);
     }
 
@@ -98,7 +99,7 @@ public class Multimeter extends BaseSTBItem {
         int n = machine.getAttachedEnergyNets().length;
         String s = n == 1 ? "" : "s";
         String[] lines = new String[] { ChatColor.GOLD + machine.getItemName() + ChatColor.WHITE + ": on " + n + " energy net" + s, "Charge: " + STBUtil.getChargeString(machine), "Max Charge Rate: " + ChatColor.GOLD + machine.getChargeRate() + " SCU/t", };
-        HoloMessage.popup(p, clicked.getLocation(), lines);
+        HoloMessage.popup(p, clicked.getLocation(), 5, lines);
         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 2.0F);
     }
 }

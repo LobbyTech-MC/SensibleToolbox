@@ -40,8 +40,8 @@ import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.ButtonGadget;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
 import io.github.thebusybiscuit.sensibletoolbox.blocks.PaintCan;
-import io.github.thebusybiscuit.sensibletoolbox.utils.HoloMessage;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
+import io.github.thebusybiscuit.sensibletoolbox.utils.HoloMessage;
 import io.github.thebusybiscuit.sensibletoolbox.utils.UnicodeSymbol;
 
 import me.desht.dhutils.Debugger;
@@ -228,15 +228,16 @@ public class PaintBrush extends BaseSTBItem {
             ((Colorable) ent).setColor(getColor());
             paintUsed = 1;
         } else if (ent instanceof Painting) {
-            Art art = ((Painting) ent).getArt();
+            Painting painting = (Painting) ent;
+            Art art = painting.getArt();
 
             if (getPaintLevel() >= art.getBlockHeight() * art.getBlockWidth()) {
-                openArtworkMenu(e.getPlayer(), e.getHand(), (Painting) e);
+                openArtworkMenu(e.getPlayer(), e.getHand(), painting);
             } else {
                 Location l = ent.getLocation().add(0, -art.getBlockHeight() / 2.0, 0);
-                HoloMessage.popup(e.getPlayer(), l, ChatColor.RED + "Not enough paint!");
+                HoloMessage.popup(e.getPlayer(), l, 5, ChatColor.RED + "Not enough paint!");
             }
-        } else if (e instanceof Wolf) {
+        } else if (ent instanceof Wolf) {
             Wolf wolf = (Wolf) e;
             wolf.setCollarColor(getColor());
             paintUsed = 1;
