@@ -24,6 +24,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -567,7 +568,7 @@ public abstract class BaseSTBMachine extends BaseSTBBlock implements ChargeableB
 
     @Override
     public void onInteractBlock(PlayerInteractEvent e) {
-        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && !e.getPlayer().isSneaking()) {
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && !e.getPlayer().isSneaking() && e.getHand().equals(EquipmentSlot.HAND)) {
             if (getGUI() != null) {
                 // gui shouldn't ever be null, but let's be defensive
                 getGUI().show(e.getPlayer());
