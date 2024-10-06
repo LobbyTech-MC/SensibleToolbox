@@ -17,14 +17,16 @@ jobs:
           java-version: 16
           distribution: adopt
 
-      - name: Get current version
-        id: get_version
+      - name: Get latest release tag
+        id: get_latest_tag
         run: |
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "Current version: $VERSION"
+          git fetch --tags
 
-          BASE_VERSION=${VERSION#Reborn-}
+          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "Latest tag: $LATEST_TAG"
 
+          BASE_VERSION=${LATEST_TAG#vReborn-}
+          
           IFS='.' read -r -a version_parts <<< "$BASE_VERSION"
           
           LAST_INDEX=${#version_parts[@]}-1
@@ -43,16 +45,17 @@ jobs:
 
       - name: Rename JAR file
         run: |
-          JAR_FILE=$(ls target/*.jar | head -n 1)
+          # Find the generated JAR file
+          JAR_FILE=$(ls target/*.jar | head -n 1)  # Get the first jar file in target
           echo "Found JAR file: $JAR_FILE"
           mv "$JAR_FILE" "SensibleToolbox v${{ env.NEW_VERSION }}.jar"
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: "v${{ env.NEW_VERSION }}"
-          files: "SensibleToolbox v${{ env.NEW_VERSION }}.jar"
-          name: "SensibleToolbox v${{ env.NEW_VERSION }}"
+          tag_name: "v${{ env.NEW_VERSION }}" # Use the incremented version for the tag without extra prefix
+          files: "SensibleToolbox v${{ env.NEW_VERSION }}.jar" # Use the renamed file
+          name: "SensibleToolbox v${{ env.NEW_VERSION }}" # Naming the release
           body: |
             Release of version v${{ env.NEW_VERSION }}.
         env:
