@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
+import io.github.thebusybiscuit.sensibletoolbox.listeners.ExplosiveToolListener;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -464,6 +465,10 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
         pm.registerEvents(new TrashCanListener(this), this);
         pm.registerEvents(new ElevatorListener(this), this);
         pm.registerEvents(new AnvilListener(this), this);
+
+        if (pm.isPluginEnabled("Slimefun")) {
+            pm.registerEvents(new ExplosiveToolListener(this), this);
+        }
 
         if (isProtocolLibEnabled()) {
             soundMufflerListener = new SoundMufflerListener(this);
