@@ -290,10 +290,6 @@ public class GeneralListener extends STBBaseListener {
             BaseSTBBlock stb = LocationManager.getManager().get(b.getLocation());
 
             if (stb != null) {
-                if (stb.onEntityExplode(event)) {
-                    stb.breakBlock(ThreadLocalRandom.current().nextInt(100) < plugin.getConfig().getInt("explode_item_drop_chance"));
-                }
-
                 iterator.remove();
             }
         }
