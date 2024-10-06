@@ -15,6 +15,7 @@ import io.github.thebusybiscuit.sensibletoolbox.api.SensibleToolbox;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
@@ -159,6 +160,9 @@ public class EnderStorageManager implements Listener {
 
         if (e.getInventory().getHolder() instanceof STBEnderStorageHolder) {
             if (clickedItem != null && SensibleToolbox.getItemRegistry().fromItemStack(clickedItem) instanceof EnderBag) {
+                e.setCancelled(true);
+            }
+            if (e.getClick() == ClickType.NUMBER_KEY) {
                 e.setCancelled(true);
             }
         }
