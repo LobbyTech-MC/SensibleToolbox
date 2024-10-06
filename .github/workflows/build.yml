@@ -22,23 +22,15 @@ jobs:
         run: |
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "Current version: $VERSION"
+
           BASE_VERSION=${VERSION#Reborn-}
+
           IFS='.' read -r -a version_parts <<< "$BASE_VERSION"
-
-          function tag_exists {
-            git tag | grep -q "^vReborn-${1}$"
-          }
-
-          while true; do
-            LAST_INDEX=${#version_parts[@]}-1
-            version_parts[$LAST_INDEX]=$((version_parts[$LAST_INDEX]+1))
-            NEW_VERSION="Reborn-${version_parts[0]}.${version_parts[1]}.${version_parts[$LAST_INDEX]}"
-
-            if ! tag_exists "${NEW_VERSION#Reborn-}"; then
-              break
-            fi
-          done
-
+          
+          LAST_INDEX=${#version_parts[@]}-1
+          version_parts[$LAST_INDEX]=$((version_parts[$LAST_INDEX]+1))
+          
+          NEW_VERSION="Reborn-${version_parts[0]}.${version_parts[1]}.${version_parts[$LAST_INDEX]}"
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
       - name: Update version in pom.xml
@@ -55,7 +47,6 @@ jobs:
           echo "Found JAR file: $JAR_FILE"
           mv "$JAR_FILE" "SensibleToolbox v${{ env.NEW_VERSION }}.jar"
 
-      # Step 6: Create Release
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
