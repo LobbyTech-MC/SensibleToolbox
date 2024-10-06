@@ -19,7 +19,6 @@ import org.bukkit.Sound;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.WallSign;
@@ -838,19 +837,6 @@ public abstract class BaseSTBBlock extends BaseSTBItem {
     public void repaint(@Nonnull Block block) {
         block.setType(getMaterial(), true);
     }
-
-    /**
-     * Define whether this STB block can be pushed or pulled by a piston, and if
-     * doing so would break it. The default behaviour is to allow movement;
-     * override this in subclasses to modify the behaviour.
-     *
-     * @return the move reaction: one of MOVE, BLOCK, or BREAK
-     */
-    @Nonnull
-    public PistonMoveReaction getPistonMoveReaction() {
-        return PistonMoveReaction.MOVE;
-    }
-
     /**
      * Define whether this block supports the given redstone behaviour mode.
      *

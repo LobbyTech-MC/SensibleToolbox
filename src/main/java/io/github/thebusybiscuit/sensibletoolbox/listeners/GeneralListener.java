@@ -5,7 +5,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -40,7 +39,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
 import io.github.thebusybiscuit.sensibletoolbox.api.SensibleToolbox;
@@ -57,7 +55,6 @@ import me.desht.dhutils.text.LogUtils;
 
 public class GeneralListener extends STBBaseListener {
 
-    private static final String LAST_PISTON_EXTEND = "STB_Last_Piston_Extend";
 
     public GeneralListener(SensibleToolboxPlugin plugin) {
         super(plugin);
@@ -503,65 +500,20 @@ public class GeneralListener extends STBBaseListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPistonExtend(BlockPistonExtendEvent event) {
-        // work around CB bug where event is called multiple times for a block
-        Long when = (Long) STBUtil.getMetadataValue(event.getBlock(), LAST_PISTON_EXTEND);
-        long now = System.currentTimeMillis();
-
-        // 50 ms = 1 tick
-        if (when != null && now - when < 50) {
-            return;
-        }
-
-        event.getBlock().setMetadata(LAST_PISTON_EXTEND, new FixedMetadataValue(plugin, now));
-
-        for (int i = event.getBlocks().size(); i > 0; i--) {
-            Block moving = event.getBlock().getRelative(event.getDirection(), i);
-            Block to = moving.getRelative(event.getDirection());
-            BaseSTBBlock stb = LocationManager.getManager().get(moving.getLocation());
-
+        for (Block block : event.getBlocks()) {
+            BaseSTBBlock stb = LocationManager.getManager().get(block.getLocation());
             if (stb != null) {
-                switch (stb.getPistonMoveReaction()) {
-                    case MOVE:
-                        // this has to be deferred, because it's possible that this piston extension was caused
-                        // by a STB block ticking, and modifying the tickers list directly would throw a CME
-                        Bukkit.getScheduler().runTask(plugin, () -> LocationManager.getManager().moveBlock(stb, moving.getLocation(), to.getLocation()));
-                        break;
-                    case BLOCK:
-                        event.setCancelled(true);
-                        // if this one blocks, all subsequent blocks do too
-                        return;
-                    case BREAK:
-                        stb.breakBlock(true);
-                        break;
-                    default:
-                        break;
-                }
+                event.setCancelled(true);
+                return;
             }
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPistonRetract(BlockPistonRetractEvent event) {
-        if (event.isSticky()) {
-            BaseSTBBlock stb = LocationManager.getManager().get(event.getRetractLocation());
-
-            if (stb != null) {
-                switch (stb.getPistonMoveReaction()) {
-                    case MOVE:
-                        BlockFace dir = event.getDirection().getOppositeFace();
-                        Location to = event.getRetractLocation().add(dir.getModX(), dir.getModY(), dir.getModZ());
-                        Bukkit.getScheduler().runTask(plugin, () -> LocationManager.getManager().moveBlock(stb, event.getRetractLocation(), to));
-                        break;
-                    case BLOCK:
-                        event.setCancelled(true);
-                        break;
-                    case BREAK:
-                        stb.breakBlock(true);
-                        break;
-                    default:
-                        break;
-                }
-            }
+        BaseSTBBlock stb = LocationManager.getManager().get(event.getRetractLocation());
+        if (stb != null) {
+            event.setCancelled(true);
         }
     }
 }
