@@ -310,7 +310,7 @@ public class MultiBuilder extends BaseSTBItem implements Chargeable {
         } else if (SensibleToolboxPlugin.getInstance().isSlimefunEnabled() && BlockStorage.hasBlockInfo(b)) {
             return false;
             // Unbreakable Blocks
-        } else if (b.getType().getHardness() <= 0) {
+        } else if (b.getType().getHardness() == -1) {
             return false;
         } else {
             // Block is replaceable, return permission to break

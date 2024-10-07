@@ -206,16 +206,6 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
         configCache = new ConfigCache(this);
         configCache.processConfig();
 
-        MiscUtil.setColoredConsole(getConfig().getBoolean("colored_console"));
-
-        LogUtils.setLogLevel(getConfig().getString("log_level", "INFO"));
-
-        Debugger.getInstance().setPrefix("[STB] ");
-        Debugger.getInstance().setLevel(getConfig().getInt("debug_level"));
-
-        if (getConfig().getInt("debug_level") > 0) {
-            Debugger.getInstance().setTarget(getServer().getConsoleSender());
-        }
 
         // try to hook other plugins
         decentHolograms = getServer().getPluginManager().isPluginEnabled("DecentHolograms");
@@ -271,6 +261,16 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
             updater.start();
         }
 
+        MiscUtil.setColoredConsole(getConfig().getBoolean("colored_console"));
+
+        LogUtils.setLogLevel(getConfig().getString("log_level", "INFO"));
+
+        Debugger.getInstance().setPrefix("[STB] ");
+        Debugger.getInstance().setLevel(getConfig().getInt("debug_level"));
+
+        if (getConfig().getInt("debug_level") > 0) {
+            Debugger.getInstance().setTarget(getServer().getConsoleSender());
+        }
         enabled = true;
     }
 
