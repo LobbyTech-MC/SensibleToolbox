@@ -231,9 +231,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.baked-libs.dough</groupId>
+            <groupId>io.github.baked-libs</groupId>
             <artifactId>dough-api</artifactId>
-            <version>f8ff25187d</version>
+            <version>1.2.0</version>
             <scope>compile</scope>
         </dependency>
 
