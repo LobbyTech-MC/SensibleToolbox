@@ -7,10 +7,7 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Tag;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -46,12 +43,12 @@ public class AutoForester extends AutoFarmingMachine {
 
     @Override
     public String getItemName() {
-        return "Auto Forester";
+        return "量子伐木机";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Automatically harvests and replants", "Trees", "in a " + RADIUS + "x" + RADIUS + " Radius 2 Blocks above the Machine" };
+        return new String[] { "§7可以自动种植的收割树木", "§7工作范围: "+ ChatColor.GOLD + RADIUS + " §7x " + ChatColor.GOLD + RADIUS +"", "§7工作条件: 放在低于树苗 §6一格 §7的地方", "§7也就是与土壤 §6平齐 §7地方" };
     }
 
     @Override

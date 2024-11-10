@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -45,12 +46,12 @@ public class AutoFarm2 extends AutoFarm {
 
     @Override
     public String getItemName() {
-        return "Auto Farm MkII";
+        return "§d量子耕作器";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Automatically harvests and replants", "Cocoa Beans/Sugar Cane/Cactus", "in a " + RADIUS + "x" + RADIUS + " Radius 2 Blocks above the Machine" };
+        return new String[] { "§7消耗 §cSCU §7量子能量自动耕作和收割", "§7仅限小麦/胡萝卜/土豆", "§7工作范围: "+ ChatColor.GOLD + RADIUS + " §7x " + ChatColor.GOLD + RADIUS +"","§7工作条件: 放在低于作物 §6一格 §7的地方", "也就是与土壤 §6平齐 §7地方" };
     }
 
     @Override

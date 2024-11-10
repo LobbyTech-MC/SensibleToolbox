@@ -20,12 +20,12 @@ public class ToughMachineFrame extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Tough Machine Frame";
+        return "§4坚韧的机械框架";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Used in fabrication of", "some more advanced machines." };
+        return new String[] { "用来制作一些高级的量子设备" };
     }
 
     @Override

@@ -97,7 +97,7 @@ public abstract class BatteryBox extends BaseSTBMachine {
 
     @Override
     public String[] getLore() {
-        return new String[] { "Stores up to " + UnicodeSymbol.ELECTRICITY.toUnicode() + " " + getMaxCharge() + " SCU" };
+        return new String[] { "能源最大储存量" + UnicodeSymbol.ELECTRICITY.toUnicode() + " " + getMaxCharge() + " SCU" };
     }
 
     @Override
