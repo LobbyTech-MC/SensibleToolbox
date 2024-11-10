@@ -31,9 +31,9 @@ public final class ItemGlow {
     private static boolean inited = false;
 
     // use this enchantment on most items
-    private static final Enchantment GLOW_FLAG = Enchantment.ARROW_INFINITE;
+    private static final Enchantment GLOW_FLAG = Enchantment.INFINITY;
     // use this enchantment on bows, where Infinity actually means something
-    private static final Enchantment GLOW_FLAG_2 = Enchantment.PROTECTION_FALL;
+    private static final Enchantment GLOW_FLAG_2 = Enchantment.FEATHER_FALLING;
     private static final int GLOW_FLAG_LEVEL = 32;
 
     /**

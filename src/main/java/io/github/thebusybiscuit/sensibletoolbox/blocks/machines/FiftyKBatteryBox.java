@@ -30,7 +30,7 @@ public class FiftyKBatteryBox extends BatteryBox {
         return new String[] { "可以使用 §6铁栏杆 §7作为导线传输电力", "能源最大储存量: §6⚡ 50,000 §7SCU" };
     }
     @Override
-    public Recipe getRecipe() {
+    public Recipe getMainRecipe() {
         ShapedRecipe recipe = new ShapedRecipe(getKey(), toItemStack());
         recipe.shape("GGG", "GCG", "RIR");
         FiftyKEnergyCell cell = new FiftyKEnergyCell();
