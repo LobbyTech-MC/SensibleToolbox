@@ -78,7 +78,7 @@ public class SCURelay extends BatteryBox {
 
     @Override
     public String getItemName() {
-        return "SCU Relay";
+        return "SCU传输器";
     }
 
     @Override
@@ -95,10 +95,10 @@ public class SCURelay extends BatteryBox {
         }
 
         String[] res = Arrays.copyOf(lore, lore.length + 4);
-        res[lore.length] = "Comes in pairs: both partners";
-        res[lore.length + 1] = "always have the same SCU level.";
-        res[lore.length + 2] = "Displayed charge may be out of date";
-        res[lore.length + 3] = "L-Click to refresh";
+        res[lore.length] = "必须连接两台相同的SCU传输器";
+        res[lore.length + 1] = "两台转发器总会有一样的能量";
+        res[lore.length + 2] = "显示的能量可能并不准确";
+        res[lore.length + 3] = "左键以刷新显示";
         return res;
     }
 
@@ -286,7 +286,7 @@ public class SCURelay extends BatteryBox {
     protected InventoryGUI createGUI() {
         InventoryGUI gui = super.createGUI();
 
-        gui.addLabel("Subspace Transponder", TRANSPONDER_LABEL_SLOT, null, "Insert a Subspace Transponder", "here if the relay partner will", "be on a different world");
+        gui.addLabel("跨世界升级", TRANSPONDER_LABEL_SLOT, null, "当你连接的SCU传输器不在同一世界时", "在此插入跨世界升级");
         gui.setSlotType(TRANSPONDER_SLOT, SlotType.ITEM);
 
         drawTransponder(gui);
@@ -300,17 +300,17 @@ public class SCURelay extends BatteryBox {
     }
 
     private void updateInfoLabel(@Nonnull SCURelayConnection connection) {
-        String locStr = "(unknown)";
+        String locStr = "(未知)";
         SCURelay block1 = connection.getFirst();
         SCURelay block2 = connection.getSecond();
 
         if (this.equals(block1)) {
-            locStr = block2 == null ? "(not placed)" : MiscUtil.formatLocation(block2.getLocation());
+            locStr = block2 == null ? "(未放置)" : MiscUtil.formatLocation(block2.getLocation());
         } else if (this.equals(block2)) {
-            locStr = block1 == null ? "(not placed)" : MiscUtil.formatLocation(block1.getLocation());
+            locStr = block1 == null ? "(未放置)" : MiscUtil.formatLocation(block1.getLocation());
         }
 
-        getGUI().addLabel("SCU Relay : #" + relayId, 0, null, ChatColor.DARK_AQUA + "Partner Location: " + locStr, "Relay will only accept/supply power", "when both partners are placed");
+        getGUI().addLabel("SCU 传输器 : #" + relayId, 0, null, ChatColor.DARK_AQUA + "连接位置: " + locStr, "工作时，传输器只会输入/输出能量");
     }
 
     @Override

@@ -1,17 +1,17 @@
-## Description
-<!-- Please explain what you changed/added and why you did it in detail. -->
+## 描述 (Description)
+<!-- 请详细解释您所做的更改/添加内容以及原因。 -->
 
-## Changes
-<!-- Please list all the changes you have made. -->
+## 更改 (Changes)
+<!-- 请列出您所做的所有更改。 -->
 
-## Related Issues
-<!-- Please tag any Issues related to your Pull Request -->
-<!-- Syntax: "Resolves #000" -->
+## 相关 Issue (Related Issues)
+<!-- 请标记与您的Pull Request相关的任何Issue -->
+<!-- 语法："Resolves #000" -->
 
-## Checklist
-<!-- Here is a little checklist you should follow. -->
-<!-- You can click those check boxes after you posted your issue. -->
-- [ ] I have fully tested the proposed changes and promise that they will not break everything into chaos.
-- [ ] I followed the existing code standards and didn't mess up the formatting.
-- [ ] I did my best to add documentation to any public classes or methods I added.
-- [ ] I have added `Nonnull` and `Nullable` annotations to my methods to indicate their behaviour for null values
+## 检查清单 (Checklist)
+<!-- 以下是一个小检查清单，您应该遵循。 -->
+<!-- 您可以在发布问题后点击这些复选框。 -->
+- [ ] 我已完全测试了所提议的更改，并承诺它们不会使一切陷入混乱。
+- [ ] 我遵循了现有的代码标准，并且没有打乱格式。
+- [ ] 我尽最大努力为添加的任何公共类或方法添加了文档。
+- [ ] 我已在方法中添加了`Nonnull`和`Nullable`注解，以指示它们对空值的行为。

@@ -114,12 +114,12 @@ public class AutoBuilder extends BaseSTBMachine {
 
     @Override
     public String getItemName() {
-        return "Auto Builder";
+        return "自动建造机";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Can build or clear", "an area.  Use Land Markers", "to define the area" };
+        return new String[] { "使用区域标记器标记一段区域", "然后你可以建造或清除区域" };
     }
 
     @Override
@@ -168,7 +168,7 @@ public class AutoBuilder extends BaseSTBMachine {
         gui.setSlotType(LANDMARKER_SLOT_2, SlotType.ITEM);
 
         gui.addGadget(new AutoBuilderGadget(gui, MODE_SLOT));
-        gui.addGadget(new ButtonGadget(gui, START_BUTTON_SLOT, "Start/Stop", null, null, () -> {
+        gui.addGadget(new ButtonGadget(gui, START_BUTTON_SLOT, "开始/停止", null, null, () -> {
             if (getStatus() == BuilderStatus.RUNNING) {
                 stop(false);
                 updateAttachedLabelSigns();
@@ -179,9 +179,9 @@ public class AutoBuilder extends BaseSTBMachine {
         }));
 
         ChatColor c = STBUtil.dyeColorToChatColor(status.getColor());
-        gui.addLabel(ChatColor.WHITE + "Status: " + c + status, STATUS_SLOT, status.makeTexture(), status.getText());
+        gui.addLabel(ChatColor.WHITE + "状态: " + c + status, STATUS_SLOT, status.makeTexture(), status.getText());
 
-        gui.addLabel("Building Inventory", 29, null);
+        gui.addLabel("物品", 29, null);
 
         return gui;
     }
@@ -247,7 +247,7 @@ public class AutoBuilder extends BaseSTBMachine {
         if (status != this.status) {
             this.status = status;
             ChatColor c = STBUtil.dyeColorToChatColor(status.getColor());
-            getGUI().addLabel(ChatColor.WHITE + "Status: " + c + status, STATUS_SLOT, status.makeTexture(), status.getText());
+            getGUI().addLabel(ChatColor.WHITE + "状态: " + c + status, STATUS_SLOT, status.makeTexture(), status.getText());
         }
     }
 
@@ -481,11 +481,10 @@ public class AutoBuilder extends BaseSTBMachine {
 
     private void setupLandMarkerLabel(InventoryGUI gui, Location loc1, Location loc2) {
         if (workArea == null) {
-            gui.addLabel("Land Markers", 11, null, "Place two Land Markers", "in these slots, set", "to two opposite corners", "of the area to work.");
+            gui.addLabel("区域标记器", 11, null, "在此放置两个以选中方块的区域标记器");
         } else {
             int v = workArea.getVolume();
-            String s = v == 1 ? "" : "s";
-            gui.addLabel("Land Markers", 11, null, "Work Area:", MiscUtil.formatLocation(loc1), MiscUtil.formatLocation(loc2), v + " block" + s);
+            gui.addLabel("区域标记器", 11, null, "选中范围: ", MiscUtil.formatLocation(loc1), MiscUtil.formatLocation(loc2), v + " 个方块");
         }
     }
 
@@ -533,7 +532,7 @@ public class AutoBuilder extends BaseSTBMachine {
             if (((LandMarker) item).getMarkedLocation() != null) {
                 insertLandMarker(toInsert);
             } else {
-                STBUtil.complain((Player) player, "Land Marker doesn't have a location set!");
+                STBUtil.complain((Player) player, "区域标记器还没有标记任何位置");
             }
             // we just put a copy of the land marker into the builder
             return 0;
@@ -610,27 +609,27 @@ public class AutoBuilder extends BaseSTBMachine {
         String[] label = super.getSignLabel(face);
 
         if (getStatus() == BuilderStatus.FINISHED){
-            label[1] = ChatColor.WHITE + "Finished";
+            label[1] = ChatColor.WHITE + "已完成";
         } else if (getStatus() == BuilderStatus.READY) {
-            label[1] = ChatColor.GREEN + "Ready";
+            label[1] = ChatColor.GREEN + "已待机";
         } else if (getStatus() == BuilderStatus.NO_PERMISSION) {
-            label[1] = ChatColor.RED + "Can't Build";
+            label[1] = ChatColor.RED + "无权限";
         } else if (getStatus() == BuilderStatus.HALTED) {
-            label[1] = ChatColor.BLACK + "Halted";
+            label[1] = ChatColor.BLACK + "已暂停";
         } else if (getStatus() == BuilderStatus.PAUSED) {
-            label[1] = ChatColor.RED + "Paused";
+            label[1] = ChatColor.RED + "已停止";
         } else if (getStatus() == BuilderStatus.NO_WORKAREA) {
-            label[1] = ChatColor.YELLOW + "Set Area";
+            label[1] = ChatColor.YELLOW + "请设置区域";
         } else if (getStatus() == BuilderStatus.RUNNING) {
-            label[1] = ChatColor.BLUE + "At: " + buildX + " " + buildY + " " + buildZ;
+            label[1] = ChatColor.BLUE + "正在处理: " + buildX + ":" + buildY + ":" + buildZ;
         } else if (getStatus() == BuilderStatus.TOO_FAR) {
-            label[1] = ChatColor.RED + "Too Far";
+            label[1] = ChatColor.RED + "太远了";
         } else if (getStatus() == BuilderStatus.TOO_NEAR) {
-            label[1] = ChatColor.RED + "Too Near";
+            label[1] = ChatColor.RED + "太近了";
         } else if (getStatus() == BuilderStatus.LM_WORLDS_DIFFERENT) {
-            label[1] = ChatColor.RED + "Match Worlds";
+            label[1] = ChatColor.RED + "两点设置在了不相同的世界";
         } else if (getStatus() == BuilderStatus.NO_INVENTORY) {
-            label[1] = ChatColor.RED + "No Materials";
+            label[1] = ChatColor.RED + "没有足够的物品";
         }
 
         label[2] = ChatColor.WHITE + "-( " + STBUtil.dyeColorToChatColor(getStatus().getColor()) + "⬤" + ChatColor.WHITE + " )-";
@@ -657,17 +656,17 @@ public class AutoBuilder extends BaseSTBMachine {
 
     private enum BuilderStatus {
 
-        READY(DyeColor.LIME, "Ready to Operate!"),
-        NO_WORKAREA(DyeColor.YELLOW, "No work area has", "been defined yet"),
-        NO_INVENTORY(DyeColor.RED, "Out of building material!", "Place more blocks in", "the inventory and", "press Start to resume"),
-        NO_PERMISSION(DyeColor.RED, "Builder doesn't have", "building rights in", "this area"),
-        TOO_NEAR(DyeColor.RED, "Auto Builder is inside", "the work area!"),
-        TOO_FAR(DyeColor.RED, "Auto Builder is too far", "away from the work area!", "Place it " + MAX_DISTANCE + " blocks or less from", "the edge of the work area"),
-        LM_WORLDS_DIFFERENT(DyeColor.RED, "Land Markers are", "from different worlds!"),
-        RUNNING(DyeColor.LIGHT_BLUE, "Builder is running", "Press Start button to pause"),
-        PAUSED(DyeColor.ORANGE, "Builder has been paused", "Press Start button to resume"),
-        HALTED(DyeColor.BLACK, "Builder has encountered", "a problem! Check power or materials!"),
-        FINISHED(DyeColor.WHITE, "Builder has finished!", "Ready for next operation");
+        READY(DyeColor.LIME, "准备好操作！"), // Ready to Operate!
+        NO_WORKAREA(DyeColor.YELLOW, "尚未定义工作区域"), // No work area has been defined yet
+        NO_INVENTORY(DyeColor.RED, "建筑材料不足！", "请在物品栏中放置更多方块", "然后按开始恢复"), // Out of building material! Place more blocks in the inventory and press Start to resume
+        NO_PERMISSION(DyeColor.RED, "在此区域没有建筑权限"), // Builder doesn't have building rights in this area
+        TOO_NEAR(DyeColor.RED, "自动建造机在工作区域内！"), // Auto Builder is inside the work area!
+        TOO_FAR(DyeColor.RED, "自动建造机距离工作区域太远！", "请将其放置在工作区域边缘 " + MAX_DISTANCE + " 方块以内"), // Auto Builder is too far away from the work area! Place it MAX_DISTANCE blocks or less from the edge of the work area
+        LM_WORLDS_DIFFERENT(DyeColor.RED, "区域不在同一世界！"), // Land Markers are from different worlds!
+        RUNNING(DyeColor.LIGHT_BLUE, "建造机正在运行", "按开始按钮暂停"), // Builder is running. Press Start button to pause
+        PAUSED(DyeColor.ORANGE, "建造机已暂停", "按开始按钮恢复"), // Builder has been paused. Press Start button to resume
+        HALTED(DyeColor.BLACK, "建造机无法工作", "请检查电源或材料！"), // Builder has encountered a problem! Check power or materials!
+        FINISHED(DyeColor.WHITE, "建造机已完工", "准备进行下一次操作。"); // Builder has finished! Ready for next operation
 
         private final DyeColor color;
         private final String[] text;
@@ -702,11 +701,11 @@ public class AutoBuilder extends BaseSTBMachine {
     private class AutoBuilderGadget extends CyclerGadget<AutoBuilderMode> {
 
         protected AutoBuilderGadget(InventoryGUI gui, int slot) {
-            super(gui, slot, "Build Mode");
-            add(AutoBuilderMode.CLEAR, ChatColor.YELLOW, Material.WHITE_STAINED_GLASS, "Clear all blocks", "in the work area");
-            add(AutoBuilderMode.FILL, ChatColor.YELLOW, Material.BRICK, "Use inventory to replace", "all empty blocks", "in the work area");
-            add(AutoBuilderMode.WALLS, ChatColor.YELLOW, Material.COBBLESTONE_WALL, "Use inventory to build", "walls around the", "the work area");
-            add(AutoBuilderMode.FRAME, ChatColor.YELLOW, Material.OAK_FENCE, "Use inventory to build", "a frame around the", "the work area");
+            super(gui, slot, "建造模式");
+            add(AutoBuilderMode.CLEAR, ChatColor.YELLOW, Material.WHITE_STAINED_GLASS, "清除区域内的方块");
+            add(AutoBuilderMode.FILL, ChatColor.YELLOW, Material.BRICK, "填充区域内的空气");
+            add(AutoBuilderMode.WALLS, ChatColor.YELLOW, Material.COBBLESTONE_WALL, "沿着区域边缘建筑墙");
+            add(AutoBuilderMode.FRAME, ChatColor.YELLOW, Material.OAK_FENCE, "沿着区域边缘建筑框架");
             setInitialValue(((AutoBuilder) gui.getOwningBlock()).getBuildMode());
         }
 

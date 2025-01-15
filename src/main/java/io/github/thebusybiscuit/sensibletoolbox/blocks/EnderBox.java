@@ -83,17 +83,17 @@ public class EnderBox extends BaseSTBBlock implements EnderTunable, STBInventory
 
     @Override
     public String getItemName() {
-        return "Ender Box";
+        return "下界箱";
     }
 
     @Override
     public String getDisplaySuffix() {
-        return (isGlobal() ? "Global" : "Personal") + " " + UnicodeSymbol.NUMBER.toUnicode() + getEnderFrequency();
+        return (isGlobal() ? "公开" : "私人") + " " + UnicodeSymbol.NUMBER.toUnicode() + getEnderFrequency();
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Extra-dimensional storage", "Right-click with an", "Ender Tuner to set", "its frequency" };
+        return new String[] { "属于下界的末影箱", "手持末影调频器右键以设置频道" };
     }
 
     @Override
@@ -121,7 +121,7 @@ public class EnderBox extends BaseSTBBlock implements EnderTunable, STBInventory
             Player p = e.getPlayer();
 
             if (!hasAccessRights(p)) {
-                STBUtil.complain(p, "That " + getItemName() + " is private!");
+                STBUtil.complain(p, "你没有权限打开" + getItemName());
             } else {
                 Inventory inv = isGlobal() ? EnderStorage.getEnderInventory(getEnderFrequency()) : EnderStorage.getEnderInventory(p, getEnderFrequency());
                 p.openInventory(inv);

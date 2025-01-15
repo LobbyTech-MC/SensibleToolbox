@@ -42,12 +42,12 @@ public class AngelicBlock extends BaseSTBBlock {
 
     @Override
     public String getItemName() {
-        return "Angelic Block";
+        return "天使方块";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "R-click: " + ChatColor.WHITE + " place block in the air", "L-click block: " + ChatColor.WHITE + " insta-break" };
+        return new String[] { "伟大无需多言" };
     }
 
     @Override

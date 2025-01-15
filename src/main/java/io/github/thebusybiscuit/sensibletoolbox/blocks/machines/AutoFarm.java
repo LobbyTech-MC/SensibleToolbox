@@ -56,12 +56,12 @@ public class AutoFarm extends AutoFarmingMachine {
 
     @Override
     public String getItemName() {
-        return "Auto Farm";
+        return "自动农场 I型";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Automatically harvests and replants", "Wheat/Potato/Carrot/Beetroot Crops", "in a " + RADIUS + "x" + RADIUS + " Radius 2 Blocks above the Machine" };
+        return new String[] { "自动种植小麦/马铃薯/胡萝卜/甜菜", "工作范围: 机器上2格外的 " + RADIUS + "x" + RADIUS + " 区域"};
     }
 
     @Override

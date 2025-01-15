@@ -953,7 +953,7 @@ public abstract class BaseSTBMachine extends BaseSTBBlock implements ChargeableB
         }
 
         if (item instanceof EjectorUpgrade && ((EjectorUpgrade) item).getFacing() == BlockFace.SELF) {
-            STBUtil.complain(player, "Ejector upgrade must have a direction configured.");
+            STBUtil.complain(player, "输出升级必须被配置一个方向");
             return false;
         } else {
             return true;

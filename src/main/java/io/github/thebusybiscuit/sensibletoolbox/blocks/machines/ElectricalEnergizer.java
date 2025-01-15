@@ -87,12 +87,12 @@ public class ElectricalEnergizer extends AbstractIOMachine {
 
     @Override
     public String getItemName() {
-        return "Electrical Energizer";
+        return "充电台";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Allows you to energize certain Items" };
+        return new String[] { "用于给物品充电" };
     }
 
     @Override

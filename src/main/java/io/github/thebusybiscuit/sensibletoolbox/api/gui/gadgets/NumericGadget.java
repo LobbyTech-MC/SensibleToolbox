@@ -98,7 +98,7 @@ public class NumericGadget extends ClickableGadget {
         meta.setDisplayName(ChatColor.YELLOW + title + ": " + ChatColor.AQUA + value);
         String max = range.getMaximumInt() == Integer.MAX_VALUE ? "\u221e" : Integer.toString(range.getMaximumInt());
         String min = range.getMaximumInt() == Integer.MIN_VALUE ? "-\u221e" : Integer.toString(range.getMinimumInt());
-        String[] lore = { "Valid value range: " + min + "-" + max, "L-Click: -" + incr, "R-Click: +" + incr, "With Shift held, +/-" + altIncr };
+        String[] lore = { "有效范围: " + min + "-" + max, "左键: -" + incr, "右键: +" + incr, "Shift + 左键: -" + altIncr, "Shift + 右键: +" + altIncr };
         meta.setLore(GUIUtil.makeLore(lore));
         icon.setItemMeta(meta);
         return icon;

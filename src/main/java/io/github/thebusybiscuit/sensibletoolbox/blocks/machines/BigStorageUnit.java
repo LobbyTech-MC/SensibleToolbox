@@ -151,7 +151,7 @@ public class BigStorageUnit extends AbstractProcessingMachine {
                 List<String> currentLore = meta.getLore();
                 if (currentLore != null) {newLore.addAll(currentLore);}
             }
-            newLore.add(ChatColor.GRAY + "Stored Item");
+            newLore.add(ChatColor.GRAY + "物品");
             meta.setLore(newLore);
             displayItemStack.setItemMeta(meta);
             return displayItemStack;
@@ -176,7 +176,7 @@ public class BigStorageUnit extends AbstractProcessingMachine {
                 signLabel[3] = pfx + lines[1];
             }
         } else {
-            signLabel[2] = ChatColor.ITALIC + "Empty";
+            signLabel[2] = ChatColor.ITALIC + "空";
             signLabel[3] = "";
         }
     }
@@ -219,18 +219,18 @@ public class BigStorageUnit extends AbstractProcessingMachine {
 
     @Override
     public String getItemName() {
-        return "BSU";
+        return "存储单元";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Big Storage Unit", "Stores up to " + getStackCapacity() + " stacks", "of a single item type" };
+        return new String[] { "可存储 " + getStackCapacity() + " 组一种物品" };
     }
 
     @Override
     public String[] getExtraLore() {
         if (isLocked() && getStoredItemType() != null) {
-            return new String[] { ChatColor.WHITE + "Locked: " + ChatColor.YELLOW + ItemUtils.getItemName(getStoredItemType()) };
+            return new String[] { ChatColor.WHITE + "已存储: " + ChatColor.YELLOW + ItemUtils.getItemName(getStoredItemType()) };
         } else {
             return new String[0];
         }
@@ -247,7 +247,7 @@ public class BigStorageUnit extends AbstractProcessingMachine {
 
     @Override
     public String getCraftingNotes() {
-        return "Any type of log or slab may be used";
+        return "使用原木和木质台阶制作";
     }
 
     @Override
@@ -471,7 +471,7 @@ public class BigStorageUnit extends AbstractProcessingMachine {
         int toInsert = Math.min(s.getAmount(), maxCapacity - getStorageAmount());
 
         if (toInsert == 0) {
-            STBUtil.complain(p, getItemName() + " is full.");
+            STBUtil.complain(p, getItemName() + " 已满.");
             return 0;
         }
 
@@ -490,7 +490,7 @@ public class BigStorageUnit extends AbstractProcessingMachine {
             p.setMetadata(STB_LAST_BSU_INSERT, new FixedMetadataValue(getProviderPlugin(), System.currentTimeMillis()));
             return toInsert;
         } else {
-            STBUtil.complain(p, getItemName() + " has insufficient charge to accept items.");
+            STBUtil.complain(p, getItemName() + "能量不足");
             return 0;
         }
     }
@@ -521,12 +521,12 @@ public class BigStorageUnit extends AbstractProcessingMachine {
     @Nonnull
     @Override
     public String getProgressMessage() {
-        return ChatColor.YELLOW + "In Storage: " + getStorageAmount() + "/" + maxCapacity;
+        return ChatColor.YELLOW + "已存储: " + getStorageAmount() + "/" + maxCapacity;
     }
 
     @Override
     public String[] getProgressLore() {
-        return new String[] { "Total: " + (getStorageAmount() + getOutputAmount()) };
+        return new String[] { "已存储: " + (getStorageAmount() + getOutputAmount()) };
     }
 
     @Override

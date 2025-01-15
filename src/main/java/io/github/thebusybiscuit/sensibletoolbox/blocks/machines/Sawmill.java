@@ -102,12 +102,12 @@ public class Sawmill extends AbstractIOMachine {
 
     @Override
     public String getItemName() {
-        return "Sawmill";
+        return "锯子";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Processes wooden items" };
+        return new String[] { "加工木质物品" };
     }
 
     @Override

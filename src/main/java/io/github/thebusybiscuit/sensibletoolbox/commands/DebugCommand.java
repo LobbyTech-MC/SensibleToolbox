@@ -23,7 +23,7 @@ public class DebugCommand extends AbstractCommand {
             if (level >= 0) {
                 setDebugLevel(sender, level);
             } else {
-                MiscUtil.errorMessage(sender, "Debug level must be >= 0");
+                MiscUtil.errorMessage(sender, "Debug 等级必须 >= 0");
             }
         } else {
             if (Debugger.getInstance().getLevel() > 0) {
@@ -40,9 +40,9 @@ public class DebugCommand extends AbstractCommand {
         Debugger.getInstance().setTarget(level == 0 ? null : sender);
 
         if (level > 0) {
-            MiscUtil.statusMessage(sender, "Debugger enabled (level " + level + ")");
+            MiscUtil.statusMessage(sender, "Debugger 已开启 (等级 " + level + ")");
         } else {
-            MiscUtil.statusMessage(sender, "Debugger disabled");
+            MiscUtil.statusMessage(sender, "Debugger 已禁用");
         }
     }
 }

@@ -36,8 +36,7 @@ public class ValidateCommand extends STBAbstractCommand {
     public boolean execute(Plugin plugin, CommandSender sender, String[] args) {
         for (World world : Bukkit.getWorlds()) {
             int fixed = validate(plugin, world);
-            String s = fixed == 1 ? "" : "s";
-            MiscUtil.statusMessage(sender, "Fixed up &e" + fixed + "&- block" + s + " in world &6" + world.getName());
+            MiscUtil.statusMessage(sender, "在世界&6" + world.getName() + " &r中修复了 &e" + fixed + "&- 个方块");
         }
 
         return true;

@@ -1,43 +1,43 @@
 ---
-name: Bug Report
-about: Report a Bug or an Issue with SensibleToolbox.
+name: 错误报告
+about: 报告SensibleToolbox中的错误或问题。
 title: ''
-labels: Bug Report
+labels: 错误报告
 assignees: ''
 
 ---
 
-<!-- FILL IN THE FORM BELOW -->
+<!-- 在下面的表单中填写信息 -->
 
-## :round_pushpin: Description (REQUIRED)
-<!-- A clear and detailed description of what went wrong. -->
-<!-- The more information you can provide, the easier we can handle this problem. -->
-<!-- Start writing below this line -->
-
-
-## :bookmark_tabs: Steps to reproduce the Issue (REQUIRED)
-<!-- Tell us the exact steps to reproduce this issue, the more detailed the easier we can reproduce it. -->
-<!-- Youtube Videos and Screenshots are recommended!!! -->
-<!-- Start writing below this line -->
+## :round_pushpin: 描述（必填）
+<!-- 清晰且详细地描述发生了什么问题。 -->
+<!-- 您提供的信息越多，我们处理这个问题就越容易。 -->
+<!-- 从下面这行开始编写 -->
 
 
-## :bulb: Expected behavior (REQUIRED)
-<!-- What were you expecting to happen? -->
-<!-- What do you think would have been the correct behaviour? -->
-<!-- Start writing below this line -->
+## :bookmark_tabs: 复现问题的步骤（必填）
+<!-- 告诉我们复现这个问题的确切步骤，越详细我们越容易复现。 -->
+<!-- 推荐提供YouTube视频和截图！ -->
+<!-- 从下面这行开始编写 -->
 
 
-## :scroll: Server Log
-<!-- Take a look at your Server Log and post any errors you can find via https://pastebin.com/ -->
-<!-- If you are unsure about it, post your full log, you can find it under /logs/latest.log -->
-<!-- Paste your link(s) below this line -->
+## :bulb: 预期行为（必填）
+<!-- 您期望发生什么？ -->
+<!-- 您认为正确的行为是什么？ -->
+<!-- 从下面这行开始编写 -->
 
 
-## :compass: Environment (REQUIRED)
-<!-- Any info without the exact version numbers will be closed! -->
-<!-- "latest" IS NOT A VERSION NUMBER. -->
-<!-- If your issue is related to other plugins, make sure to include the versions of these plugins too! -->
+## :scroll: 服务器日志
+<!-- 查看您的服务器日志，并通过https://pastebin.com/发布您能找到的任何错误。 -->
+<!-- 如果您不确定，请发布您的完整日志，您可以在/logs/latest.log下找到它。 -->
+<!-- 在下面这行粘贴您的链接 -->
 
- - Server Software (Spigot/Paper):
- - Minecraft Version:
- - SensibleToolbox Version:
+
+## :compass: 环境（必填）
+<!-- 任何没有确切版本号的信息都将被关闭！ -->
+<!-- “latest”不是版本号。 -->
+<!-- 如果您的问题与其他插件相关，请确保也包含这些插件的版本号！ -->
+
+- 服务器软件（Spigot/Paper）：
+- Minecraft版本：
+- SensibleToolbox版本：

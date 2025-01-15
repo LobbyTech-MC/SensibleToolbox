@@ -47,12 +47,15 @@ public class TrashCan extends BaseSTBBlock implements STBInventoryHolder {
 
     @Override
     public String getItemName() {
-        return "Trash Can";
+        return "垃圾桶";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "DESTROYS any items which are", "placed or piped into it.", "Beware!" };
+        return new String[] {
+                "被放入此机器或运输进此机器的物品都会消失",
+                "谨慎使用!"
+        };
     }
 
     @Override
@@ -81,7 +84,7 @@ public class TrashCan extends BaseSTBBlock implements STBInventoryHolder {
                 l.getWorld().playSound(l, Sound.ENTITY_GENERIC_EAT, 1.0F, 1.0F);
             }
 
-            Debugger.getInstance().debug(this + ": trash emptied");
+            Debugger.getInstance().debug(this + ": 垃圾桶已被清空");
             d.getInventory().clear();
         }
     }

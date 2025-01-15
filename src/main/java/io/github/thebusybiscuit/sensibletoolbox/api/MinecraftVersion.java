@@ -68,6 +68,15 @@ public enum MinecraftVersion {
      *
      */
     MINECRAFT_1_21(21, "1.21.x"),
+    MINECRAFT_1_22(22, "1.22.x"),
+    MINECRAFT_1_23(23, "1.23.x"),
+    MINECRAFT_1_24(24, "1.24.x"),
+    MINECRAFT_1_25(25, "1.25.x"),
+    MINECRAFT_1_26(26, "1.26.x"),
+    MINECRAFT_1_27(27, "1.27.x"),
+    MINECRAFT_1_28(28, "1.28.x"),
+    MINECRAFT_1_29(29, "1.29.x"),
+    MINECRAFT_1_30(30, "1.30.x"),
 
     /**
      * This constant represents an exceptional state in which we were unable

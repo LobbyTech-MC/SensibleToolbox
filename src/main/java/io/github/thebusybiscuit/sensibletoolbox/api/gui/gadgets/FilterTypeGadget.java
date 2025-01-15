@@ -29,8 +29,8 @@ public class FilterTypeGadget extends CyclerGadget<FilterType> {
 
         Preconditions.checkArgument(gui.getOwningItem() instanceof Filtering, "Filter Type gadget can only be added to filtering items!");
 
-        add(FilterType.MATERIAL, ChatColor.GRAY, Material.STONE, "Match material only");
-        add(FilterType.ITEM_META, ChatColor.LIGHT_PURPLE, Material.ENCHANTED_BOOK, "Match material, block metadata", "and item metadata (NBT)");
+        add(FilterType.MATERIAL, ChatColor.GRAY, Material.STONE, FilterType.MATERIAL.getLabel());
+        add(FilterType.ITEM_META, ChatColor.LIGHT_PURPLE, Material.ENCHANTED_BOOK, FilterType.ITEM_META.getLabel());
         setInitialValue(((Filtering) getGUI().getOwningItem()).getFilter().getFilterType());
     }
 

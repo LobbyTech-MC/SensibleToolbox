@@ -54,12 +54,12 @@ public class Elevator extends BaseSTBBlock implements Colorable {
 
     @Override
     public String getItemName() {
-        return "Elevator";
+        return "电梯";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Links to other elevators", " directly above or below", "Press Space to go up", "Press Shift to go down" };
+        return new String[] { "在上方或下方放置电梯", "跳跃上楼", "潜行下楼" };
     }
 
     @Override

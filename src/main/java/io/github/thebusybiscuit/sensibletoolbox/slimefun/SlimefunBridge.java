@@ -36,8 +36,8 @@ public final class SlimefunBridge implements SlimefunAddon {
     public SlimefunBridge(@Nonnull SensibleToolboxPlugin plugin) {
         this.plugin = plugin;
 
-        ItemGroup items = new ItemGroup(new NamespacedKey(plugin, "items"), new CustomItemStack(Material.SHEARS, "&7STB - Items"));
-        ItemGroup blocks = new ItemGroup(new NamespacedKey(plugin, "blocks"), new CustomItemStack(Material.PURPLE_STAINED_GLASS, "&7STB - Blocks and Machines"));
+        ItemGroup items = new ItemGroup(new NamespacedKey(plugin, "items"), new CustomItemStack(Material.SHEARS, "&7STB - 物品"));
+        ItemGroup blocks = new ItemGroup(new NamespacedKey(plugin, "blocks"), new CustomItemStack(Material.PURPLE_STAINED_GLASS, "&7STB - 机器"));
 
         for (String id : SensibleToolboxPlugin.getInstance().getItemRegistry().getItemIds()) {
             BaseSTBItem item = SensibleToolboxPlugin.getInstance().getItemRegistry().getItemById(id);
@@ -154,7 +154,7 @@ public final class SlimefunBridge implements SlimefunAddon {
 
     @Override
     public String getBugTrackerURL() {
-        return "https://github.com/Slimefun/SensibleToolbox/issues";
+        return "https://github.com/SlimefunGuguProject/SensibleToolboxReborn/issues";
     }
 
 }

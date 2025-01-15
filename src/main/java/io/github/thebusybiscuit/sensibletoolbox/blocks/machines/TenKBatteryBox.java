@@ -22,7 +22,7 @@ public class TenKBatteryBox extends BatteryBox {
 
     @Override
     public String getItemName() {
-        return "10K Battery Box";
+        return "电容 (10K)";
     }
 
     @Override
