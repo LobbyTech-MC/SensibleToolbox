@@ -99,12 +99,12 @@ public class MagmaticEngine extends Generator {
 
     @Override
     public String getItemName() {
-        return "Magmatic Engine";
+        return "岩浆发电机";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Converts Lava into power", };
+        return new String[] { "将岩浆变为岩浆能", };
     }
 
     @Override
@@ -113,7 +113,7 @@ public class MagmaticEngine extends Generator {
             return false;
         }
         if (!(upgrade instanceof RegulatorUpgrade)) {
-            STBUtil.complain(player, upgrade.getItemName() + " is not accepted by a " + getItemName());
+            STBUtil.complain(player, "你不能对" + getItemName() + "使用" + upgrade.getItemName());
             return false;
         }
         return true;

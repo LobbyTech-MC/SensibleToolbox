@@ -52,7 +52,7 @@ public class SoundMuffler extends BaseSTBBlock {
     protected InventoryGUI createGUI() {
         InventoryGUI gui = GUIUtil.createGUI(this, 9, ChatColor.DARK_AQUA + getItemName());
 
-        gui.addGadget(new NumericGadget(gui, 0, "Volume", new IntRange(0, 100), getVolume(), 10, 1, newValue -> {
+        gui.addGadget(new NumericGadget(gui, 0, "音量", new IntRange(0, 100), getVolume(), 10, 1, newValue -> {
             setVolume(newValue);
             return true;
         }));
@@ -83,12 +83,12 @@ public class SoundMuffler extends BaseSTBBlock {
 
     @Override
     public String getItemName() {
-        return "Sound Muffler";
+        return "降噪机";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Reduces the volume of all sounds", "within a " + DISTANCE + "-block radius", "R-click: " + ChatColor.WHITE + " open configuration" };
+        return new String[] { "降低附近的噪音", "范围: " + DISTANCE + " 格", "右键以" + ChatColor.WHITE + "配置此机器" };
     }
 
     @Override
@@ -135,7 +135,7 @@ public class SoundMuffler extends BaseSTBBlock {
     @Override
     public String[] getSignLabel(BlockFace face) {
         String[] label = super.getSignLabel(face);
-        label[1] = ChatColor.DARK_RED + "Volume " + ChatColor.WHITE + getVolume();
+        label[1] = ChatColor.DARK_RED + "音量: " + ChatColor.WHITE + getVolume();
         return label;
     }
 }

@@ -122,12 +122,12 @@ public class Pump extends AbstractProcessingMachine {
 
     @Override
     public String getItemName() {
-        return "Pump";
+        return "流体泵";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Pumps liquids into a bucket" };
+        return new String[] { "抽水机，抽岩浆机" };
     }
 
     @Override

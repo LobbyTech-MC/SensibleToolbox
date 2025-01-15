@@ -37,7 +37,7 @@ public class FriendCommand extends STBAbstractCommand {
             UUID id = getID(args[0]);
             Preconditions.checkArgument(id != null, "Unknown player: " + args[0]);
             fm.addFriend(target.getUniqueId(), id);
-            MiscUtil.statusMessage(sender, target.getName() + " is now friends with " + args[0]);
+            MiscUtil.statusMessage(sender, target.getName() + " 现在是 " + args[0] + " 的信任者了。");
         } else if (args.length == 0) {
             // listing friends
             listFriends(sender, fm, target);
@@ -55,9 +55,8 @@ public class FriendCommand extends STBAbstractCommand {
             names.add(Bukkit.getOfflinePlayer(id).getName());
         }
 
-        String s = friends.size() == 1 ? "" : "s";
         MessagePager pager = MessagePager.getPager(sender).clear();
-        pager.add(ChatColor.AQUA + "Player " + target.getName() + " has " + ChatColor.YELLOW + friends.size() + ChatColor.AQUA + " friend" + s + ":");
+        pager.add(ChatColor.AQUA + target.getName() + " 共有 " + ChatColor.YELLOW + friends.size() + ChatColor.AQUA + " 名信任者" + ":");
 
         for (String name : MiscUtil.asSortedList(names)) {
             pager.add(MessagePager.BULLET + ChatColor.YELLOW + name);

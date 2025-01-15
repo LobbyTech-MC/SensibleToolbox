@@ -28,12 +28,12 @@ public class PowerMonitor extends BaseSTBBlock {
 
     @Override
     public String getItemName() {
-        return "Power Monitor";
+        return "能源监视器";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Displays the Net Gain/Loss", "on attached Signs" };
+        return new String[] { "在此机器贴上告示牌", "会显示能源增长与减少" };
     }
 
     @Override
@@ -64,7 +64,7 @@ public class PowerMonitor extends BaseSTBBlock {
     protected String[] getSignLabel(BlockFace face) {
         String[] label = super.getSignLabel(face);
 
-        label[2] = ChatColor.DARK_RED + "No cable attached";
+        label[2] = ChatColor.DARK_RED + "未连接能源网";
 
         for (BlockFace f : STBUtil.getMainHorizontalFaces()) {
             EnergyNet net = SensibleToolbox.getEnergyNet(getRelativeLocation(f).getBlock());

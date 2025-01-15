@@ -27,14 +27,14 @@ public class AnvilListener extends STBBaseListener {
 
                 if (SensibleToolbox.getItemRegistry().isSTBItem(cursor)) {
                     event.setCancelled(true);
-                    MiscUtil.errorMessage((Player) event.getWhoClicked(), "Sensible Toolbox items don't fit in a vanilla anvil.");
+                    MiscUtil.errorMessage((Player) event.getWhoClicked(), "你不能在原版铁砧内使用 STB 物品");
                 }
             } else if (event.getRawSlot() > 2 && event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
                 ItemStack item = event.getCurrentItem();
 
                 if (SensibleToolbox.getItemRegistry().isSTBItem(item)) {
                     event.setCancelled(true);
-                    MiscUtil.errorMessage((Player) event.getWhoClicked(), "Sensible Toolbox items don't fit in a vanilla anvil.");
+                    MiscUtil.errorMessage((Player) event.getWhoClicked(), "你不能在原版铁砧内使用 STB 物品");
                 }
             }
         }

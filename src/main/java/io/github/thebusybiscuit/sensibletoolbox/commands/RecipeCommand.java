@@ -26,7 +26,7 @@ public class RecipeCommand extends AbstractCommand {
     @Override
     public boolean execute(Plugin plugin, CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            MiscUtil.errorMessage(sender, "This command can't be run from the console.");
+            MiscUtil.errorMessage(sender, "仅玩家可执行此命令!");
             return true;
         }
 
@@ -43,7 +43,7 @@ public class RecipeCommand extends AbstractCommand {
         }
 
         if (book == null) {
-            MiscUtil.errorMessage(sender, "You must have a Recipe Book in your inventory to search for recipes!");
+            MiscUtil.errorMessage(sender, "你必须持有一本配方书才能搜索配方!");
             return true;
         }
 

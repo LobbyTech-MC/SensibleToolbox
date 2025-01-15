@@ -25,10 +25,10 @@ public class ChargeDirectionGadget extends CyclerGadget<ChargeDirection> {
      *            the GUI slot that the gadget occupies
      */
     public ChargeDirectionGadget(InventoryGUI gui, int slot) {
-        super(gui, slot, "Charge");
+        super(gui, slot, "能量");
 
-        add(ChargeDirection.MACHINE, ChatColor.GOLD, Material.MAGMA_CREAM, "Energy will transfer from", "an installed energy cell", "to this machine");
-        add(ChargeDirection.CELL, ChatColor.GREEN, Material.SLIME_BALL, "Energy will transfer", "from this machine to", "an installed energy cell");
+        add(ChargeDirection.MACHINE, ChatColor.GOLD, Material.MAGMA_CREAM, "能量会从电池中流向机器");
+        add(ChargeDirection.CELL, ChatColor.GREEN, Material.SLIME_BALL, "能量会从机器流向电池");
         setInitialValue(((BaseSTBMachine) gui.getOwningItem()).getChargeDirection());
     }
 

@@ -63,12 +63,12 @@ public class Masher extends AbstractIOMachine {
 
     @Override
     public String getItemName() {
-        return "Masher";
+        return "粉碎机";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Grinds ores and other ", "resources into dusts" };
+        return new String[] { "粉碎物品" };
     }
 
     @Override

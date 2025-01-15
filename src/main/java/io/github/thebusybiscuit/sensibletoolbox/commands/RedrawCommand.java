@@ -40,8 +40,7 @@ public class RedrawCommand extends AbstractCommand {
             }
         }
 
-        String s = redrawn == 1 ? "" : "s";
-        MiscUtil.statusMessage(sender, redrawn + " STB block" + s + " redrawn.");
+        MiscUtil.statusMessage(sender, redrawn + " 个 STB 方块被修复.");
         return true;
     }
 

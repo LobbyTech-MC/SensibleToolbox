@@ -999,7 +999,7 @@ public abstract class BaseSTBBlock extends BaseSTBItem {
 
         if (!signBlock.isEmpty()) {
             // looks like some non-solid block is in the way
-            STBUtil.complain(p, "There is no room to place a label sign there!");
+            STBUtil.complain(p, "没有足够的空间放置告示牌");
             e.setCancelled(true);
             return false;
         }

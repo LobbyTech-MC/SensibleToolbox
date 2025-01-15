@@ -36,9 +36,9 @@ public class EnergyFlowGadget extends CyclerGadget<EnergyFlow> {
         Preconditions.checkArgument(gui.getOwningItem() instanceof BatteryBox, "Energy flow gadget can only be used on a battery box!");
 
         this.face = face;
-        add(EnergyFlow.IN, ChatColor.DARK_AQUA, Material.BLUE_WOOL, "Device accepts energy", "on this face");
-        add(EnergyFlow.OUT, ChatColor.GOLD, Material.ORANGE_WOOL, "Device emits energy", "on this face");
-        add(EnergyFlow.NONE, ChatColor.GRAY, Material.LIGHT_GRAY_WOOL, "This face does not", "accept or emit energy");
+        add(EnergyFlow.IN, ChatColor.DARK_AQUA, Material.BLUE_WOOL, "输入能量");
+        add(EnergyFlow.OUT, ChatColor.GOLD, Material.ORANGE_WOOL, "输出能量");
+        add(EnergyFlow.NONE, ChatColor.GRAY, Material.LIGHT_GRAY_WOOL, "禁用");
         setInitialValue(((BatteryBox) gui.getOwningItem()).getEnergyFlow(face));
     }
 

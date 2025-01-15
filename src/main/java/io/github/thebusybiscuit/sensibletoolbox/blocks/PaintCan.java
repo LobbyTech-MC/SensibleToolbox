@@ -127,12 +127,12 @@ public class PaintCan extends BaseSTBBlock implements LevelReporter {
 
     @Override
     public String getItemName() {
-        return "Paint Can";
+        return "染料罐";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "R-click block with Paint Brush", " to refill the brush", "R-click block with anything else", " to open mixer; place milk bucket and", " a dye inside to mix some paint" };
+        return new String[] { "使用画笔右键此机器以填充画笔", "使用其他物品右键此机器以打开存储器", "将奶桶和染料放入其中以混合染料" };
     }
 
     @Override
@@ -174,22 +174,22 @@ public class PaintCan extends BaseSTBBlock implements LevelReporter {
     @Override
     public InventoryGUI createGUI() {
         InventoryGUI gui = GUIUtil.createGUI(this, 27, ChatColor.DARK_RED + getItemName());
-        gui.addLabel("Ingredients", 0, null, "To mix paint:", "▶ Place a milk bucket & dye", "To dye items:", "▶ Place any dyeable item");
+        gui.addLabel("原料", 0, null, "▶ 放置奶桶和染料以混色", "▶ 放置可染色物品以染色");
 
         for (int slot : ITEM_SLOTS) {
             gui.setSlotType(slot, SlotType.ITEM);
         }
 
-        String[] lore = new String[] { "Combine milk & dye to make paint", "or dye any colorable item", "with existing paint" };
-        gui.addGadget(new ButtonGadget(gui, 12, "Mix or Dye", lore, MIX_TEXTURE, () -> {
+        String[] lore = new String[] { "将奶桶和染料放入其中并混合染料", "将可染色物品放入其中并染色" };
+        gui.addGadget(new ButtonGadget(gui, 12, "混/染色", lore, MIX_TEXTURE, () -> {
             if (tryMix()) {
                 Location l = getLocation();
                 l.getWorld().playSound(l, Sound.ENTITY_GENERIC_SPLASH, 1.0F, 1.0F);
             }
         }));
 
-        lore = new String[] { "Caution: This will empty the", "paint tank and can't be undone!" };
-        gui.addGadget(new ButtonGadget(gui, 13, ChatColor.RED.toString() + ChatColor.UNDERLINE + "☠ Empty Paint ☠", lore, EMPTY_TEXTURE, this::emptyPaintCan));
+        lore = new String[] { "染料罐将会永久清空! (真的很久!)" };
+        gui.addGadget(new ButtonGadget(gui, 13, ChatColor.RED.toString() + ChatColor.UNDERLINE + "☠ 空 ☠", lore, EMPTY_TEXTURE, this::emptyPaintCan));
 
         levelMonitorId = gui.addMonitor(new LevelMonitor(gui, this));
         gui.addGadget(new AccessControlGadget(gui, 8));
@@ -223,7 +223,7 @@ public class PaintCan extends BaseSTBBlock implements LevelReporter {
     @Override
     public String getLevelMessage() {
         ChatColor cc = STBUtil.dyeColorToChatColor(getColor());
-        return ChatColor.WHITE + "Paint Level: " + getPaintLevel() + "/" + MAX_PAINT_LEVEL + " " + cc + getColor();
+        return ChatColor.WHITE + "染色进度: " + getPaintLevel() + "/" + MAX_PAINT_LEVEL + " " + cc + getColor();
     }
 
     private void emptyPaintCan() {

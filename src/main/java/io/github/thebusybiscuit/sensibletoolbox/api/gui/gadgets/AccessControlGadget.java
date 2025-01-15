@@ -31,10 +31,10 @@ public class AccessControlGadget extends CyclerGadget<AccessControl> {
      *            the STB block that the gadget controls
      */
     public AccessControlGadget(InventoryGUI gui, int slot, BaseSTBBlock stb) {
-        super(gui, slot, "Access", stb);
-        add(AccessControl.PUBLIC, ChatColor.GREEN, Material.GREEN_WOOL, "Owner: " + ChatColor.ITALIC + "<OWNER>", "All players may access");
-        add(AccessControl.PRIVATE, ChatColor.RED, Material.RED_WOOL, "Owner: " + ChatColor.ITALIC + "<OWNER>", "Only owner may access");
-        add(AccessControl.RESTRICTED, ChatColor.YELLOW, Material.YELLOW_WOOL, "Owner: " + ChatColor.ITALIC + "<OWNER>", "Only owner and owner's", "friends may access");
+        super(gui, slot, "访问权限", stb);
+        add(AccessControl.PUBLIC, ChatColor.GREEN, Material.GREEN_WOOL, "持有者: " + ChatColor.ITALIC + "<OWNER>", "公开");
+        add(AccessControl.PRIVATE, ChatColor.RED, Material.RED_WOOL, "持有者: " + ChatColor.ITALIC + "<OWNER>", "仅自己可使用");
+        add(AccessControl.RESTRICTED, ChatColor.YELLOW, Material.YELLOW_WOOL, "持有者: " + ChatColor.ITALIC + "<OWNER>", "仅自己和可信者可使用");
         setInitialValue(stb == null ? gui.getOwningBlock().getAccessControl() : stb.getAccessControl());
     }
 

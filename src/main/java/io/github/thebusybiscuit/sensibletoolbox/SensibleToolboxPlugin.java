@@ -227,7 +227,7 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
         try {
             LocationManager.getManager().load();
         } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "An Error occured while loading Locations...", e);
+            getLogger().log(Level.SEVERE, "An Error occurred while loading Locations...", e);
             setEnabled(false);
             return;
         }
@@ -293,11 +293,11 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
 
             // Looks like you are using an unsupported Minecraft Version
             getLogger().log(Level.SEVERE, "#############################################");
-            getLogger().log(Level.SEVERE, "### SensibleToolbox was not installed correctly!");
-            getLogger().log(Level.SEVERE, "### You are using the wrong version of Minecraft!");
+            getLogger().log(Level.SEVERE, "### STB 无法正常加载");
+            getLogger().log(Level.SEVERE, "### 原因: 错误的 Minecraft 版本！");
             getLogger().log(Level.SEVERE, "###");
-            getLogger().log(Level.SEVERE, "### You are using Minecraft v1.{0}", majorVersion);
-            getLogger().log(Level.SEVERE, "### but SensibleToolbox v{0} requires you to be using", getDescription().getVersion());
+            getLogger().log(Level.SEVERE, "### 你正在使用 Minecraft v1.{0}", majorVersion);
+            getLogger().log(Level.SEVERE, "### 但 STB 仅支持 v{0} ", getDescription().getVersion());
             getLogger().log(Level.SEVERE, "### Minecraft {0}", String.join(" / ", getSupportedVersions()));
             getLogger().log(Level.SEVERE, "#############################################");
             return true;
@@ -484,7 +484,7 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
 
         if (pLib instanceof ProtocolLib && pLib.isEnabled()) {
             protocolLibEnabled = true;
-            Debugger.getInstance().debug("Hooked ProtocolLib v" + pLib.getDescription().getVersion());
+            Debugger.getInstance().debug("已适配 ProtocolLib v" + pLib.getDescription().getVersion());
         }
 
         if (protocolLibEnabled) {
@@ -492,8 +492,8 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
                 ItemGlow.init(this);
             }
         } else {
-            LogUtils.warning("ProtocolLib not detected - some functionality is reduced:");
-            LogUtils.warning("No glowing items, Reduced particle effects, Sound Muffler item disabled");
+            LogUtils.warning("未找到 ProtocolLib - 一些功能将被禁用");
+            LogUtils.warning("荧光物品, 粒子效果, 降噪机");
         }
     }
 

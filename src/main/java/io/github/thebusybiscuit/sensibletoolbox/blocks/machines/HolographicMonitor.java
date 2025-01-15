@@ -34,12 +34,12 @@ public class HolographicMonitor extends BaseSTBBlock {
 
     @Override
     public String getItemName() {
-        return "Holographic Monitor";
+        return "全息能源监视器";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Displays the Net Gain/Loss", "using Holograms" };
+        return new String[] { "使用先进的全息技术", "——显示能源增长与减少" };
     }
 
     @Override
@@ -91,7 +91,7 @@ public class HolographicMonitor extends BaseSTBBlock {
 
         onServerTick();
         this.hologram = DHAPI.createHologram("holo_monitor_" + System.currentTimeMillis(), getLocation().add(0.5, 1.4, 0.5));
-        DHAPI.setHologramLines(hologram, Arrays.asList("Initializing...", "Awaiting data..."));
+        DHAPI.setHologramLines(hologram, Arrays.asList("加载中...", "整理数据..."));
         onServerTick();
     }
 

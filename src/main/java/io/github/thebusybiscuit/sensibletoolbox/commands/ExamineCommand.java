@@ -20,7 +20,7 @@ public class ExamineCommand extends AbstractCommand {
     @Override
     public boolean execute(Plugin plugin, CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            MiscUtil.errorMessage(sender, "This command can't be run from the console.");
+            MiscUtil.errorMessage(sender, "仅玩家可执行此命令!");
             return true;
         }
 

@@ -119,12 +119,12 @@ public class FishingNet extends AbstractProcessingMachine {
 
     @Override
     public String getItemName() {
-        return "Fishing Net";
+        return "鱼网";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Catches Fish" };
+        return new String[] { "一铺，一捕，一网。" };
     }
 
     @Override

@@ -119,7 +119,7 @@ public abstract class AbstractProcessingMachine extends BaseSTBMachine {
      */
     @Nonnull
     public String getProgressMessage() {
-        return ChatColor.GRAY + "Progress: " + getProgressMeter().getProgressPercent() + '%';
+        return ChatColor.GRAY + "进度: " + getProgressMeter().getProgressPercent() + '%';
     }
 
     /**

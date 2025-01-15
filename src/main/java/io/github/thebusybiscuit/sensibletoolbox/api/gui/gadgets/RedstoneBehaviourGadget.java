@@ -25,12 +25,12 @@ public class RedstoneBehaviourGadget extends CyclerGadget<RedstoneBehaviour> {
      *            the GUI slot to display the gadget in
      */
     public RedstoneBehaviourGadget(InventoryGUI gui, int slot) {
-        super(gui, slot, "Redstone Mode");
+        super(gui, slot, "红石信号");
 
-        add(RedstoneBehaviour.IGNORE, ChatColor.GRAY, Material.GUNPOWDER, "Operate regardless of", "redstone signal level");
-        add(RedstoneBehaviour.HIGH, ChatColor.RED, Material.REDSTONE, "Require a redstone", "signal to operate");
-        add(RedstoneBehaviour.LOW, ChatColor.YELLOW, Material.GLOWSTONE_DUST, "Require no redstone", "signal to operate");
-        add(RedstoneBehaviour.PULSED, ChatColor.DARK_AQUA, Material.LAPIS_LAZULI, "Operate once per", "redstone pulse");
+        add(RedstoneBehaviour.IGNORE, ChatColor.GRAY, Material.GUNPOWDER, "忽略红石信号");
+        add(RedstoneBehaviour.HIGH, ChatColor.RED, Material.REDSTONE, "需要高红石信号");
+        add(RedstoneBehaviour.LOW, ChatColor.YELLOW, Material.GLOWSTONE_DUST, "需要低红石信号");
+        add(RedstoneBehaviour.PULSED, ChatColor.DARK_AQUA, Material.LAPIS_LAZULI, "需要持续高低红石信号");
         setInitialValue(gui.getOwningBlock().getRedstoneBehaviour());
     }
 

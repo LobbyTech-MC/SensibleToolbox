@@ -14,7 +14,7 @@ public class GlobalEnderHolder extends STBEnderStorageHolder {
 
     @Override
     public String getInventoryTitle() {
-        return ChatColor.DARK_PURPLE + "E-Storage " + ChatColor.DARK_RED + "[Global " + UnicodeSymbol.NUMBER.toUnicode() + getFrequency() + "]";
+        return ChatColor.DARK_PURPLE + "电子存储 " + ChatColor.DARK_RED + "[公开 " + UnicodeSymbol.NUMBER.toUnicode() + getFrequency() + "]";
     }
 
     @Override
@@ -25,7 +25,7 @@ public class GlobalEnderHolder extends STBEnderStorageHolder {
 
     @Override
     public String toString() {
-        return "Global Ender Storage #" + getFrequency();
+        return "公开电子存储 #" + getFrequency();
     }
 
     @Override

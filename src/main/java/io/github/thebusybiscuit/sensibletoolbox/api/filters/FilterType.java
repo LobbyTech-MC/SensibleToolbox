@@ -15,7 +15,7 @@ public enum FilterType {
     /**
      * Match only the item's {@link Material}.
      */
-    MATERIAL("Filter by Material"),
+    MATERIAL("仅筛选物品类型"),
 
     /**
      * Match the item's {@link Material}, data byte and item meta (sometimes
@@ -23,7 +23,7 @@ public enum FilterType {
      * distinguished from a diamond sword with Looting II, even if their
      * damage values are identical.
      */
-    ITEM_META("Filter by Material/Block Meta/Item Meta");
+    ITEM_META("筛选全部");
 
     private final String label;
 

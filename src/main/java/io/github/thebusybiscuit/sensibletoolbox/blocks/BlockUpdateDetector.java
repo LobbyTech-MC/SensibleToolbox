@@ -75,17 +75,17 @@ public class BlockUpdateDetector extends BaseSTBBlock {
 
     @Override
     public String getItemName() {
-        return "Block Update Detector";
+        return "节制型侦测器";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Emits a redstone pulse when", " an adjacent block updates", "R-click block: " + ChatColor.WHITE + "configure BUD" };
+        return new String[] { "相邻方块更新时发出红石信号", "右键以" + ChatColor.WHITE + "配置此机器" };
     }
 
     @Override
     public String[] getExtraLore() {
-        return new String[] { "Pulse duration: " + ChatColor.GOLD + getDuration() + " ticks", "Sleep time after pulse: " + ChatColor.GOLD + getQuiet() + " ticks", };
+        return new String[] { "持续时间: " + ChatColor.GOLD + getDuration() + " 刻", "休眠时间: " + ChatColor.GOLD + getQuiet() + " 刻", };
     }
 
     @Override
@@ -103,7 +103,7 @@ public class BlockUpdateDetector extends BaseSTBBlock {
     public void onBlockPhysics(BlockPhysicsEvent e) {
         Block b = e.getBlock();
         long timeNow = getLocation().getWorld().getFullTime();
-        Debugger.getInstance().debug(this + ": BUD physics: time=" + timeNow + ", lastPulse=" + lastPulse + ", duration=" + getDuration());
+        Debugger.getInstance().debug(this + ": STB侦测器更新: time=" + timeNow + ", lastPulse=" + lastPulse + ", duration=" + getDuration());
 
         if (timeNow - lastPulse > getDuration() + getQuiet() && isRedstoneActive()) {
             // emit a signal for one or more ticks
@@ -132,12 +132,12 @@ public class BlockUpdateDetector extends BaseSTBBlock {
     protected InventoryGUI createGUI() {
         InventoryGUI gui = GUIUtil.createGUI(this, 9, ChatColor.DARK_PURPLE + getItemName());
 
-        gui.addGadget(new NumericGadget(gui, 1, "Pulse Duration", new IntRange(1, Integer.MAX_VALUE), getDuration(), 10, 1, newValue -> {
+        gui.addGadget(new NumericGadget(gui, 1, "持续时间", new IntRange(1, Integer.MAX_VALUE), getDuration(), 10, 1, newValue -> {
             setDuration(newValue);
             return true;
         }));
 
-        gui.addGadget(new NumericGadget(gui, 0, "Sleep Time after Pulse", new IntRange(0, Integer.MAX_VALUE), getQuiet(), 10, 1, newValue -> {
+        gui.addGadget(new NumericGadget(gui, 0, "休眠时间", new IntRange(0, Integer.MAX_VALUE), getQuiet(), 10, 1, newValue -> {
             setQuiet(newValue);
             return true;
         }));

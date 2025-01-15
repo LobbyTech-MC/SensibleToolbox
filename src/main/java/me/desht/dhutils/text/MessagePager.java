@@ -306,7 +306,7 @@ public class MessagePager {
                 }
             }
 
-            String footer = getPageCount() > 1 ? "\u2524 Use " + pageCmd + " to see other pages \u251c" : "";
+            String footer = getPageCount() > 1 ? "\u2524 使用 " + pageCmd + " 以查看更多 \u251c" : "";
             MiscUtil.rawMessage(p, ChatColor.GREEN + "\u2514" + getCenteredLabel(footer, 2));
 
             setPage(pageNum);

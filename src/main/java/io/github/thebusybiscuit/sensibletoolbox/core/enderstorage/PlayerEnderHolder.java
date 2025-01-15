@@ -50,12 +50,12 @@ public class PlayerEnderHolder extends STBEnderStorageHolder {
 
     @Override
     public String getInventoryTitle() {
-        return ChatColor.DARK_PURPLE + "E-Storage " + ChatColor.DARK_RED + "[Personal " + UnicodeSymbol.NUMBER.toUnicode() + getFrequency() + "]";
+        return ChatColor.DARK_PURPLE + "电子存储 " + ChatColor.DARK_RED + "[私人 " + UnicodeSymbol.NUMBER.toUnicode() + getFrequency() + "]";
     }
 
     @Override
     public String toString() {
-        return "Player Ender Storage " + p.getName() + "#" + getFrequency();
+        return "私人电子存储 " + p.getName() + "#" + getFrequency();
     }
 
     @Override
