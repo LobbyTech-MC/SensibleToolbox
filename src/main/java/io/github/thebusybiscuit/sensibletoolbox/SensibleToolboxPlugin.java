@@ -11,7 +11,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Preconditions;
 import io.github.thebusybiscuit.sensibletoolbox.listeners.ExplosiveToolListener;
+import net.guizhanss.guizhanlib.updater.GuizhanBuildsUpdater;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -256,9 +258,14 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
             new SlimefunBridge(this);
         }
 
-        if (getConfig().getBoolean("options.auto-update") && getDescription().getVersion().startsWith("DEV - ")) {
-            PluginUpdater<PrefixedVersion> updater = new GitHubBuildsUpdater(this, getFile(), "Slimefun/SensibleToolbox/master");
-            updater.start();
+        if (getConfig().getBoolean("options.auto-update") && getDescription().getVersion().startsWith("Build")) {
+            if (Bukkit.getPluginManager().isPluginEnabled("GuizhanLibPlugin")) {
+                try {
+                    GuizhanUpdater.start(this, getFile(), "SlimefunGuguProject", "SensibleToolboxReborn", "master");
+                } catch (NoClassDefFoundError | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         MiscUtil.setColoredConsole(getConfig().getBoolean("colored_console"));

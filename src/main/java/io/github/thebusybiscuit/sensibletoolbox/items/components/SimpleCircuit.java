@@ -20,12 +20,12 @@ public class SimpleCircuit extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Simple Electronic Circuit";
+        return "简易电路板";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Used as a component in", "various machinery " };
+        return new String[] { "用于制作各种机械" };
     }
 
     @Override

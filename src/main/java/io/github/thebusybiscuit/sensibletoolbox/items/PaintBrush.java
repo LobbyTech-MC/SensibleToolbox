@@ -104,12 +104,12 @@ public class PaintBrush extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Paintbrush";
+        return "画笔";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Paints colorable blocks:", " Wool, carpet, stained clay/glass", "R-click block: paint up to " + getMaxBlocksAffected() + " blocks", UnicodeSymbol.ARROW_UP.toUnicode() + " + R-click block: paint block", UnicodeSymbol.ARROW_UP.toUnicode() + " + R-click air: empty brush", "R-click paintings: Change artwork", };
+        return new String[] { "支持对羊毛, 地毯, 陶瓦, 玻璃，混凝土染色", "右键方块对 " + getMaxBlocksAffected() + " 个方块染色", UnicodeSymbol.ARROW_UP.toUnicode() + " 右键以对方块染色", UnicodeSymbol.ARROW_UP.toUnicode() + " 右键空气以清除画笔", "右键画以改变画作", };
     }
 
     @Override
@@ -235,7 +235,7 @@ public class PaintBrush extends BaseSTBItem {
                 openArtworkMenu(e.getPlayer(), e.getHand(), painting);
             } else {
                 Location l = ent.getLocation().add(0, -art.getBlockHeight() / 2.0, 0);
-                HoloMessage.popup(e.getPlayer(), l, 5, ChatColor.RED + "Not enough paint!");
+                HoloMessage.popup(e.getPlayer(), l, 5, ChatColor.RED + "没有足够的染料");
             }
         } else if (ent instanceof Wolf) {
             Wolf wolf = (Wolf) e;
@@ -327,11 +327,11 @@ public class PaintBrush extends BaseSTBItem {
         Painting editingPainting = painting;
 
         Art[] other = getOtherArt(painting.getArt());
-        InventoryGUI menu = GUIUtil.createGUI(p, this, 9, ChatColor.DARK_PURPLE + "Select Artwork");
+        InventoryGUI menu = GUIUtil.createGUI(p, this, 9, ChatColor.DARK_PURPLE + "选择画作");
 
         int i = 0;
         for (Art art : other) {
-            menu.addGadget(new ButtonGadget(menu, i, new CustomItemStack(Material.PAINTING, art.name(), "", "&7Click to select this artwork"), new Runnable() {
+            menu.addGadget(new ButtonGadget(menu, i, new CustomItemStack(Material.PAINTING, art.name(), "", "&7点击选择画作"), new Runnable() {
 
                 @Override
                 public void run() {

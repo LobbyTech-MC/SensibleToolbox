@@ -66,12 +66,12 @@ public class PVCell extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "PV Cell";
+        return "光伏电池";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Photovoltaic Cell", "Insert into a solar generator", "R-click solar: insert directly" };
+        return new String[] { "这是一个光伏电池", "可以插入太阳能发电机", "右键太阳能发电机以插入" };
     }
 
     @Override
@@ -148,9 +148,9 @@ public class PVCell extends BaseSTBItem {
         int sec = lifespan / 20;
 
         if (sec >= 60) {
-            return ChatColor.WHITE + "Lifetime: " + ChatColor.YELLOW.toString() + (sec / 60) + " min";
+            return ChatColor.WHITE + "可用时间: " + ChatColor.YELLOW.toString() + (sec / 60) + " 分钟";
         } else {
-            return ChatColor.WHITE + "Lifetime: " + ChatColor.YELLOW.toString() + sec + " sec";
+            return ChatColor.WHITE + "可用时间: " + ChatColor.YELLOW.toString() + sec + " 秒";
         }
     }
 }

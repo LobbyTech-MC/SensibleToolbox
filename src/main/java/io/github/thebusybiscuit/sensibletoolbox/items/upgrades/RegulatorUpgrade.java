@@ -22,12 +22,12 @@ public class RegulatorUpgrade extends AbstractMachineUpgrade {
 
     @Override
     public String getItemName() {
-        return "Regulator Upgrade";
+        return "效率升级";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Adds intelligence to machines", "for more efficient resource", "usage.  Effect varies by machine." };
+        return new String[] { "提升机器的效率", "以更有效的利用资源", "效果因机器而异" };
     }
 
     @Override

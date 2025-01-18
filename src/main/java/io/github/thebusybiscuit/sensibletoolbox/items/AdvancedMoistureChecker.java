@@ -15,7 +15,7 @@ public class AdvancedMoistureChecker extends MoistureChecker {
 
     @Override
     public String getItemName() {
-        return "Advanced Moisture Checker";
+        return "高级成熟度检查器";
     }
 
     @Override

@@ -27,12 +27,12 @@ public class HyperSenderModule extends AdvancedSenderModule {
 
     @Override
     public String getItemName() {
-        return "I.R. Mod: Hypersender";
+        return "终极发送升级";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Insert into an Item Router", "Sends items to a linked Receiver Module", "anywhere on any world", "L-Click item router with installed", " Receiver Module: " + ChatColor.WHITE + " Link Hyper Sender", UnicodeSymbol.ARROW_UP.toUnicode() + " + L-Click anywhere: " + ChatColor.WHITE + " Unlink Hyper Sender" };
+        return new String[] { "可放入物品运输器", "将物品运输至任意接收升级", "左键已插入接收升级的物品运输器: " + ChatColor.WHITE + " 连接终极发送升级", UnicodeSymbol.ARROW_UP.toUnicode() + " 左键其他: " + ChatColor.WHITE + " 取消连接" };
     }
 
     @Override

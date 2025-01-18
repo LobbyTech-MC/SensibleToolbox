@@ -131,12 +131,12 @@ public class ItemRouter extends BaseSTBBlock implements STBInventoryHolder {
 
     @Override
     public String getItemName() {
-        return "物品路由器";
+        return "物品运输器";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "路由物品. ", "放入路由模块以使用", "右键以" + ChatColor.WHITE + "配置此机器" };
+        return new String[] { "用于融合升级. ", "放入升级模块以使用", "右键以" + ChatColor.WHITE + "配置此机器" };
     }
 
     @Override

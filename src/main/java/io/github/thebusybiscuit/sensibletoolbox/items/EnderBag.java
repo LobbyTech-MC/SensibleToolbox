@@ -54,17 +54,17 @@ public class EnderBag extends BaseSTBItem implements EnderTunable {
 
     @Override
     public String getItemName() {
-        return "Ender Bag";
+        return "下界背包";
     }
 
     @Override
     public String getDisplaySuffix() {
-        return (isGlobal() ? "Global" : "Personal") + " " + UnicodeSymbol.NUMBER.toUnicode() + getEnderFrequency();
+        return (isGlobal() ? "公开" : "私有") + " " + UnicodeSymbol.NUMBER.toUnicode() + getEnderFrequency();
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "R-click: open bag", UnicodeSymbol.ARROW_UP.toUnicode() + " + R-click ender box: sync " + UnicodeSymbol.NUMBER.toUnicode() };
+        return new String[] { "右键打开背包 ", UnicodeSymbol.ARROW_UP.toUnicode() + " 右键下界箱以链接 " + UnicodeSymbol.NUMBER.toUnicode() };
     }
 
     @Override

@@ -50,7 +50,7 @@ public class EjectorUpgrade extends AbstractMachineUpgrade implements Directiona
 
     @Override
     public String getItemName() {
-        return "Ejector Upgrade";
+        return "输出升级";
     }
 
     @Override
@@ -60,7 +60,7 @@ public class EjectorUpgrade extends AbstractMachineUpgrade implements Directiona
 
     @Override
     public String[] getLore() {
-        return new String[] { "Place in a machine block ", "Auto-ejects finished items", "L-Click block: set ejection direction" };
+        return new String[] { "放置在机器中 ", "自动输出物品", "左键方块设置输出方向" };
     }
 
     @Override
@@ -96,10 +96,10 @@ public class EjectorUpgrade extends AbstractMachineUpgrade implements Directiona
     }
 
     private InventoryGUI createGUI(Player p) {
-        InventoryGUI gui = GUIUtil.createGUI(p, this, 27, ChatColor.DARK_RED + "Ejector Configuration");
-        gui.addLabel("Module Direction", DIRECTION_LABEL_SLOT, null, "Set the direction in which the", "machine should eject finished items");
+        InventoryGUI gui = GUIUtil.createGUI(p, this, 27, ChatColor.DARK_RED + "输出升级配置");
+        gui.addLabel("方向", DIRECTION_LABEL_SLOT, null, "机器工作完毕后，物品输出的方向");
 
-        ItemStack texture = GUIUtil.makeTexture(getMaterial(), "Ejection Direction");
+        ItemStack texture = GUIUtil.makeTexture(getMaterial(), "输出方向");
         DirectionGadget dg = new DirectionGadget(gui, 13, texture);
         dg.setAllowSelf(false);
         gui.addGadget(dg);

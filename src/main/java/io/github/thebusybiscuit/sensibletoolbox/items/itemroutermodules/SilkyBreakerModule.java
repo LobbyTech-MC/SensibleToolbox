@@ -27,12 +27,12 @@ public class SilkyBreakerModule extends BreakerModule {
 
     @Override
     public String getItemName() {
-        return "I.R. Mod: Silky Breaker";
+        return "精准破坏升级";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Insert into an Item Router", "Silk touches a block in its", " configured direction and", " pulls it into the item router.", "NOTE: must use a Silk Touch", "  enchanted book to craft." };
+        return new String[] { "可放入物品运输器", "使用精准采集破坏指向的方块并输出至机器", "需要使用精准采集附魔书以制作!" };
     }
 
     @Override

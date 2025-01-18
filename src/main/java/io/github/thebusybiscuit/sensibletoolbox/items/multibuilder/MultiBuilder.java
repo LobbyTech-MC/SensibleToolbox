@@ -110,16 +110,16 @@ public class MultiBuilder extends BaseSTBItem implements Chargeable {
 
     @Override
     public String getItemName() {
-        return "Multibuilder";
+        return "多功能建造器";
     }
 
     @Override
     public String[] getLore() {
         return switch (getMode()) {
             case BUILD ->
-                new String[]{"L-click block: " + ChatColor.WHITE + "preview", "R-click block: " + ChatColor.WHITE + "build", UnicodeSymbol.ARROW_UP.toUnicode() + " + R-click block: " + ChatColor.WHITE + "build one", ChatColor.YELLOW + UnicodeSymbol.ARROW_UP.toUnicode() + " + R-click air: Exchange mode"};
+                new String[]{"左键方块: " + ChatColor.WHITE + "预览", "右键方块: " + ChatColor.WHITE + "建造", UnicodeSymbol.ARROW_UP.toUnicode() + " 右键方块: " + ChatColor.WHITE + "建造一个", ChatColor.YELLOW + UnicodeSymbol.ARROW_UP.toUnicode() + " 右键空气: 切换模式"};
             case EXCHANGE ->
-                new String[]{"L-click block: " + ChatColor.WHITE + "set target block", "R-click block: " + ChatColor.WHITE + "swap many blocks", UnicodeSymbol.ARROW_UP.toUnicode() + " + R-click block: " + ChatColor.WHITE + "swap one block", ChatColor.YELLOW + UnicodeSymbol.ARROW_UP.toUnicode() + " + R-click air: Build mode"};
+                new String[]{"左键方块: " + ChatColor.WHITE + "设置模板方块", "右键方块 " + ChatColor.WHITE + "交换方块", UnicodeSymbol.ARROW_UP.toUnicode() + " 右键方块: " + ChatColor.WHITE + "交换一个方块", ChatColor.YELLOW + UnicodeSymbol.ARROW_UP.toUnicode() + " 右键空气: 切换模式"};
         };
     }
 
@@ -153,10 +153,10 @@ public class MultiBuilder extends BaseSTBItem implements Chargeable {
     public String getDisplaySuffix() {
         switch (getMode()) {
             case BUILD:
-                return "Build";
+                return "建造";
             case EXCHANGE:
                 String s = material == null ? "" : ItemUtils.getItemName(new ItemStack(material));
-                return "Exchange " + s;
+                return "交换 " + s;
             default:
                 return null;
         }
@@ -221,7 +221,7 @@ public class MultiBuilder extends BaseSTBItem implements Chargeable {
 
             int amount = howMuchDoesPlayerHave(p, material);
             if (amount <= 0) {
-                p.sendMessage(ChatColor.RED + "You do not have any " + ChatColor.WHITE + material.name() + ChatColor.RED + " to exchange!");
+                p.sendMessage(ChatColor.RED + "你没有足够的 " + ChatColor.WHITE + material.name() + ChatColor.RED + " 去交换!");
                 return;
             }
 
@@ -392,7 +392,7 @@ public class MultiBuilder extends BaseSTBItem implements Chargeable {
 
         if (p.getGameMode() != GameMode.CREATIVE) {
             if (getCharge() < chargeNeeded) {
-                p.sendMessage(ChatColor.RED + "Not enough charge to build!");
+                p.sendMessage(ChatColor.RED + "能量不足!");
                 return;
             }
 
@@ -413,7 +413,7 @@ public class MultiBuilder extends BaseSTBItem implements Chargeable {
             }
 
             String direction = STBUtil.getDirectionString(face);
-            p.sendMessage(ChatColor.YELLOW + "Built " + ChatColor.WHITE + actualBlocks.size() + ChatColor.YELLOW + " blocks " + direction);
+            p.sendMessage(ChatColor.YELLOW + "建造了 " + ChatColor.WHITE + actualBlocks.size() + ChatColor.YELLOW + " 个方块 " + direction);
         }, 2L);
 
         updateHeldItemStack(p, hand);

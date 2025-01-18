@@ -22,7 +22,7 @@ public class DiamondCombineHoe extends CombineHoe {
 
     @Override
     public String getItemName() {
-        return "Diamond Combine Hoe";
+        return "钻质多功能锄";
     }
 
     @Override

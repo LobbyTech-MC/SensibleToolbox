@@ -64,12 +64,12 @@ public class LandMarker extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Land Marker";
+        return "区域标记器";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Stores positions via Sensible GPS", "R-Click block: store position", "R-Click air: clear position" };
+        return new String[] { "通过 STB GPS 存储位置", "右键方块以标记位置", "右键空气以清除位置" };
     }
 
     @Override

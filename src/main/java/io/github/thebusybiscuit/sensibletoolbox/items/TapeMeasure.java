@@ -57,18 +57,18 @@ public class TapeMeasure extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Tape Measure";
+        return "测距尺";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { UnicodeSymbol.ARROW_UP.toUnicode() + " + R-click block: set anchor", "R-click block: get measurement" };
+        return new String[] { UnicodeSymbol.ARROW_UP.toUnicode() + "右键第一个方块以设置锚点", "右键第二个方块开始测距" };
     }
 
     @Override
     public String[] getExtraLore() {
         if (world != null) {
-            return new String[] { ChatColor.YELLOW + "Anchor point: " + ChatColor.WHITE + world + "," + x + "," + y + "," + z };
+            return new String[] { ChatColor.YELLOW + "锚点: " + ChatColor.WHITE + world + "," + x + "," + y + "," + z };
         } else {
             return new String[0];
         }
@@ -89,14 +89,14 @@ public class TapeMeasure extends BaseSTBItem {
             if (e.getPlayer().isSneaking()) {
                 setAnchor(e.getClickedBlock());
                 updateHeldItemStack(e.getPlayer(), e.getHand());
-                MiscUtil.statusMessage(e.getPlayer(), ChatColor.YELLOW + "Tape measure anchor point set.");
+                MiscUtil.statusMessage(e.getPlayer(), ChatColor.YELLOW + "已设置锚点");
             } else {
                 makeMeasurement(e.getPlayer(), e.getClickedBlock());
             }
         } else if (e.getAction() == Action.RIGHT_CLICK_AIR) {
             setAnchor(null);
             updateHeldItemStack(e.getPlayer(), e.getHand());
-            MiscUtil.statusMessage(e.getPlayer(), ChatColor.YELLOW + "Tape measure anchor point cleared.");
+            MiscUtil.statusMessage(e.getPlayer(), ChatColor.YELLOW + "已清除锚点");
         }
 
         e.setCancelled(true);
@@ -117,7 +117,7 @@ public class TapeMeasure extends BaseSTBItem {
 
             int totalBlocks = xOff + yOff + zOff + 1; // +1 to count the clicked block
 
-            MiscUtil.statusMessage(p, String.format(ChatColor.YELLOW + "Measurement: " + ChatColor.WHITE + "Distance: X=%d Y=%d Z=%d, Total=%d", xOff, yOff, zOff, totalBlocks));
+            MiscUtil.statusMessage(p, String.format(ChatColor.YELLOW + "测量结果: " + ChatColor.WHITE + "距离: X: %d Y: %d Z: %d, 共: %d 个方块", xOff, yOff, zOff, totalBlocks));
         }
     }
 

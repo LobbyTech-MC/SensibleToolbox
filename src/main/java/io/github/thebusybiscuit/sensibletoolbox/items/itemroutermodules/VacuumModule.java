@@ -45,12 +45,12 @@ public class VacuumModule extends DirectionalItemRouterModule {
 
     @Override
     public String getItemName() {
-        return "I.R. Mod: Vacuum";
+        return "拾荒升级";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Insert into an Item Router", "Sucks up items within a " + RADIUS + "-block radius" };
+        return new String[] { "可放入物品运输器", "捡起 " + RADIUS + " 格内的物品" };
     }
 
     @Override

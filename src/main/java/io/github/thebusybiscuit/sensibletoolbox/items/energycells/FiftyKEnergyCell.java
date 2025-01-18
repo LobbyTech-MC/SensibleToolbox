@@ -35,7 +35,7 @@ public class FiftyKEnergyCell extends EnergyCell {
 
     @Override
     public String getItemName() {
-        return "50K Energy Cell";
+        return "50K 能量单元";
     }
 
     @Override

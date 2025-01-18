@@ -116,9 +116,9 @@ public class EnderLeash extends BaseSTBItem {
             if (capturedConf == null || !capturedConf.contains("type")) {
                 Animals animal = (Animals) target;
                 if (!checkLeash(animal)) {
-                    STBUtil.complain(p, "Can't capture a leashed animal!");
+                    STBUtil.complain(p, "无法捕捉被拴住的动物!");
                 } else if (!verifyOwner(p, animal)) {
-                    STBUtil.complain(p, "This animal is owned by someone else!");
+                    STBUtil.complain(p, "这个动物已经有主人了!");
                 } else {
                     capturedConf = freezeEntity(animal);
                     target.getWorld().playEffect(target.getLocation(), Effect.ENDER_SIGNAL, 0);
@@ -127,7 +127,7 @@ public class EnderLeash extends BaseSTBItem {
                 }
             } else {
                 // workaround CB bug to ensure client is updated properly
-                STBUtil.complain(e.getPlayer(), "Ender Leash already has a captured animal");
+                STBUtil.complain(e.getPlayer(), "你已经捕捉了一个动物！");
                 p.updateInventory();
             }
         }

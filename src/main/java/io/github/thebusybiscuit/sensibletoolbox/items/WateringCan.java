@@ -183,7 +183,7 @@ public class WateringCan extends BaseSTBItem {
         }
 
         if (floodWarning) {
-            MiscUtil.alertMessage(p, "This soil is getting very wet!");
+            MiscUtil.alertMessage(p, "这个耕地已经被浸润了!");
             floodWarning = false;
         }
     }
@@ -206,7 +206,7 @@ public class WateringCan extends BaseSTBItem {
         if (p.getFireTicks() > 0 && getWaterLevel() >= FIRE_EXTINGUISH_AMOUNT) {
             p.setFireTicks(0);
             setWaterLevel(getWaterLevel() - FIRE_EXTINGUISH_AMOUNT);
-            MiscUtil.alertMessage(p, "The fire is out!");
+            MiscUtil.alertMessage(p, "火焰已消散!");
         }
 
         p.getInventory().setItemInMainHand(toItemStack());

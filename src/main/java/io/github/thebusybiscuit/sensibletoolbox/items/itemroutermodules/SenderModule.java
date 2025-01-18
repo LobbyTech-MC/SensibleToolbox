@@ -31,12 +31,12 @@ public class SenderModule extends DirectionalItemRouterModule {
 
     @Override
     public String getItemName() {
-        return "I.R. Mod: Sender";
+        return "发送升级";
     }
 
     @Override
     public String[] getLore() {
-        return makeDirectionalLore("Insert into an Item Router", "Sends items elsewhere:", " - An adjacent inventory OR", " - Item Router with Receiver Module:", "   within 10 blocks, with line of sight");
+        return makeDirectionalLore("可插入物品运输器", "可发送物品到:", " - 相邻的机器", " - 在视线中10格内的已插入接收升级的物品运输器");
     }
 
     @Override

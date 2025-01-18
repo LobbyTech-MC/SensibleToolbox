@@ -1,130 +1,132 @@
-请注意，此页面使用 AI 翻译，可能存在不准确或错误的地方。欢迎提交 PR 帮助我们改进翻译质量。
+如有 Bug 或建议，请优先提交到汉化版[问题追踪器](https://github.com/SlimefunGuguProject/SensibleToolboxReborn/issues)
+
+以下是 README.md 原文:
 
 <p align="center">
     <img src="https://github.com/user-attachments/assets/886e7e3c-8231-42cb-bb9e-3bf687b4ade7" alt="STBR"/>
 </p>
 
-### Sensible Toolbox Reborn (STBR) 是原始 Sensible Toolbox 插件的延续和现代化版本。该插件最初由 [@desht](https://github.com/desht) 在 2014 年开发，此分支已得到复兴，以使其与现代 Minecraft 版本保持同步，并包括各种改进和修复。原始存储库可以在[此处](https://github.com/desht/sensibletoolbox)找到。
+### Sensible Toolbox Reborn (STBR) is a continuation and modernization of the original Sensible Toolbox plugin. Originally developed in 2014 by [@desht](https://github.com/desht), this fork has been revitalized to bring it in line with modern Minecraft versions and includes various improvements and fixes. The original repository can be found [here](https://github.com/desht/sensibletoolbox).
 > [!TIP]
-> 此分支在保持插件核心原则的同时引入了许多新功能和增强功能。无论你是在自动化农场，还是构建复杂系统，STBR 都将继续提供用户友好的体验！
+> This fork introduces many new features and enhancements while staying true to the plugin’s core principles. Whether you're automating farms, or building complex systems, STBR will continue provide a user-friendly experience!
 >
-> ### 支持的 MC 版本：1.20+
+> ### Supported MC Versions: 1.20+
 >
-## :gear: 关键功能和更新
+## :gear: Key Features and Updates
 > [!IMPORTANT]
-> 以下是 Sensible Toolbox Reborn 的第一个版本中引入的一些主要改进和修复：
+> Here are some major improvements and fixes introduced in the first version of Sensible Toolbox Reborn:
 >
-> 添加的拉取请求：[#44](https://github.com/Slimefun/SensibleToolbox/pull/44)，[#60](https://github.com/Slimefun/SensibleToolbox/pull/60)，[#85](https://github.com/Slimefun/SensibleToolbox/pull/85)，[#89](https://github.com/Slimefun/SensibleToolbox/pull/89)，[#90](https://github.com/Slimefun/SensibleToolbox/pull/90)，[#91](https://github.com/Slimefun/SensibleToolbox/pull/91)，[#120](https://github.com/Slimefun/SensibleToolbox/pull/120)，[#121](https://github.com/Slimefun/SensibleToolbox/pull/121)
+> Pull Requests added: [#44](https://github.com/Slimefun/SensibleToolbox/pull/44), [#60](https://github.com/Slimefun/SensibleToolbox/pull/60), [#85](https://github.com/Slimefun/SensibleToolbox/pull/85), [#89](https://github.com/Slimefun/SensibleToolbox/pull/89), [#90](https://github.com/Slimefun/SensibleToolbox/pull/90), [#91](https://github.com/Slimefun/SensibleToolbox/pull/91), [#120](https://github.com/Slimefun/SensibleToolbox/pull/120), [#121](https://github.com/Slimefun/SensibleToolbox/pull/121)
 > ```
-> 神圣方块：
-> - 如果用户处于创造模式，则方块不再被移除
-> 自动建造器：
-> - 告示牌正确更新且外观更好
-> - 当机器耗尽电力或材料，或遇到无法破坏的方块时，会添加停止状态；在 GUI 和告示牌中可视化
-> - 修复了清除模式的方块硬度检查，并移除了液体
-> - 添加了新粒子，以便更好地可视化机器运行时的位置
-> - 修复了一些 UI 元素
-> 自动农场：
-> - 修复了半径检查
-> - 修复了机器工作区域和充电问题
-> - 自动农场现在可以正确收获材料并设置正确的作物年龄
-> 自动农场 MK II：
-> - 修复了半径检查
-> - 现在可以收获甜浆果
-> 自动伐木机：
-> - 修复了半径检查
-> - 正确移除并重植树苗
-> BSU：
-> - 修复了主要复制问题 [#85]
-> 组合锄头：
-> - 说明文字已修复，更加一致
-> - 种子袋再次可用
-> - 如果存在（异国情调的花园，耕作），组合锄头将清除树叶方块存储数据
-> - 权限检查
-> - 新组合锄头：下界合金；7x7 的类似合成过程
-> 电梯：
-> - 现在可以在 y0 以下工作并正确获取最低世界高度
-> 地狱农场：
-> - 修复了半径检查
-> 多建造器：
-> - 当使用能量单元时，充电速率从 100 提高到 500
-> - 构建模式：
->   - 以前的构建模式使用“洪水填充”方法，该方法非常不稳定且有点令人困惑。构建模式现在将在你面对的面上构建一排方块。非常适合构建列或行，这与其他插件中的类似“建造魔杖”不同。
->   - 如果放置的方块会与玩家相交，则构建模式中的方块现在将停止放置
->   - 添加了消息，以在构建时指示构建了多少个方块以及方向
-> - 交换模式：
->   - 现在交换使用类似于构建模式的线性机制
->   - 如果玩家没有所需的方块进行交换，则添加消息通知玩家
-> 画笔/滚筒：
-> - 用油漆罐右击填充画笔或滚筒时，将不再打开 GUI
-> 红石时钟：
-> - 打开 GUI 时，现在取消了右击事件
-> 发送模块：
-> - 修复了向诸如箱子和漏斗等方块实体发送物品的问题
-> 速度升级（机器）：
-> - 现在可以应用于所有自动农场机器
-> 卷尺：
-> - 输出文本现在显示从锚点到测量总块数的距离
-> 其他：
-> - 修复了众多漏洞
-> - 移除了 > PlayerItemHeldEvent 的取消
-> - 土地标记器不再适用于 STB 机器
-> - 修复了 Vanilla 库存插入问题
-> - 现在发光物品上不再显示附魔
-> - 将一些物品从“方块”类别移动到“物品”类别
-> - 总体改善了告示牌的更新
-> - 现在发光效果适用于著名工具和 IR 模块
-> - 物品说明文字和消息的颜色更加一致
+> Angelic Block:
+> - Block is no longer removed if user is in Creative mode
+> Auto Builder:
+> - Signs properly update & look better
+> - Halted status added when machine runs out of power or materials, or hits an unbreakable block; visualizes in GUI and sign
+> - Clear mode's block hardness check fixed, and removes liquid
+> - New particles added for better visualization of the machine's position when running
+> - UI elements fixed up a bit
+> Auto Farm:
+> - Radius check fixed
+> - Machine work area & charge fixed
+> - Auto Farm now properly harvests materials and sets proper crop ages
+> Auto Farm MK II:
+> - Radius check fixed
+> - Sweet Berries can now be harvested
+> Auto Forester:
+> - Radius check fixed
+> - Properly removes & replants saplings
+> BSU:
+> - Major dupe fixed [#85]
+> Combine Hoe:
+> - Lore fixed up, more consistent
+> - Seed bag works again
+> - Combine hoes will clear leaf block storage data in case there's some (Exotic Garden, Cultivation)
+> - Permission checks
+> - New Combine Hoe: Netherite; 7x7' similar crafting process
+> Elevator:
+> - Now works below y0 and properly gets minimum world heights
+> Infernal Farm:
+> - Radius check fixed
+> Multibuilder:
+> - Charge rate buffed 100 -> 500 when using an energy cell
+> - Build Mode:
+>   - Building Mode used to use a "flood fill" method, which was very inconsistent and a bit confusing. Build Mode will now build a line of blocks on the face you're looking at. Great for building columns or rows, which is different from other similar "building wands" from other plugins.
+>   - Blocks placed in build mode will now stop if the blocks would intersect the player
+>   - Messaging added when building to indicate how many blocks are built and what direction
+> - Exchange Mode:
+>   - Exchanging now uses a line-style mechanic, similar to Building Mode
+>   - Messaging added to inform the player if they don't have the required blocks to exchange
+> Paint Brush/Roller:
+> - Right clicking the Paint Can will no longer open the GUI when refilling a brush or roller
+> Redstone Clock:
+> - Right click event now canceled when opening GUI
+> Sender Module:
+> - Fixed sending items to tile entities like chests and hoppers
+> Speed Upgrade (Machine):
+> - Can now be applied to all auto farming machines
+> Tape Measure:
+> - Output text now shows distance from anchor and total blocks in measurement
+> Other:
+> - Numerous exploits fixed
+> - Removed > PlayerItemHeldEvent canceling
+> - Land Markers no longer work on STB machines
+> - Vanilla inventory insertion fixed
+> - Enchantments are now hidden from glowing items
+> - Moved a few items from Blocks category to Items
+> - Sign updating overall has been improved
+> - Glow now applies to notable tools & IR modules
+> - More consistent coloring of item lore & messaging
 > ```
-## 📺 媒体
+## 📺 Media
 
 <details> 
-  <summary>更快的自动农场！如果你的服务器有更高的刻率，或者你有更快的生长方法，现在你可以使用速度升级来跟上节奏！</summary>
+  <summary>Faster Auto farms! If your server has a higher tick rate, or you have a method for quicker growth, you can now keep up with it using Speed upgrades!</summary>
   <img src="https://github.com/user-attachments/assets/1c3a1e78-8965-4e56-a4c0-b3f79ccf53c2">
 </details>
 
 <details> 
-  <summary>使用新的下界合金组合锄头耕地、播种和收获！7x7 的半径意味着你只需点击几下就可以种植大片农场！</summary>
+  <summary>Till, sew, and harvest with the new Netherite Combine Hoe! With a 7x7 radius you'll be you planting massive farms in just a few clicks!</summary>
   <img src="https://github.com/user-attachments/assets/8c087917-2f5a-400d-9861-41e872c01e45">
 </details>
 
 <details> 
-  <summary>使用全新设计的多建造器快速构建列和行！</summary>
+  <summary>Quickly build columns & rows with the newly designed Multibuilder!</summary>
   <img src="https://github.com/user-attachments/assets/8e156f37-589e-4e1f-8807-2c3e5a195a82">
 </details>
 
 <details> 
-  <summary>多建造器的交换模式也已重新设计。轻松快速替换地板和天花板！</summary>
+  <summary>The Exchange Mode of the Multibuilder has also been redesigned. Quickly replace floors and ceilings with ease!</summary>
   <img src="https://github.com/user-attachments/assets/3724e906-d4e7-452a-a5b6-ab75afe78066">
 </details>
 
 <details> 
-  <summary>别忘了用效率附魔来减少耐久度损失，用锋利附魔来覆盖更大区域，以增强多建造器的性能！</summary>
+  <summary>Don't forget to enchant the Multibuilder with Efficiency for less durability loss and Sharpness for larger areas!</summary>
   <img src="https://github.com/user-attachments/assets/d8854e17-cdf7-48f1-b2b6-39a5bfd8bb07">
 </details>
 
 <details> 
-  <summary>使用强大的自动建造器来构建大型（或小型）长方体，清除整个区块，或者只是为你的温馨小屋建一堵墙！</summary>
+  <summary>Use the almighty Auto Builder to build massive (or small) cuboids, clear whole chunks, or just a wall for your cozy home!</summary>
   <img src="https://github.com/user-attachments/assets/f0b41726-3400-41bb-b2d0-9b4002461b53">
 </details>
 
-## :floppy_disk: 下载 Sensible Toolbox Reborn
-在此处下载最新版本：[发行版](https://github.com/Bunnky/SensibleToolbox/releases/)
+## :floppy_disk: Download Sensible Toolbox Reborn
+Download the latest builds here: [Releases](https://github.com/Bunnky/SensibleToolbox/releases/)
 
 > [!WARNING]
-> STBR 目前正在积极开发中，构建可能仍然不稳定。代码库已有 10 多年的历史，因此请谨慎将其添加到实时服务器。
+> STBR is currently in active development, and builds may still be unstable. The code base is over 10 years old, so please use caution when adding it to live servers.
 
-## :headphones: Discord 支持服务器
+## :headphones: Discord Support Server
 > [!CAUTION]
-> 对于错误报告，请使用[问题跟踪器](https://github.com/SlimefunGuguProject/SensibleToolboxReborn/issues)，而不是 Discord。官方版本的 SensibleToolbox 几乎没有支持，并且没有更新以在 1.18 之后的版本中工作。
+> For bug reports, please use the [Issue Tracker](https://github.com/Bunnky/SensibleToolboxReborn/issues) rather than Discord. The official version of SensibleToolbox has virtually no support and is not updated to work past 1.18.
 >
-> ### **请联系或在 discord 中 @Bunnky 以获取实时支持！请使用 [#addons](https://discord.com/channels/565557184348422174/624966637816381440) 频道**
+> ### **Please contact or ping "Bunnky" in discord for live support! Please use the [#addons](https://discord.com/channels/565557184348422174/624966637816381440) channel**
 
 <p align="center">
   <a href="https://discord.gg/slimefun">
-    <img src="https://discordapp.com/api/guilds/565557184348422174/widget.png?style=banner3" alt="Discord 邀请"/>
+    <img src="https://discordapp.com/api/guilds/565557184348422174/widget.png?style=banner3" alt="Discord Invite"/>
   </a>
 </p>
 
-## :bulb: 致谢
-此分支基于原始的 [Slimefun/SensibleToolbox](https://github.com/Slimefun/SensibleToolbox).
+## :bulb: Credits
+This fork is based on the original [Slimefun/SensibleToolbox](https://github.com/Slimefun/SensibleToolbox).

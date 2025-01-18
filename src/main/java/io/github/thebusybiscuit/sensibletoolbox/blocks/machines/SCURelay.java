@@ -78,7 +78,7 @@ public class SCURelay extends BatteryBox {
 
     @Override
     public String getItemName() {
-        return "SCU传输器";
+        return "SCU 传输器";
     }
 
     @Override
@@ -95,7 +95,7 @@ public class SCURelay extends BatteryBox {
         }
 
         String[] res = Arrays.copyOf(lore, lore.length + 4);
-        res[lore.length] = "必须连接两台相同的SCU传输器";
+        res[lore.length] = "必须连接两台相同的 SCU 传输器";
         res[lore.length + 1] = "两台转发器总会有一样的能量";
         res[lore.length + 2] = "显示的能量可能并不准确";
         res[lore.length + 3] = "左键以刷新显示";
@@ -286,7 +286,7 @@ public class SCURelay extends BatteryBox {
     protected InventoryGUI createGUI() {
         InventoryGUI gui = super.createGUI();
 
-        gui.addLabel("跨世界升级", TRANSPONDER_LABEL_SLOT, null, "当你连接的SCU传输器不在同一世界时", "在此插入跨世界升级");
+        gui.addLabel("跨世界升级", TRANSPONDER_LABEL_SLOT, null, "当你连接的 SCU 传输器不在同一世界时", "在此插入跨世界升级");
         gui.setSlotType(TRANSPONDER_SLOT, SlotType.ITEM);
 
         drawTransponder(gui);

@@ -441,7 +441,7 @@ public final class STBUtil {
     @Nonnull
     public static String describeItemStack(@Nullable ItemStack s) {
         if (s == null) {
-            return "nothing";
+            return "无物品";
         }
 
         return s.getAmount() + " x " + ItemUtils.getItemName(s);
@@ -593,24 +593,24 @@ public final class STBUtil {
         }
 
         List<String> l = new ArrayList<>();
-        l.add("Quantity: " + s.getAmount());
-        l.add("Material/Data: " + s.getType() + ":" + s.getDurability());
+        l.add("数量: " + s.getAmount());
+        l.add("材质: " + s.getType() + ":" + s.getDurability());
 
         if (s.hasItemMeta()) {
             ItemMeta meta = s.getItemMeta();
-            l.add("Display name: " + meta.getDisplayName());
+            l.add("显示名字: " + meta.getDisplayName());
 
             if (meta.hasLore()) {
-                l.add("Lore: [" + Joiner.on(",").join(meta.getLore()) + "]");
+                l.add("描述: [" + Joiner.on(",").join(meta.getLore()) + "]");
             }
 
             if (meta.hasEnchants()) {
                 for (Map.Entry<Enchantment, Integer> e : meta.getEnchants().entrySet()) {
-                    l.add("Enchant " + e.getKey() + " = " + e.getValue());
+                    l.add("附魔 " + e.getKey() + " = " + e.getValue());
                 }
             }
         } else {
-            l.add("No metadata");
+            l.add("没有 metadata");
         }
 
         return l;
@@ -925,13 +925,13 @@ public final class STBUtil {
 
     public static String getDirectionString(BlockFace face) {
         return switch (face) {
-            case NORTH -> "North";
-            case SOUTH -> "South";
-            case EAST -> "East";
-            case WEST -> "West";
-            case UP -> "Upward";
-            case DOWN -> "Downward";
-            default -> "Unknown Direction";
+            case NORTH -> "北";
+            case SOUTH -> "南";
+            case EAST -> "东";
+            case WEST -> "西";
+            case UP -> "上";
+            case DOWN -> "下";
+            default -> "未知方向";
         };
     }
 
