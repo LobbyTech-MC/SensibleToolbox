@@ -61,8 +61,8 @@ public class STBInventoryGUI implements InventoryGUI {
         BG_TEXTURE = STBUtil.parseMaterialSpec(config.getString("gui.texture.bg"));
         LABEL_TEXTURE = STBUtil.parseMaterialSpec(config.getString("gui.texture.label"));
         BUTTON_TEXTURE = STBUtil.parseMaterialSpec(config.getString("gui.texture.button"));
-        GUIUtil.setDisplayName(INPUT_TEXTURE, ChatColor.AQUA + "Input");
-        GUIUtil.setDisplayName(OUTPUT_TEXTURE, ChatColor.AQUA + "Output");
+        GUIUtil.setDisplayName(INPUT_TEXTURE, ChatColor.AQUA + "输入");
+        GUIUtil.setDisplayName(OUTPUT_TEXTURE, ChatColor.AQUA + "输出");
         GUIUtil.setDisplayName(BG_TEXTURE, " ");
     }
 
