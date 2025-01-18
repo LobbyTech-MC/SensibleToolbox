@@ -160,6 +160,7 @@ import io.github.thebusybiscuit.sensibletoolbox.slimefun.SlimefunBridge;
 import io.github.thebusybiscuit.sensibletoolbox.utils.ItemGlow;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
 import io.papermc.lib.PaperLib;
+import net.guizhanss.guizhanlibplugin.updater.GuizhanUpdater;
 
 import me.desht.dhutils.DHUtilsException;
 import me.desht.dhutils.Debugger;
@@ -262,7 +263,7 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
             if (Bukkit.getPluginManager().isPluginEnabled("GuizhanLibPlugin")) {
                 try {
                     GuizhanUpdater.start(this, getFile(), "SlimefunGuguProject", "SensibleToolboxReborn", "master");
-                } catch (NoClassDefFoundError | ClassNotFoundException e) {
+                } catch (NoClassDefFoundError e) {
                     e.printStackTrace();
                 }
             }
