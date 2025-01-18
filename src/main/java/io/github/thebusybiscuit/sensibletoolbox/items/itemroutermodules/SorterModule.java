@@ -30,12 +30,12 @@ public class SorterModule extends DirectionalItemRouterModule {
 
     @Override
     public String getItemName() {
-        return "I.R. Mod: Sorter";
+        return "分拣机升级";
     }
 
     @Override
     public String[] getLore() {
-        return makeDirectionalLore("Insert into an Item Router", "Places items into inventory IF", "- inventory is empty OR", "- inventory already contains that item");
+        return makeDirectionalLore("可放入物品运输器", "将物品放置到空容器或有物品的容器");
     }
 
     @Override

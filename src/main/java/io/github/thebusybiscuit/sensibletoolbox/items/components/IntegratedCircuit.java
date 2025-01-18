@@ -20,12 +20,12 @@ public class IntegratedCircuit extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Integrated Circuit";
+        return "集成电路";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Used as a component", "in some more", "advanced machinery" };
+        return new String[] { "用于制作一些高级机械" };
     }
 
     @Override

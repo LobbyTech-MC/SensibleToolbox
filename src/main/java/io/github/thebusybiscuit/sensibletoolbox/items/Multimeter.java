@@ -37,12 +37,12 @@ public class Multimeter extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Multimeter";
+        return "万用表";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Use on cabling and machines", "to check energy net connections", "and power usage", "R-Click: " + ChatColor.WHITE + "use" };
+        return new String[] { "可以对导线或机器使用", "以查看它们的能源连接和能源使用", "右键" + ChatColor.WHITE + "使用" };
     }
 
     @Override
@@ -87,18 +87,14 @@ public class Multimeter extends BaseSTBItem {
     }
 
     private void showNetInfo(final Player p, EnergyNet net, Block clicked) {
-        String s1 = net.getCableCount() == 1 ? "" : "s";
-        String s2 = net.getSourceCount() == 1 ? "" : "s";
-        String s3 = net.getSinkCount() == 1 ? "" : "s";
-        String[] lines = new String[] { net.getSourceCount() + ChatColor.GOLD.toString() + " source" + s2 + ChatColor.WHITE + ", " + net.getSinkCount() + ChatColor.GOLD.toString() + " sink" + s3, net.getCableCount() + ChatColor.GOLD.toString() + " cable" + s1, String.format("Demand: " + ChatColor.GOLD + "%5.2f SCU/t", net.getDemand()), String.format("Supply: " + ChatColor.GOLD + "%5.2f SCU/t", net.getSupply()), };
+        String[] lines = new String[] { net.getSourceCount() + ChatColor.GOLD.toString() + " 源" + ChatColor.WHITE + ", " + net.getSinkCount() + ChatColor.GOLD.toString() + " 汇流", net.getCableCount() + ChatColor.GOLD.toString() + " 导线" + String.format("消耗: " + ChatColor.GOLD + "%5.2f SCU/t", net.getDemand()), String.format("供电: " + ChatColor.GOLD + "%5.2f SCU/t", net.getSupply()), };
         HoloMessage.popup(p, clicked.getLocation(), 5, lines);
         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 2.0F);
     }
 
     private void showMachineInfo(Player p, BaseSTBMachine machine, Block clicked) {
         int n = machine.getAttachedEnergyNets().length;
-        String s = n == 1 ? "" : "s";
-        String[] lines = new String[] { ChatColor.GOLD + machine.getItemName() + ChatColor.WHITE + ": on " + n + " energy net" + s, "Charge: " + STBUtil.getChargeString(machine), "Max Charge Rate: " + ChatColor.GOLD + machine.getChargeRate() + " SCU/t", };
+        String[] lines = new String[] { ChatColor.GOLD + machine.getItemName() + ChatColor.WHITE + ": 连接 " + n + " 个能源网络", "已存入: " + STBUtil.getChargeString(machine), "最大充能速率: " + ChatColor.GOLD + machine.getChargeRate() + " SCU/t", };
         HoloMessage.popup(p, clicked.getLocation(), 5, lines);
         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 2.0F);
     }

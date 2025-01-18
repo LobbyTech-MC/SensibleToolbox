@@ -16,12 +16,12 @@ public class PullerModule extends DirectionalItemRouterModule {
 
     @Override
     public String getItemName() {
-        return "I.R. Mod: Puller";
+        return "取出升级";
     }
 
     @Override
     public String[] getLore() {
-        return makeDirectionalLore("Insert into an Item Router", "Pulls items from an adjacent inventory");
+        return makeDirectionalLore("可放入物品运输器", "——从相邻的机器中提取原料");
     }
 
     @Override

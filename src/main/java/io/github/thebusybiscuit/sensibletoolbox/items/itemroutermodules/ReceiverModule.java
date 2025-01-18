@@ -21,12 +21,12 @@ public class ReceiverModule extends ItemRouterModule {
 
     @Override
     public String getItemName() {
-        return "I.R. Mod: Receiver";
+        return "接收升级";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Insert into an Item Router", "Passive module; receives items", "from a facing Sender module OR", "linked Adv. Sender module" };
+        return new String[] { "可放入物品运输器", "被动接收物品", "从面朝的发送升级或", "连接的高级发送升级" };
     }
 
     @Override

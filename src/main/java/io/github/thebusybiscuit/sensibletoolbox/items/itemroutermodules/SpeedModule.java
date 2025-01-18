@@ -15,12 +15,12 @@ public class SpeedModule extends ItemRouterModule {
 
     @Override
     public String getItemName() {
-        return "I.R. Mod: Speed Upgrade";
+        return "速度升级";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Insert into an Item Router", "Passive module; increases router speed:", "0 modules = 1 operation / 20 ticks", "1 = 1/15, 2 = 1/10, 3 = 1/5", "Any modules over 3 are ignored." };
+        return new String[] { "可放入物品运输器", "提升工作速度:", "0 个速度升级 = 1 次 / 20 游戏刻", "1 = 1 / 15, 2 = 1 / 10, 3 = 1 / 5", "最多放入 3 个速度升级" };
     }
 
     @Override

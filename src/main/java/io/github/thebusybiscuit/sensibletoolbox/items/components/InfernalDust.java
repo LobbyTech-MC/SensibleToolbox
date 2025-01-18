@@ -19,12 +19,12 @@ public class InfernalDust extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Infernal Dust";
+        return "烈焰粉";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Sometimes dropped from blazes.", "Looting enchantment may help.", "Combine this with iron or gold dust." };
+        return new String[] { "从烈焰人掠夺而来的粉末", "可以附加掠夺附魔以获取更多", "可以与铁粉和金粉融合" };
     }
 
     @Override

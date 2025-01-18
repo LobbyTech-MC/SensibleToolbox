@@ -40,10 +40,10 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
 
     private static final String LIST_ITEM = ChatColor.LIGHT_PURPLE + UnicodeSymbol.CENTERED_POINT.toUnicode() + " " + ChatColor.AQUA;
 
-    private static final ItemStack WHITE_BUTTON = GUIUtil.makeTexture(Material.WHITE_WOOL, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "Whitelist", "Module will only process", "items which match the filter.");
-    private static final ItemStack BLACK_BUTTON = GUIUtil.makeTexture(Material.BLACK_WOOL, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "Blacklist", "Module will NOT process", "items which match the filter.");
-    private static final ItemStack OFF_BUTTON = GUIUtil.makeTexture(Material.LIGHT_BLUE_STAINED_GLASS, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "Termination OFF", "Subsequent modules in the", "Item Router will process items", "as normal.");
-    private static final ItemStack ON_BUTTON = GUIUtil.makeTexture(Material.ORANGE_WOOL, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "Termination ON", "If this module processes an", "item, the Item Router will", "not process any more items", "on this tick.");
+    private static final ItemStack WHITE_BUTTON = GUIUtil.makeTexture(Material.WHITE_WOOL, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "白名单", "仅处理匹配的物品");
+    private static final ItemStack BLACK_BUTTON = GUIUtil.makeTexture(Material.BLACK_WOOL, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "黑名单", "仅处理不匹配的物品");
+    private static final ItemStack OFF_BUTTON = GUIUtil.makeTexture(Material.LIGHT_BLUE_STAINED_GLASS, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "处理顺序(关)", "当这个升级正在处理物品时，", "机器将继续处理其他物品");
+    private static final ItemStack ON_BUTTON = GUIUtil.makeTexture(Material.ORANGE_WOOL, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "处理顺序(开)", "当这个升级正在处理物品时，", "机器将不会处理其他物品");
 
     public static final int FILTER_LABEL_SLOT = 0;
     public static final int DIRECTION_LABEL_SLOT = 5;
@@ -104,12 +104,11 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
             return new String[0];
         } else {
             String[] lore = new String[(filter.size() + 1) / 2 + 2];
-            String what = filter.isWhiteList() ? "white-listed" : "black-listed";
-            String s = filter.size() == 1 ? "" : "s";
-            lore[0] = ChatColor.GOLD.toString() + filter.size() + " item" + s + " " + what;
+            String what = filter.isWhiteList() ? "白名单" : "黑名单";
+            lore[0] = ChatColor.GOLD.toString() + filter.size() + " 个物品"  + " " + what;
 
             if (isTerminator()) {
-                lore[0] += ", " + ChatColor.BOLD + "Terminating";
+                lore[0] += ", " + ChatColor.BOLD + "处理顺序(开)";
             }
 
             lore[1] = ChatColor.GOLD + filter.getFilterType().getLabel();
@@ -177,7 +176,7 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
     }
 
     private InventoryGUI createGUI(Player p) {
-        InventoryGUI inventory = GUIUtil.createGUI(p, this, 36, ChatColor.DARK_RED + "Module Configuration");
+        InventoryGUI inventory = GUIUtil.createGUI(p, this, 36, ChatColor.DARK_RED + "升级配置");
 
         inventory.addGadget(new ToggleButton(inventory, 28, getFilter().isWhiteList(), WHITE_BUTTON, BLACK_BUTTON, newValue -> {
             if (getFilter() != null) {
@@ -194,15 +193,15 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
             return true;
         }));
 
-        inventory.addLabel("Filtered Items", FILTER_LABEL_SLOT, null, "Place up to 9 items", "in the filter " + UnicodeSymbol.ARROW_RIGHT.toUnicode());
+        inventory.addLabel("过滤物品", FILTER_LABEL_SLOT, null, "最多 9 种物品", "在这个升级中 " + UnicodeSymbol.ARROW_RIGHT.toUnicode());
         for (int slot : filterSlots) {
             inventory.setSlotType(slot, SlotType.ITEM);
         }
         populateFilterInventory(inventory.getInventory());
 
-        inventory.addLabel("Module Direction", DIRECTION_LABEL_SLOT, null, "Set the direction that", "the module works in", "once installed in an", "Item Router");
+        inventory.addLabel("方向", DIRECTION_LABEL_SLOT, null, "设置模块在机器中安装后的工作方向");
         ItemStack texture = new ItemStack(new ItemRouter().getMaterial());
-        GUIUtil.setDisplayName(texture, "No Direction");
+        GUIUtil.setDisplayName(texture, "未设置方向");
         inventory.addGadget(new DirectionGadget(inventory, 16, texture));
 
         return inventory;
@@ -221,8 +220,8 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
 
     protected String[] makeDirectionalLore(String... lore) {
         String[] newLore = Arrays.copyOf(lore, lore.length + 2);
-        newLore[lore.length] = "L-click Block: " + ChatColor.WHITE + " Set direction";
-        newLore[lore.length + 1] = UnicodeSymbol.ARROW_UP.toUnicode() + " + L-click Air: " + ChatColor.WHITE + " Unset direction";
+        newLore[lore.length] = "左键方块: " + ChatColor.WHITE + " 设置方向";
+        newLore[lore.length + 1] = UnicodeSymbol.ARROW_UP.toUnicode() + " 左键空气: " + ChatColor.WHITE + " 取消设置";
         return newLore;
     }
 

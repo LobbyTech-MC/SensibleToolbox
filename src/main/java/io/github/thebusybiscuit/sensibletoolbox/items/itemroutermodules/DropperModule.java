@@ -22,12 +22,12 @@ public class DropperModule extends DirectionalItemRouterModule {
 
     @Override
     public String getItemName() {
-        return "I.R. Mod: Dropper";
+        return "丢弃升级";
     }
 
     @Override
     public String[] getLore() {
-        return makeDirectionalLore("Insert into an Item Router", "Drops items onto the ground", "in the configured direction");
+        return makeDirectionalLore("可放入物品运输器", "将物品丢弃到指定的方向");
     }
 
     @Override

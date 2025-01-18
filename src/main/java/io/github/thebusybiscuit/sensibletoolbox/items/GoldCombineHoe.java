@@ -22,7 +22,7 @@ public class GoldCombineHoe extends CombineHoe {
 
     @Override
     public String getItemName() {
-        return "Gold Combine Hoe";
+        return "金质多功能锄";
     }
 
     @Override

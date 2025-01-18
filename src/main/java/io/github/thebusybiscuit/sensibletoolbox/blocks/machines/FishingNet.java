@@ -119,7 +119,7 @@ public class FishingNet extends AbstractProcessingMachine {
 
     @Override
     public String getItemName() {
-        return "鱼网";
+        return "渔网";
     }
 
     @Override

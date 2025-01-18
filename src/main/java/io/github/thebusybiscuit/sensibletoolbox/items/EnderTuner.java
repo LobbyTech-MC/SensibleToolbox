@@ -30,8 +30,8 @@ import io.github.thebusybiscuit.sensibletoolbox.utils.IntRange;
 
 public class EnderTuner extends BaseSTBItem {
 
-    private static final ItemStack GLOBAL_TEXTURE = GUIUtil.makeTexture(Material.BLUE_STAINED_GLASS, "Global", "Common inventory for", "all players");
-    private static final ItemStack PERSONAL_TEXTURE = GUIUtil.makeTexture(Material.YELLOW_STAINED_GLASS, "Personal", "Separate inventory for", "each player");
+    private static final ItemStack GLOBAL_TEXTURE = GUIUtil.makeTexture(Material.BLUE_STAINED_GLASS, "公开", "公共背包");
+    private static final ItemStack PERSONAL_TEXTURE = GUIUtil.makeTexture(Material.YELLOW_STAINED_GLASS, "私有", "独立背包");
     public static final int TUNING_GUI_SIZE = 27;
     public static final int TUNED_ITEM_SLOT = 11;
     public static final int FREQUENCY_BUTTON_SLOT = 13;
@@ -54,12 +54,12 @@ public class EnderTuner extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Ender Tuner";
+        return "下界调频器";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Vibrates in six dimensions", "R-Click Ender Box: " + ChatColor.WHITE + "tune box", "R-Click other: " + ChatColor.WHITE + "open tuning GUI", };
+        return new String[] { "在六个维度中振动", "右键下界箱以" + ChatColor.WHITE + "调频", "右键另一个下界箱: " + ChatColor.WHITE + "打开调频后的 GUI"};
     }
 
     @Override
@@ -91,7 +91,7 @@ public class EnderTuner extends BaseSTBItem {
 
     @Nonnull
     private InventoryGUI makeTuningGUI(@Nonnull Player p) {
-        InventoryGUI gui = GUIUtil.createGUI(p, this, TUNING_GUI_SIZE, ChatColor.DARK_PURPLE + "Ender Tuner");
+        InventoryGUI gui = GUIUtil.createGUI(p, this, TUNING_GUI_SIZE, ChatColor.DARK_PURPLE + "下界调频器");
 
         for (int slot = 0; slot < gui.getInventory().getSize(); slot++) {
             gui.setSlotType(slot, SlotType.BACKGROUND);
@@ -103,12 +103,12 @@ public class EnderTuner extends BaseSTBItem {
 
         if (tuningBlock != null) {
             gui.setItem(TUNED_ITEM_SLOT, ((BaseSTBBlock) tuningBlock).toItemStack());
-            gui.addLabel("Ender Box", TUNED_ITEM_SLOT - 1, null);
+            gui.addLabel("下界箱", TUNED_ITEM_SLOT - 1, null);
             freq = tuningBlock.getEnderFrequency();
             global = tuningBlock.isGlobal();
             gui.addGadget(new AccessControlGadget(gui, ACCESS_CONTROL_SLOT, (BaseSTBBlock) tuningBlock));
         } else {
-            gui.addLabel("Ender Bag", TUNED_ITEM_SLOT - 1, null, "Place an Ender Bag or", "Ender Box here to tune", "its Ender frequency");
+            gui.addLabel("下界背包", TUNED_ITEM_SLOT - 1, null, "放置下界背包或下界箱已调整它的频率");
         }
 
         gui.addGadget(new ToggleButton(gui, GLOBAL_BUTTON_SLOT, global, GLOBAL_TEXTURE, PERSONAL_TEXTURE, newValue -> {
@@ -130,7 +130,7 @@ public class EnderTuner extends BaseSTBItem {
 
         }));
 
-        gui.addGadget(new NumericGadget(gui, FREQUENCY_BUTTON_SLOT, "Ender Frequency", new IntRange(1, EnderStorage.MAX_ENDER_FREQUENCY), freq, 1, 10, newValue -> {
+        gui.addGadget(new NumericGadget(gui, FREQUENCY_BUTTON_SLOT, "频道", new IntRange(1, EnderStorage.MAX_ENDER_FREQUENCY), freq, 1, 10, newValue -> {
             ItemStack s = gui.getItem(TUNED_ITEM_SLOT);
             BaseSTBItem item = SensibleToolbox.getItemRegistry().fromItemStack(s);
 

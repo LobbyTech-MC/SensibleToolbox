@@ -24,12 +24,12 @@ public class SubspaceTransponder extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Subspace Transponder";
+        return "跨世界升级";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Used by some advanced", "items for cross-world", "communication" };
+        return new String[] { "用于高级的跨世界操作" };
     }
 
     @Override

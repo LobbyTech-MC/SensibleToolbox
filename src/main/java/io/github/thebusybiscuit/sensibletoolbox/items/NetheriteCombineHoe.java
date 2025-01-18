@@ -22,7 +22,7 @@ public class NetheriteCombineHoe extends CombineHoe {
 
     @Override
     public String getItemName() {
-        return "Netherite Combine Hoe";
+        return "下界合金多功能锄";
     }
 
 

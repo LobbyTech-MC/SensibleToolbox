@@ -22,12 +22,12 @@ public class BlankModule extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Blank Item Router Module";
+        return "空白升级";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Used for crafting active", " Item Router Modules " };
+        return new String[] { "用于制作升级" };
     }
 
     @Override

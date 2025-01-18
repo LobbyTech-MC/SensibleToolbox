@@ -40,13 +40,13 @@ public class MoistureChecker extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Moisture Checker";
+        return "成熟度检查器";
     }
 
     @Override
     public String[] getLore() {
         int r = getRadius() * 2 + 1;
-        return new String[] { "Tests the saturation level", " of a " + r + "x" + r + " area of farmland.", "R-click: " + ChatColor.WHITE + "use" };
+        return new String[] { "检查 " + r + "x" + r + " 范围内耕地的成熟度", "右键以" + ChatColor.WHITE + "使用" };
     }
 
     @Override

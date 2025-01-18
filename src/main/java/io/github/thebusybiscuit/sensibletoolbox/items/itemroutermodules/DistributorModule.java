@@ -32,12 +32,12 @@ public class DistributorModule extends DirectionalItemRouterModule {
 
     @Override
     public String getItemName() {
-        return "I.R. Mod: Distributor";
+        return "中转站升级";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Pulls items from the configured", "direction, then sends them", "round-robin to all other", "adjacent inventories" };
+        return new String[] { "从配置的方向中取出物品，并依次发送到相邻的机器中" };
     }
 
     @Override

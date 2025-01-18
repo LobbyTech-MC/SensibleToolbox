@@ -22,12 +22,12 @@ public class SpeedUpgrade extends AbstractMachineUpgrade {
 
     @Override
     public String getItemName() {
-        return "Speed Upgrade";
+        return "速度升级";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Place in a machine block", "Speed: x1.4", "Power Usage: x1.6" };
+        return new String[] { "放置在机器中", "速度: x1.4", "耗电: x1.6" };
     }
 
     @Override

@@ -21,12 +21,12 @@ public class EnergizedGoldIngot extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Energized Gold Ingot";
+        return "充能金锭";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Strangely glowing..." };
+        return new String[] { "闪耀着奇异的光芒..." };
     }
 
     @Override

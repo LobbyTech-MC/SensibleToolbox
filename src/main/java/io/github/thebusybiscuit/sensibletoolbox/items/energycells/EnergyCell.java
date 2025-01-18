@@ -46,7 +46,7 @@ public abstract class EnergyCell extends BaseSTBItem implements Chargeable {
 
     @Override
     public String[] getLore() {
-        return new String[] { "Stores up to " + UnicodeSymbol.ELECTRICITY.toUnicode() + " " + getMaxCharge() + " SCU" };
+        return new String[] { "可存储 " + UnicodeSymbol.ELECTRICITY.toUnicode() + " " + getMaxCharge() + " SCU" };
     }
 
     @Override

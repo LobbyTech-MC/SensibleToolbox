@@ -195,7 +195,7 @@ public class STBInventoryGUI implements InventoryGUI {
     @Override
     public void show(Player p) {
         if (getOwningItem() instanceof BaseSTBBlock && !getOwningBlock().hasAccessRights(p)) {
-            STBUtil.complain(p, "That " + getOwningItem().getItemName() + " is private!");
+            STBUtil.complain(p, getOwningItem().getItemName() + " 是私有的!");
             return;
         }
         if (inventory.getViewers().isEmpty()) {

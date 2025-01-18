@@ -19,12 +19,12 @@ public class FishBait extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Fish Bait";
+        return "鱼饵";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Used in a Fishing Net", "to catch Fish" };
+        return new String[] { "放置在渔网中以捕鱼" };
     }
 
     @Override

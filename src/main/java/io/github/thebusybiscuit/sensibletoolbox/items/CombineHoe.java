@@ -50,7 +50,7 @@ public abstract class CombineHoe extends BaseSTBItem {
 
     @Nonnull
     public static String getInventoryTitle() {
-        return ChatColor.DARK_GREEN + "Seed Bag";
+        return ChatColor.DARK_GREEN + "种子袋";
     }
 
     protected CombineHoe() {
@@ -107,14 +107,14 @@ public abstract class CombineHoe extends BaseSTBItem {
         int n = getWorkRadius() * 2 + 1;
         String s = n + "x" + n;
         String t = n + "x" + n + "x" + n;
-        return new String[] { "Right-click dirt/grass:" + ChatColor.WHITE + " till " + s + " area", "Right-click soil:" + ChatColor.WHITE + " sow " + s + " area", "Right-click air:" + ChatColor.WHITE + " open seed bag", "Left-click plants:" + ChatColor.WHITE + " harvest " + s + " area", "Left-click leaves:" + ChatColor.WHITE + " break " + t + " area", };
+        return new String[] { "右键泥土/草方块以" + ChatColor.WHITE + "耕种 " + s + " 范围区域", "右键耕地以" + ChatColor.WHITE + "种植 " + s + " 范围区域", "右键空气以" + ChatColor.WHITE + " 打开种子袋", "左键农作物以" + ChatColor.WHITE + "收获 " + s + " 范围区域", "左键树叶以" + ChatColor.WHITE + "破坏 " + t + " 范围区域", };
     }
 
     @Override
     public String[] getExtraLore() {
         if (getSeedType() != null && getSeedAmount() > 0) {
             String s = ItemUtils.getItemName(new ItemStack(getSeedType()));
-            return new String[] { ChatColor.WHITE + "Seed bag: " + ChatColor.GOLD + getSeedAmount() + " x " + s };
+            return new String[] { ChatColor.WHITE + "种子袋: " + ChatColor.GOLD + getSeedAmount() + " x " + s };
         } else {
             return new String[0];
         }
@@ -237,10 +237,10 @@ public abstract class CombineHoe extends BaseSTBItem {
             if (s != null) {
                 if (seeds != null && seeds != s.getType()) {
                     p.getWorld().dropItemNaturally(p.getLocation(), s);
-                    err = "Mixed items in the seed bag?";
+                    err = "你只能放置一种种子";
                 } else if (STBUtil.getCropType(s.getType()) == null) {
                     p.getWorld().dropItemNaturally(p.getLocation(), s);
-                    err = "Non-seed items in the seed bag?";
+                    err = "你还没有放置种子";
                 } else {
                     seeds = s.getType();
                     count += s.getAmount();
@@ -336,7 +336,7 @@ public abstract class CombineHoe extends BaseSTBItem {
         for (Block b1 : cuboid) {
 
             if (!SensibleToolbox.getProtectionManager().hasPermission(p, b1, Interaction.BREAK_BLOCK)) {
-                MiscUtil.errorMessage(p, "You do not have permission to till soil here.");
+                MiscUtil.errorMessage(p, "你没有权限在这里耕种土地");
                 continue;
             }
 

@@ -295,7 +295,7 @@ public class MessagePager {
 
             int i = (pageNum - 1) * getPageSize();
             int nMessages = getSize();
-            String header = String.format("\u2524 %d-%d of %d lines (page %d/%d) \u251c", i + 1, Math.min(getPageSize() * pageNum, nMessages), nMessages, pageNum, getPageCount());
+            String header = String.format("\u2524 当前行: %d-%d 共 %d 行 (页 %d/%d) \u251c", i + 1, Math.min(getPageSize() * pageNum, nMessages), nMessages, pageNum, getPageCount());
             MiscUtil.rawMessage(p, ChatColor.GREEN + "\u250c" + getCenteredLabel(header, 2));
 
             for (; i < nMessages && i < pageNum * getPageSize(); ++i) {

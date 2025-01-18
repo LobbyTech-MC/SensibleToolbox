@@ -82,9 +82,9 @@ public class RecipeBook extends BaseSTBItem {
     private static final List<ItemStack> fullItemList = new ArrayList<>();
     private static final Map<ItemStack, Integer> itemListPos = new HashMap<>();
 
-    private static final ItemStack SHAPED_ICON = STBUtil.makeStack(Material.CRAFTING_TABLE, ChatColor.YELLOW + "Shaped Recipe");
-    private static final ItemStack SHAPELESS_ICON = STBUtil.makeStack(Material.CRAFTING_TABLE, ChatColor.YELLOW + "Shapeless Recipe");
-    private static final ItemStack FURNACE_ICON = STBUtil.makeStack(Material.FURNACE, ChatColor.YELLOW + "Furnace Recipe");
+    private static final ItemStack SHAPED_ICON = STBUtil.makeStack(Material.CRAFTING_TABLE, ChatColor.YELLOW + "有序配方");
+    private static final ItemStack SHAPELESS_ICON = STBUtil.makeStack(Material.CRAFTING_TABLE, ChatColor.YELLOW + "无序配方");
+    private static final ItemStack FURNACE_ICON = STBUtil.makeStack(Material.FURNACE, ChatColor.YELLOW + "熔炼配方");
     private static final ItemStack GO_BACK_TEXTURE = new ItemStack(Material.IRON_DOOR);
     private static final ItemStack GO_BACK_TEXTURE_2 = new ItemStack(Material.OAK_DOOR);
     private static final ItemStack WEB_TEXTURE = new ItemStack(Material.COBWEB);
@@ -105,7 +105,7 @@ public class RecipeBook extends BaseSTBItem {
     public static final int TRAIL_BACK_SLOT = 52;
     public static final int ITEM_LIST_SLOT = 53;
     public static final String FREEFAB_PERMISSION = "stb.recipebook.freefab";
-    public static final String FABRICATION_TITLE = ChatColor.BLUE + "Fabrication";
+    public static final String FABRICATION_TITLE = ChatColor.BLUE + "合成配方";
 
     private int page;
     private int viewingItem;
@@ -275,12 +275,12 @@ public class RecipeBook extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Recipe Book";
+        return "合成环";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Allows browsing/fabrication", "of all known recipes" };
+        return new String[] { "可以制造物品" };
     }
 
     public void setInventorySlot(int inventorySlot) {
@@ -348,7 +348,7 @@ public class RecipeBook extends BaseSTBItem {
         fabricationFree = p.hasPermission(FREEFAB_PERMISSION);
         setFabricationAvailable(fabricationFree || fabricationBlock != null || hasFabricatorInInventory(p));
         findResourceInventories(fabricationBlock);
-        gui = GUIUtil.createGUI(p, this, 54, "Recipe Book");
+        gui = GUIUtil.createGUI(p, this, 54, "配方书");
         buildFilteredList();
 
         if (viewingItem < 0) {
@@ -504,8 +504,8 @@ public class RecipeBook extends BaseSTBItem {
 
         if (item instanceof AbstractProcessingMachine) {
             AbstractProcessingMachine machine = (AbstractProcessingMachine) item;
-            lore.add(ChatColor.WHITE.toString() + machine.getScuPerTick() + " SCU/t over " + recipe.getProcessingTime() / 20.0 + "s");
-            lore.add(ChatColor.WHITE.toString() + "Total SCU: " + machine.getScuPerTick() * recipe.getProcessingTime());
+            lore.add(ChatColor.WHITE.toString() + machine.getScuPerTick() + " SCU/t (" + recipe.getProcessingTime() / 20.0 + "/s)");
+            lore.add(ChatColor.WHITE.toString() + "总需 SCU: " + machine.getScuPerTick() * recipe.getProcessingTime());
         }
 
         meta.setLore(lore);
@@ -589,7 +589,7 @@ public class RecipeBook extends BaseSTBItem {
             ItemCost cost = new ItemCost(ingredient);
 
             if (!cost.isAffordable(p, false, inventories)) {
-                MiscUtil.errorMessage(p, "Missing: &f" + ItemUtils.getItemName(ingredient));
+                MiscUtil.errorMessage(p, "缺少物品: &f" + ItemUtils.getItemName(ingredient));
                 ok = false;
             }
 
@@ -628,7 +628,7 @@ public class RecipeBook extends BaseSTBItem {
 
         p.getInventory().addItem(result);
         p.playSound(p.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1.0F, 1.0F);
-        MiscUtil.statusMessage(p, "Fabricated (free): &f" + ItemUtils.getItemName(result));
+        MiscUtil.statusMessage(p, "已制造物品 (免费): &f" + ItemUtils.getItemName(result));
     }
 
     private void fabricateNormal(List<ItemStack> taken, ItemStack result) {
@@ -654,7 +654,7 @@ public class RecipeBook extends BaseSTBItem {
 
         p.getInventory().addItem(result);
         p.playSound(p.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1.0F, 1.0F);
-        MiscUtil.statusMessage(p, "Fabricated: &f" + ItemUtils.getItemName(result));
+        MiscUtil.statusMessage(p, "已制造物品: &f" + ItemUtils.getItemName(result));
     }
 
     private List<ItemStack> mergeIngredients() {
@@ -721,7 +721,7 @@ public class RecipeBook extends BaseSTBItem {
 
         gui.setSlotType(RESULT_SLOT, SlotType.ITEM);
 
-        gui.addGadget(new ButtonGadget(gui, ITEM_LIST_SLOT, "< Back to Item List", new String[0], GO_BACK_TEXTURE, () -> {
+        gui.addGadget(new ButtonGadget(gui, ITEM_LIST_SLOT, "< 返回物品浏览", new String[0], GO_BACK_TEXTURE, () -> {
             trail.clear();
             viewingItem = -1;
             viewingRecipe = null;
@@ -730,7 +730,7 @@ public class RecipeBook extends BaseSTBItem {
 
         if (!trail.isEmpty()) {
             ItemStack prevStack = fullItemList.get(trail.peek().getItem());
-            String label = "< Back to Last Recipe";
+            String label = "< 返回";
             gui.addGadget(new ButtonGadget(gui, TRAIL_BACK_SLOT, label, new String[] { ItemUtils.getItemName(prevStack) }, GO_BACK_TEXTURE_2, () -> {
                 ItemAndRecipeNumber ir = trail.pop();
                 viewingItem = ir.getItem();
@@ -743,7 +743,7 @@ public class RecipeBook extends BaseSTBItem {
         int nRecipes = recipes.size();
 
         if (nRecipes > 1) {
-            gui.addGadget(new ButtonGadget(gui, NEXT_RECIPE_SLOT, "< Prev Recipe", new String[] { lore }, null, () -> {
+            gui.addGadget(new ButtonGadget(gui, NEXT_RECIPE_SLOT, "< 上一个配方", new String[] { lore }, null, () -> {
                 recipeNumber--;
 
                 if (recipeNumber < 0) {
@@ -753,7 +753,7 @@ public class RecipeBook extends BaseSTBItem {
                 drawRecipePage();
             }));
 
-            gui.addGadget(new ButtonGadget(gui, PREV_RECIPE_SLOT, "Next Recipe >", new String[] { lore }, null, () -> {
+            gui.addGadget(new ButtonGadget(gui, PREV_RECIPE_SLOT, "下一个配方 >", new String[] { lore }, null, () -> {
                 recipeNumber++;
 
                 if (recipeNumber >= nRecipes) {
@@ -795,12 +795,12 @@ public class RecipeBook extends BaseSTBItem {
         }
 
         if (fabricationFree || (fabricationAvailable && (viewingRecipe instanceof ShapedRecipe || viewingRecipe instanceof ShapelessRecipe))) {
-            String fabLabel = fabricationFree ? "Fabricate (free)" : "Fabricate";
+            String fabLabel = fabricationFree ? "制造物品 (免费)" : "制造物品";
             gui.addGadget(new ButtonGadget(gui, 46, fabLabel, new String[0], SHAPED_ICON, () -> tryFabrication(viewingRecipe)));
         }
 
         ItemStack pageStack = new ItemStack(Material.PAPER, recipeNumber + 1);
-        gui.addLabel("Recipe " + (recipeNumber + 1) + "/" + nRecipes, 45, pageStack);
+        gui.addLabel("配方 " + (recipeNumber + 1) + "/" + nRecipes, 45, pageStack);
     }
 
     protected void drawItemsPage() {
@@ -817,7 +817,7 @@ public class RecipeBook extends BaseSTBItem {
             }
         }
 
-        gui.addGadget(new ButtonGadget(gui, PREV_PAGE_SLOT, "< Prev Page", null, null, () -> {
+        gui.addGadget(new ButtonGadget(gui, PREV_PAGE_SLOT, "< 上一页", null, null, () -> {
             page--;
 
             if (page < 0) {
@@ -827,7 +827,7 @@ public class RecipeBook extends BaseSTBItem {
             drawItemsPage();
         }));
 
-        gui.addGadget(new ButtonGadget(gui, NEXT_PAGE_SLOT, "Next Page >", null, null, () -> {
+        gui.addGadget(new ButtonGadget(gui, NEXT_PAGE_SLOT, "下一页 >", null, null, () -> {
             page++;
 
             if (page >= totalPages) {
@@ -837,9 +837,9 @@ public class RecipeBook extends BaseSTBItem {
             drawItemsPage();
         }));
 
-        gui.addGadget(new RecipeTypeFilter(gui, FILTER_TYPE_BUTTON_SLOT, "Recipe Type"));
+        gui.addGadget(new RecipeTypeFilter(gui, FILTER_TYPE_BUTTON_SLOT, "配方类型"));
         if (recipeNameFilter != null && !recipeNameFilter.isEmpty()) {
-            gui.addGadget(new ButtonGadget(gui, FILTER_STRING_BUTTON_SLOT, "Filter:" + ChatColor.YELLOW + " " + recipeNameFilter, new String[] { "Click to clear filter " }, WEB_TEXTURE, () -> {
+            gui.addGadget(new ButtonGadget(gui, FILTER_STRING_BUTTON_SLOT, "过滤:" + ChatColor.YELLOW + " " + recipeNameFilter, new String[] { "点击清除过滤 " }, WEB_TEXTURE, () -> {
                 setRecipeNameFilter("");
                 buildFilteredList();
                 drawItemsPage();
@@ -850,7 +850,7 @@ public class RecipeBook extends BaseSTBItem {
         }
 
         ItemStack pageStack = new ItemStack(Material.PAPER, page + 1);
-        gui.addLabel("Page " + (page + 1) + "/" + totalPages, PAGE_LABEL_SLOT, pageStack);
+        gui.addLabel("页 " + (page + 1) + "/" + totalPages, PAGE_LABEL_SLOT, pageStack);
     }
 
 }

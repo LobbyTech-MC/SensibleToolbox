@@ -11,9 +11,9 @@ class RecipeTypeFilter extends CyclerGadget<RecipeType> {
 
     protected RecipeTypeFilter(InventoryGUI gui, int slot, String label) {
         super(gui, slot, label);
-        add(RecipeType.ALL, ChatColor.GRAY, Material.BLACK_STAINED_GLASS, "All Recipes");
-        add(RecipeType.VANILLA, ChatColor.WHITE, Material.WHITE_STAINED_GLASS, "Vanilla Recipes");
-        add(RecipeType.STB, ChatColor.YELLOW, Material.YELLOW_STAINED_GLASS, "STB Recipes");
+        add(RecipeType.ALL, ChatColor.GRAY, Material.BLACK_STAINED_GLASS, "所有配方");
+        add(RecipeType.VANILLA, ChatColor.WHITE, Material.WHITE_STAINED_GLASS, "原版配方");
+        add(RecipeType.STB, ChatColor.YELLOW, Material.YELLOW_STAINED_GLASS, "STB 配方");
         setInitialValue(((RecipeBook) getGUI().getOwningItem()).getRecipeTypeFilter());
     }
 
