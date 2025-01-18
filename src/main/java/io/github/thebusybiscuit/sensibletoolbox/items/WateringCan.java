@@ -88,7 +88,7 @@ public class WateringCan extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Watering Can";
+        return "喷壶";
     }
 
     @Override
@@ -98,7 +98,7 @@ public class WateringCan extends BaseSTBItem {
 
     @Override
     public String[] getLore() {
-        return new String[] { "R-click to irrigate crops.", "R-click in water to refill", "Don't over-use!" };
+        return new String[] { "右键以灌溉作物", "右键水源可以补水", "不要重复使用!" };
     }
 
     @Override

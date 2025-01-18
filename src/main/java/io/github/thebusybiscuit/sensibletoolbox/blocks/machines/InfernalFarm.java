@@ -39,7 +39,7 @@ public class InfernalFarm extends AutoFarm {
 
     @Override
     public String getItemName() {
-        return "自动内容 III型";
+        return "自动农场 III型";
     }
 
     @Override

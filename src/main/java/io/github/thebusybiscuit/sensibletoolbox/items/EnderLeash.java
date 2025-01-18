@@ -85,12 +85,12 @@ public class EnderLeash extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Ender Leash";
+        return "末影栓绳";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Capture and store one peaceful animal", "Right-click: " + ChatColor.WHITE + "capture/release animal" };
+        return new String[] { "可以捕捉一个友好生物", "右键: " + ChatColor.WHITE + "捕捉/释放生物" };
     }
 
     @Override
