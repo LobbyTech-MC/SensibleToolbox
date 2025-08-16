@@ -7,12 +7,11 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 import me.desht.dhutils.Debugger;
 import me.desht.dhutils.MiscUtil;
 

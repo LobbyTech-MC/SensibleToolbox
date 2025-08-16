@@ -1,5 +1,7 @@
 package io.github.thebusybiscuit.sensibletoolbox.blocks.machines;
 
+import javax.annotation.Nonnull;
+
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -7,8 +9,6 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 
 import io.github.thebusybiscuit.sensibletoolbox.items.components.IntegratedCircuit;
-
-import javax.annotation.Nonnull;
 
 public class DenseSolar extends BasicSolarCell {
 

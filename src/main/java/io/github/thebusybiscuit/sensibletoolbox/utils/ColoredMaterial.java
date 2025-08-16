@@ -6,11 +6,10 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
+import com.google.common.base.Preconditions;
 
 /**
  * This class holds a few ordered {@link List Lists} that hold colored variants

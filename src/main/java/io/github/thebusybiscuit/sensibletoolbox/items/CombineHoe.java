@@ -5,8 +5,6 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import me.desht.dhutils.MiscUtil;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.Material;
@@ -35,9 +33,10 @@ import io.github.thebusybiscuit.sensibletoolbox.api.gui.InventoryGUI;
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.SlotType;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
-
+import me.desht.dhutils.MiscUtil;
 import me.desht.dhutils.cuboid.Cuboid;
 import me.desht.dhutils.cuboid.CuboidDirection;
+import me.mrCookieSlime.Slimefun.api.BlockStorage;
 
 
 public abstract class CombineHoe extends BaseSTBItem {

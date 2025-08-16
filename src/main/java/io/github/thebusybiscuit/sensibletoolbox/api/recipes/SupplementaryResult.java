@@ -2,10 +2,9 @@ package io.github.thebusybiscuit.sensibletoolbox.api.recipes;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.inventory.ItemStack;
 
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
+import com.google.common.base.Preconditions;
 
 /**
  * Represents a supplementary result for a recipe; a possible "bonus" item,

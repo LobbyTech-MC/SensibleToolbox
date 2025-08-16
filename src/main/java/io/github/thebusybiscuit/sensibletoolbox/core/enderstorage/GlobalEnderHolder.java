@@ -1,10 +1,10 @@
 package io.github.thebusybiscuit.sensibletoolbox.core.enderstorage;
 
+import java.io.File;
+
 import org.bukkit.ChatColor;
 
 import io.github.thebusybiscuit.sensibletoolbox.utils.UnicodeSymbol;
-
-import java.io.File;
 
 public class GlobalEnderHolder extends STBEnderStorageHolder {
 

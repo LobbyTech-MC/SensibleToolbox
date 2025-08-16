@@ -1,6 +1,7 @@
 package io.github.thebusybiscuit.sensibletoolbox.items;
 
 import javax.annotation.Nonnull;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,8 +26,8 @@ import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.NumericGadget;
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.ToggleButton;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
-import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
 import io.github.thebusybiscuit.sensibletoolbox.utils.IntRange;
+import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
 
 public class EnderTuner extends BaseSTBItem {
 

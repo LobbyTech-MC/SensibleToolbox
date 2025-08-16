@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -14,7 +13,7 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
+import com.google.common.base.Preconditions;
 
 /**
  * Serialize a Bukkit {@link Inventory} to or from a {@link String}.

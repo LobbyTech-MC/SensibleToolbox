@@ -64,7 +64,6 @@ import io.github.thebusybiscuit.sensibletoolbox.api.recipes.SimpleCustomRecipe;
 import io.github.thebusybiscuit.sensibletoolbox.core.STBItemRegistry;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
 import io.github.thebusybiscuit.sensibletoolbox.utils.VanillaInventoryUtils;
-
 import me.desht.dhutils.Debugger;
 import me.desht.dhutils.MiscUtil;
 import me.desht.dhutils.cost.ItemCost;

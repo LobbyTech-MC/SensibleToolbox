@@ -10,7 +10,6 @@ import java.util.Set;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -25,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 
 import io.github.bakedlibs.dough.items.ItemUtils;
 import io.github.thebusybiscuit.sensibletoolbox.api.SensibleToolbox;
@@ -33,7 +33,6 @@ import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
 import io.github.thebusybiscuit.sensibletoolbox.core.storage.LocationManager;
 import io.github.thebusybiscuit.sensibletoolbox.utils.BukkitSerialization;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 import me.desht.dhutils.DHUtilsException;
 import me.desht.dhutils.MiscUtil;
 import me.desht.dhutils.commands.AbstractCommand;

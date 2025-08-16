@@ -3,7 +3,6 @@ package io.github.thebusybiscuit.sensibletoolbox.listeners;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import net.guizhanss.guizhanlib.minecraft.utils.compatibility.EnchantmentX;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.ItemAction;
 import io.github.thebusybiscuit.sensibletoolbox.items.components.InfernalDust;
+import net.guizhanss.guizhanlib.minecraft.utils.compatibility.EnchantmentX;
 
 public class MobListener extends STBBaseListener {
 

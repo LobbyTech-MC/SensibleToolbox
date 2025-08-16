@@ -3,7 +3,6 @@ package io.github.thebusybiscuit.sensibletoolbox.listeners;
 import java.util.Iterator;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -40,6 +39,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.google.common.base.Preconditions;
+
 import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
 import io.github.thebusybiscuit.sensibletoolbox.api.SensibleToolbox;
 import io.github.thebusybiscuit.sensibletoolbox.api.energy.Chargeable;
@@ -50,7 +51,6 @@ import io.github.thebusybiscuit.sensibletoolbox.api.items.ItemAction;
 import io.github.thebusybiscuit.sensibletoolbox.core.gui.STBInventoryGUI;
 import io.github.thebusybiscuit.sensibletoolbox.core.storage.LocationManager;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 import me.desht.dhutils.Debugger;
 import me.desht.dhutils.text.LogUtils;
 

@@ -1,14 +1,15 @@
 package io.github.thebusybiscuit.sensibletoolbox.listeners;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+
 import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
 import io.github.thebusybiscuit.sensibletoolbox.core.storage.LocationManager;
 import io.github.thebusybiscuit.slimefun4.api.events.ExplosiveToolBreakBlocksEvent;
-import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ExplosiveToolListener extends STBBaseListener{
 

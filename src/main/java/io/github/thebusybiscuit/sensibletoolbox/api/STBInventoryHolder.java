@@ -1,11 +1,11 @@
 package io.github.thebusybiscuit.sensibletoolbox.api;
 
+import java.util.UUID;
+
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.UUID;
 
 /**
  * Represents an STB block which can hold an inventory of items.

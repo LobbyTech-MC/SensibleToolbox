@@ -2,8 +2,6 @@ package io.github.thebusybiscuit.sensibletoolbox.items;
 
 import java.util.UUID;
 
-import io.github.thebusybiscuit.sensibletoolbox.api.SensibleToolbox;
-import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,6 +15,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 
+import io.github.thebusybiscuit.sensibletoolbox.api.SensibleToolbox;
+import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
 import io.github.thebusybiscuit.sensibletoolbox.items.components.SimpleCircuit;
 import me.desht.dhutils.MiscUtil;

@@ -31,7 +31,6 @@ import io.github.thebusybiscuit.sensibletoolbox.api.SensibleToolbox;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
 import io.github.thebusybiscuit.sensibletoolbox.utils.SoilSaturation;
-
 import me.desht.dhutils.MiscUtil;
 
 public class WateringCan extends BaseSTBItem {

@@ -10,7 +10,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.ChatColor;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
@@ -36,6 +35,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.plugin.Plugin;
 
+import com.google.common.base.Preconditions;
+
 import io.github.bakedlibs.dough.data.persistent.PersistentDataAPI;
 import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
 import io.github.thebusybiscuit.sensibletoolbox.api.SensibleToolbox;
@@ -44,7 +45,6 @@ import io.github.thebusybiscuit.sensibletoolbox.api.gui.InventoryGUIListener;
 import io.github.thebusybiscuit.sensibletoolbox.core.STBItemRegistry;
 import io.github.thebusybiscuit.sensibletoolbox.utils.ItemGlow;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 
 /**
  * Represents an STB item. This is the superclass for all STB items.

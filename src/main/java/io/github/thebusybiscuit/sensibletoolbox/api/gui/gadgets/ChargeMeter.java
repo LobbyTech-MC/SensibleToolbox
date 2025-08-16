@@ -1,16 +1,16 @@
 package io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
+import com.google.common.base.Preconditions;
+
 import io.github.thebusybiscuit.sensibletoolbox.api.energy.ChargeableBlock;
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.InventoryGUI;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 
 /**
  * Shows the SCU level for an STB block. The GUI that this gadget is added to

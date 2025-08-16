@@ -1,11 +1,11 @@
 package io.github.thebusybiscuit.sensibletoolbox.api.energy;
 
-import org.bukkit.Location;
-import org.bukkit.block.BlockFace;
-
 import java.util.List;
 
 import javax.annotation.Nonnull;
+
+import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 
 /**
  * Represents a block that my be connected to an energy network.

@@ -11,8 +11,6 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.google.common.base.Strings;
-import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -27,6 +25,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 
 import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
 import io.github.thebusybiscuit.sensibletoolbox.api.STBInventoryHolder;
@@ -52,8 +53,6 @@ import io.github.thebusybiscuit.sensibletoolbox.items.upgrades.SpeedUpgrade;
 import io.github.thebusybiscuit.sensibletoolbox.items.upgrades.ThoroughnessUpgrade;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
 import io.github.thebusybiscuit.sensibletoolbox.utils.UnicodeSymbol;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.StringUtils;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 import me.desht.dhutils.Debugger;
 import me.desht.dhutils.text.LogUtils;
 

@@ -3,7 +3,6 @@ package io.github.thebusybiscuit.sensibletoolbox.utils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.guizhanss.guizhanlib.minecraft.utils.compatibility.EnchantmentX;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;

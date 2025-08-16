@@ -7,7 +7,11 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;

@@ -1,5 +1,10 @@
 package io.github.thebusybiscuit.sensibletoolbox.api.gui;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -9,11 +14,6 @@ import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.ClickableGadget;
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.MonitorGadget;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Implements a GUI system using custom inventory windows.

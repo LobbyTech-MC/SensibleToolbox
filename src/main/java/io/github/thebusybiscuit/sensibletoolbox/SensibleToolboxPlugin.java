@@ -9,9 +9,6 @@ import java.util.logging.Level;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.google.common.base.Preconditions;
-import io.github.thebusybiscuit.sensibletoolbox.listeners.ExplosiveToolListener;
-import net.guizhanss.guizhanlib.updater.GuizhanBuildsUpdater;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -24,11 +21,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.comphenix.protocol.ProtocolLib;
+import com.google.common.base.Preconditions;
 
 import io.github.bakedlibs.dough.protection.ProtectionManager;
-import io.github.bakedlibs.dough.updater.GitHubBuildsUpdater;
-import io.github.bakedlibs.dough.updater.PluginUpdater;
-import io.github.bakedlibs.dough.versions.PrefixedVersion;
 import io.github.thebusybiscuit.sensibletoolbox.api.AccessControl;
 import io.github.thebusybiscuit.sensibletoolbox.api.FriendManager;
 import io.github.thebusybiscuit.sensibletoolbox.api.MinecraftVersion;
@@ -97,10 +92,10 @@ import io.github.thebusybiscuit.sensibletoolbox.items.EnderLeash;
 import io.github.thebusybiscuit.sensibletoolbox.items.EnderTuner;
 import io.github.thebusybiscuit.sensibletoolbox.items.GoldCombineHoe;
 import io.github.thebusybiscuit.sensibletoolbox.items.IronCombineHoe;
-import io.github.thebusybiscuit.sensibletoolbox.items.NetheriteCombineHoe;
 import io.github.thebusybiscuit.sensibletoolbox.items.LandMarker;
 import io.github.thebusybiscuit.sensibletoolbox.items.MoistureChecker;
 import io.github.thebusybiscuit.sensibletoolbox.items.Multimeter;
+import io.github.thebusybiscuit.sensibletoolbox.items.NetheriteCombineHoe;
 import io.github.thebusybiscuit.sensibletoolbox.items.PVCell;
 import io.github.thebusybiscuit.sensibletoolbox.items.PaintBrush;
 import io.github.thebusybiscuit.sensibletoolbox.items.PaintRoller;
@@ -150,6 +145,7 @@ import io.github.thebusybiscuit.sensibletoolbox.items.upgrades.SpeedUpgrade;
 import io.github.thebusybiscuit.sensibletoolbox.items.upgrades.ThoroughnessUpgrade;
 import io.github.thebusybiscuit.sensibletoolbox.listeners.AnvilListener;
 import io.github.thebusybiscuit.sensibletoolbox.listeners.ElevatorListener;
+import io.github.thebusybiscuit.sensibletoolbox.listeners.ExplosiveToolListener;
 import io.github.thebusybiscuit.sensibletoolbox.listeners.FurnaceListener;
 import io.github.thebusybiscuit.sensibletoolbox.listeners.GeneralListener;
 import io.github.thebusybiscuit.sensibletoolbox.listeners.MobListener;
@@ -159,16 +155,16 @@ import io.github.thebusybiscuit.sensibletoolbox.listeners.WorldListener;
 import io.github.thebusybiscuit.sensibletoolbox.slimefun.SlimefunBridge;
 import io.github.thebusybiscuit.sensibletoolbox.utils.ItemGlow;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 import io.papermc.lib.PaperLib;
-import net.guizhanss.guizhanlibplugin.updater.GuizhanUpdater;
 import me.desht.dhutils.DHUtilsException;
 import me.desht.dhutils.Debugger;
+import me.desht.dhutils.MiscUtil;
 import me.desht.dhutils.commands.CommandManager;
 import me.desht.dhutils.configuration.ConfigurationListener;
 import me.desht.dhutils.configuration.ConfigurationManager;
 import me.desht.dhutils.text.LogUtils;
 import me.desht.dhutils.text.MessagePager;
+import net.guizhanss.guizhanlibplugin.updater.GuizhanUpdater;
 
 public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationListener {
 

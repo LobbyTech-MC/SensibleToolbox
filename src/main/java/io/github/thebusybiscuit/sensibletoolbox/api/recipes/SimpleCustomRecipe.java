@@ -1,14 +1,14 @@
 package io.github.thebusybiscuit.sensibletoolbox.api.recipes;
 
-import org.bukkit.inventory.ItemStack;
-
-import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
-
 import java.util.Collection;
 import java.util.Collections;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.bukkit.inventory.ItemStack;
+
+import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
 
 /**
  * Simple one-to-one mapping of an ingredient to a result. See

@@ -2,9 +2,14 @@ package io.github.thebusybiscuit.sensibletoolbox.blocks.machines;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.base.Preconditions;
-
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,6 +20,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
+
+import com.google.common.base.Preconditions;
 
 import io.github.bakedlibs.dough.protection.Interaction;
 import io.github.thebusybiscuit.sensibletoolbox.api.SensibleToolbox;
@@ -30,7 +37,6 @@ import io.github.thebusybiscuit.sensibletoolbox.items.components.IntegratedCircu
 import io.github.thebusybiscuit.sensibletoolbox.items.components.ToughMachineFrame;
 import io.github.thebusybiscuit.sensibletoolbox.utils.ColoredMaterial;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 import me.desht.dhutils.MiscUtil;
 import me.desht.dhutils.cuboid.Cuboid;
 import me.desht.dhutils.cuboid.CuboidDirection;
@@ -114,12 +120,12 @@ public class AutoBuilder extends BaseSTBMachine {
 
     @Override
     public String getItemName() {
-        return "§d量子建造机";
+        return "自动建造机";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "可以 §6建造 §7或 §6清理", "使用 §6建筑魔杖 §7右左键","分别点击长方形 §6对角线 §7来规划区域" };
+        return new String[] { "使用区域标记器标记一段区域", "然后你可以建造或清除区域" };
     }
 
     @Override
@@ -179,9 +185,9 @@ public class AutoBuilder extends BaseSTBMachine {
         }));
 
         ChatColor c = STBUtil.dyeColorToChatColor(status.getColor());
-        gui.addLabel(ChatColor.WHITE + "方块类型: " + c + status, STATUS_SLOT, status.makeTexture(), status.getText());
+        gui.addLabel(ChatColor.WHITE + "状态: " + c + status, STATUS_SLOT, status.makeTexture(), status.getText());
 
-        gui.addLabel("方块列表", 29, null);
+        gui.addLabel("物品", 29, null);
 
         return gui;
     }
@@ -192,7 +198,7 @@ public class AutoBuilder extends BaseSTBMachine {
     }
 
     public void setBuildMode(@Nonnull AutoBuilderMode buildMode) {
-        Validate.notNull(buildMode, "建筑不能为空");
+        Preconditions.checkArgument(buildMode != null, "The Build mode cannot be null");
         this.buildMode = buildMode;
         setStatus(workArea == null ? BuilderStatus.NO_WORKAREA : BuilderStatus.READY);
     }
@@ -242,13 +248,12 @@ public class AutoBuilder extends BaseSTBMachine {
     }
 
     private void setStatus(@Nonnull BuilderStatus status) {
-        Validate.notNull(status, "方块不能为空");
+        Preconditions.checkArgument(status != null, "The Status cannot be null");
 
         if (status != this.status) {
             this.status = status;
             ChatColor c = STBUtil.dyeColorToChatColor(status.getColor());
-            getGUI().addLabel(ChatColor.WHITE + "方块列表: " + c + status, STATUS_SLOT, status.makeTexture(), status.getText());
-            updateAttachedLabelSigns();
+            getGUI().addLabel(ChatColor.WHITE + "状态: " + c + status, STATUS_SLOT, status.makeTexture(), status.getText());
         }
     }
 
@@ -482,11 +487,10 @@ public class AutoBuilder extends BaseSTBMachine {
 
     private void setupLandMarkerLabel(InventoryGUI gui, Location loc1, Location loc2) {
         if (workArea == null) {
-            gui.addLabel("标记点一", 11, null, "放置两个标记点", "左键右键分别点击长方形对角线");
+            gui.addLabel("区域标记器", 11, null, "在此放置两个以选中方块的区域标记器");
         } else {
             int v = workArea.getVolume();
-            String s = v == 1 ? "" : "s";
-            gui.addLabel("标记点二", 11, null, "建筑面积:", MiscUtil.formatLocation(loc1), MiscUtil.formatLocation(loc2), v + " block" + s);
+            gui.addLabel("区域标记器", 11, null, "选中范围: ", MiscUtil.formatLocation(loc1), MiscUtil.formatLocation(loc2), v + " 个方块");
         }
     }
 
@@ -534,7 +538,7 @@ public class AutoBuilder extends BaseSTBMachine {
             if (((LandMarker) item).getMarkedLocation() != null) {
                 insertLandMarker(toInsert);
             } else {
-                STBUtil.complain((Player) player, "你没有标记任何位置!");
+                STBUtil.complain((Player) player, "区域标记器还没有标记任何位置");
             }
             // we just put a copy of the land marker into the builder
             return 0;
@@ -658,17 +662,17 @@ public class AutoBuilder extends BaseSTBMachine {
 
     private enum BuilderStatus {
 
-        READY(DyeColor.LIME, "准备就绪!"),
-        NO_WORKAREA(DyeColor.YELLOW, "你还没有确定建筑区域"),
-        NO_INVENTORY(DyeColor.RED, "建筑材料已用完!", "请放入更多的方块", "然后按下开始键"),
-        NO_PERMISSION(DyeColor.RED, "你没有此区域的建筑权限"),
-        TOO_NEAR(DyeColor.RED, "全自动建筑机正在工作!"),
-        TOO_FAR(DyeColor.RED, "全自动建筑机离建筑区域太远了,请走进" + MAX_DISTANCE + "格,到距离建筑区的边缘"),
-        LM_WORLDS_DIFFERENT(DyeColor.RED, "此标记点来自不同的世界!"),
-        RUNNING(DyeColor.LIGHT_BLUE, "全自动建筑机正在运行,你可以按下开始按钮暂停"),
-        PAUSED(DyeColor.ORANGE, "全自动建筑机已暂停,你可以恢复他"),
-        FINISHED(DyeColor.WHITE, "建筑完成,可以准备下一次建筑");
-
+        READY(DyeColor.LIME, "准备好操作！"), // Ready to Operate!
+        NO_WORKAREA(DyeColor.YELLOW, "尚未定义工作区域"), // No work area has been defined yet
+        NO_INVENTORY(DyeColor.RED, "建筑材料不足！", "请在物品栏中放置更多方块", "然后按开始恢复"), // Out of building material! Place more blocks in the inventory and press Start to resume
+        NO_PERMISSION(DyeColor.RED, "在此区域没有建筑权限"), // Builder doesn't have building rights in this area
+        TOO_NEAR(DyeColor.RED, "自动建造机在工作区域内！"), // Auto Builder is inside the work area!
+        TOO_FAR(DyeColor.RED, "自动建造机距离工作区域太远！", "请将其放置在工作区域边缘 " + MAX_DISTANCE + " 方块以内"), // Auto Builder is too far away from the work area! Place it MAX_DISTANCE blocks or less from the edge of the work area
+        LM_WORLDS_DIFFERENT(DyeColor.RED, "区域不在同一世界！"), // Land Markers are from different worlds!
+        RUNNING(DyeColor.LIGHT_BLUE, "建造机正在运行", "按开始按钮暂停"), // Builder is running. Press Start button to pause
+        PAUSED(DyeColor.ORANGE, "建造机已暂停", "按开始按钮恢复"), // Builder has been paused. Press Start button to resume
+        HALTED(DyeColor.BLACK, "建造机无法工作", "请检查电源或材料！"), // Builder has encountered a problem! Check power or materials!
+        FINISHED(DyeColor.WHITE, "建造机已完工", "准备进行下一次操作。"); // Builder has finished! Ready for next operation
 
         private final DyeColor color;
         private final String[] text;
@@ -704,10 +708,10 @@ public class AutoBuilder extends BaseSTBMachine {
 
         protected AutoBuilderGadget(InventoryGUI gui, int slot) {
             super(gui, slot, "建造模式");
-            add(AutoBuilderMode.CLEAR, ChatColor.YELLOW, Material.WHITE_STAINED_GLASS, "清除区域的所有方块");
-            add(AutoBuilderMode.FILL, ChatColor.YELLOW, Material.BRICK, "使用清除物来清除区域内所有方块");
-            add(AutoBuilderMode.WALLS, ChatColor.YELLOW, Material.COBBLESTONE_WALL, "利用库存在建筑区周围筑墙");
-            add(AutoBuilderMode.FRAME, ChatColor.YELLOW, Material.OAK_FENCE, "利用库存在工作区周围建一个框架");
+            add(AutoBuilderMode.CLEAR, ChatColor.YELLOW, Material.WHITE_STAINED_GLASS, "清除区域内的方块");
+            add(AutoBuilderMode.FILL, ChatColor.YELLOW, Material.BRICK, "填充区域内的空气");
+            add(AutoBuilderMode.WALLS, ChatColor.YELLOW, Material.COBBLESTONE_WALL, "沿着区域边缘建筑墙");
+            add(AutoBuilderMode.FRAME, ChatColor.YELLOW, Material.OAK_FENCE, "沿着区域边缘建筑框架");
             setInitialValue(((AutoBuilder) gui.getOwningBlock()).getBuildMode());
         }
 

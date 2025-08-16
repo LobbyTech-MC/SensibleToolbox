@@ -2,7 +2,6 @@ package io.github.thebusybiscuit.sensibletoolbox.blocks;
 
 import javax.annotation.Nonnull;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;

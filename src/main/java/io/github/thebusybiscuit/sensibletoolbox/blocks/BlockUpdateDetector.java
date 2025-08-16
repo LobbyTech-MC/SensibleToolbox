@@ -21,7 +21,6 @@ import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.NumericGadget;
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.RedstoneBehaviourGadget;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
 import io.github.thebusybiscuit.sensibletoolbox.utils.IntRange;
-
 import me.desht.dhutils.Debugger;
 
 public class BlockUpdateDetector extends BaseSTBBlock {

@@ -1,19 +1,16 @@
 package io.github.thebusybiscuit.sensibletoolbox.utils;
 
+import java.util.Arrays;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import eu.decentsoftware.holograms.api.DHAPI;
-import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import eu.decentsoftware.holograms.api.DHAPI;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
 import me.desht.dhutils.MiscUtil;
-import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
-import me.filoghost.holographicdisplays.api.hologram.Hologram;
-import me.filoghost.holographicdisplays.api.internal.HolographicDisplaysAPIProvider;
-
-import java.util.Arrays;
 
 /**
  * This utility class is used to display a holographic pop up using the {@link DHAPI}.

@@ -1,7 +1,5 @@
 package io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets;
 
-import com.google.common.base.Preconditions;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,11 +7,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.google.common.base.Preconditions;
+
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.GUIUtil;
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.InventoryGUI;
+import io.github.thebusybiscuit.sensibletoolbox.utils.IntRange;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.math.IntRange;
 /**
  * and changed.
  *
@@ -38,7 +37,7 @@ public class NumericGadget extends ClickableGadget {
      *            the GUI slot that the gadget occupies
      * @param title
      *            the label for the numeric gadget
-     * @param range
+     * @param intRange
      *            the range for the gadget
      * @param value
      *            the initial value for the gadget
@@ -49,10 +48,10 @@ public class NumericGadget extends ClickableGadget {
      * @param callback
      *            the code to run when the gadget is clicked
      */
-    public NumericGadget(InventoryGUI gui, int slot, String title, IntRange range, int value, int incr, int altIncr, NumericListener callback) {
+    public NumericGadget(InventoryGUI gui, int slot, String title, IntRange intRange, int value, int incr, int altIncr, NumericListener callback) {
         super(gui, slot);
         this.title = title;
-        this.range = range;
+        this.range = intRange;
         this.value = value;
         this.incr = incr;
         this.altIncr = altIncr;

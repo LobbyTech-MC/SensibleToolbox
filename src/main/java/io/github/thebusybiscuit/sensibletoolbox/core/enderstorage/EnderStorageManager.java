@@ -10,22 +10,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import com.google.common.base.Preconditions;
-import io.github.thebusybiscuit.sensibletoolbox.api.SensibleToolbox;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.ItemStack;
+
+import com.google.common.base.Preconditions;
 
 import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
+import io.github.thebusybiscuit.sensibletoolbox.api.SensibleToolbox;
 import io.github.thebusybiscuit.sensibletoolbox.api.enderstorage.EnderStorageHolder;
 import io.github.thebusybiscuit.sensibletoolbox.items.EnderBag;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 import me.desht.dhutils.MiscUtil;
 import me.desht.dhutils.text.LogUtils;
-import org.bukkit.inventory.ItemStack;
 
 public class EnderStorageManager implements Listener {
 

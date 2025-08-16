@@ -1,6 +1,5 @@
 package io.github.thebusybiscuit.sensibletoolbox.items.itemroutermodules;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -8,7 +7,6 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
 import io.github.thebusybiscuit.sensibletoolbox.items.components.SubspaceTransponder;
-import io.github.thebusybiscuit.sensibletoolbox.utils.UnicodeSymbol;
 
 public class HyperSenderModule extends AdvancedSenderModule {
 

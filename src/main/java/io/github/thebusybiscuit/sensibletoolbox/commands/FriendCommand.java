@@ -4,18 +4,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
 import io.github.thebusybiscuit.sensibletoolbox.api.FriendManager;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 import me.desht.dhutils.MiscUtil;
 import me.desht.dhutils.text.MessagePager;
 

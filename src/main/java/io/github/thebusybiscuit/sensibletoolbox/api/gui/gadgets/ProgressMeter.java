@@ -1,15 +1,15 @@
 package io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import com.google.common.base.Preconditions;
 
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.GUIUtil;
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.InventoryGUI;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.AbstractProcessingMachine;
 import io.github.thebusybiscuit.sensibletoolbox.core.gui.STBInventoryGUI;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 
 /**
  * A progress meter gadget. The GUI that this is added to must be owned by an

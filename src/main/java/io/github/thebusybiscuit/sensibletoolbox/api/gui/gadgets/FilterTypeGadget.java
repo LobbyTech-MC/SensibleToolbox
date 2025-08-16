@@ -1,14 +1,14 @@
 package io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+
+import com.google.common.base.Preconditions;
 
 import io.github.thebusybiscuit.sensibletoolbox.api.filters.FilterType;
 import io.github.thebusybiscuit.sensibletoolbox.api.filters.Filtering;
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.InventoryGUI;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 
 /**
  * A GUI gadget which can display and change a filter's filter type.

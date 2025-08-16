@@ -1,9 +1,9 @@
 package io.github.thebusybiscuit.sensibletoolbox.api.recipes;
 
+import java.util.Collection;
+
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-
-import java.util.Collection;
 
 /**
  * Represents a recipe which takes a defined length of time and a specific

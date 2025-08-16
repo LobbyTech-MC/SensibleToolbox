@@ -1,12 +1,12 @@
 package io.github.thebusybiscuit.sensibletoolbox.api;
 
+import java.util.Set;
+
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
-
-import java.util.Set;
 
 /**
  * An interface to the STB item registry system, allow registration

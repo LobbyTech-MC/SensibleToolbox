@@ -40,10 +40,9 @@ import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.ButtonGadget;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
 import io.github.thebusybiscuit.sensibletoolbox.blocks.PaintCan;
-import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
 import io.github.thebusybiscuit.sensibletoolbox.utils.HoloMessage;
+import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
 import io.github.thebusybiscuit.sensibletoolbox.utils.UnicodeSymbol;
-
 import me.desht.dhutils.Debugger;
 
 public class PaintBrush extends BaseSTBItem {

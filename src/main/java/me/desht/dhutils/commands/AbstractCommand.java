@@ -12,17 +12,15 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.google.common.base.Strings;
-import com.google.common.base.Preconditions;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.StringUtils;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 import me.desht.dhutils.DHUtilsException;
 import me.desht.dhutils.Debugger;
 import me.desht.dhutils.MiscUtil;

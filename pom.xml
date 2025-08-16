@@ -8,7 +8,6 @@
     <artifactId>SensibleToolbox</artifactId>
 
     <version>Reborn-1.0.0</version>
-    <version>zh-CN</version>
     <inceptionYear>2014</inceptionYear>
     <packaging>jar</packaging>
 
@@ -23,7 +22,6 @@
         <maven.compiler.target>21</maven.compiler.target>
 
         <!-- Spigot properties -->
-        <spigot.version>1.21.1</spigot.version>
         <spigot.javadocs>https://hub.spigotmc.org/javadocs/spigot/</spigot.javadocs>
 
         <!-- Default settings for sonarcloud.io -->
@@ -90,6 +88,8 @@
                         <!-- We can safely exclude them from the final jar -->
                         <exclude>**/package-info.java</exclude>
                     </excludes>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
 
@@ -154,7 +154,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.6.0</version>
 
                 <configuration>
                     <reportOutputDirectory>${project.basedir}</reportOutputDirectory>
@@ -196,8 +196,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
             <version>1.21.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
@@ -213,7 +213,6 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>5.3.0</version>
-            <version>5.0.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -221,16 +220,13 @@
             <groupId>com.github.decentsoftware-eu</groupId>
             <artifactId>decentholograms</artifactId>
             <version>2.8.11</version>
-            <groupId>me.filoghost.holographicdisplays</groupId>
-            <artifactId>holographicdisplays-api</artifactId>
-            <version>3.0.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>com.github.slimefunguguProject</groupId>
+            <groupId>com.github.SlimefunGuguProject</groupId>
             <artifactId>Slimefun4</artifactId>
-            <version>2025.1</version>
+            <version>master-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -258,7 +254,21 @@
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
-            <version>7.2.8</version>
+            <version>7.3.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.guizhanss</groupId>
+            <artifactId>GuizhanLib-api</artifactId>
+            <version>1.8.1</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.guizhanss</groupId>
+            <artifactId>GuizhanLibPlugin</artifactId>
+            <version>2.3.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

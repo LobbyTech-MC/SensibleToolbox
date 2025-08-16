@@ -11,7 +11,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.guizhanss.guizhanlib.minecraft.utils.compatibility.EnchantmentX;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -44,10 +43,10 @@ import io.github.thebusybiscuit.sensibletoolbox.items.energycells.TenKEnergyCell
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
 import io.github.thebusybiscuit.sensibletoolbox.utils.UnicodeSymbol;
 import io.github.thebusybiscuit.sensibletoolbox.utils.VanillaInventoryUtils;
-
 import me.desht.dhutils.Debugger;
 import me.desht.dhutils.cost.ItemCost;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import net.guizhanss.guizhanlib.minecraft.utils.compatibility.EnchantmentX;
 
 public class MultiBuilder extends BaseSTBItem implements Chargeable {
 

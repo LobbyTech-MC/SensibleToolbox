@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.base.Preconditions;
+import javax.annotation.Nonnull;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,6 +23,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
+import com.google.common.base.Preconditions;
+
 import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.GUIUtil;
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.InventoryGUI;
@@ -33,13 +35,10 @@ import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.MonitorGadget;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
 import io.github.thebusybiscuit.sensibletoolbox.utils.BukkitSerialization;
-import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
 import io.github.thebusybiscuit.sensibletoolbox.utils.IntRange;
-
+import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
 import me.desht.dhutils.Debugger;
 import me.desht.dhutils.text.LogUtils;
-
-import javax.annotation.Nonnull;
 
 public class STBInventoryGUI implements InventoryGUI {
 

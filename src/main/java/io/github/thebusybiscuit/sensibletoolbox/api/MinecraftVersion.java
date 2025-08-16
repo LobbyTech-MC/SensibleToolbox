@@ -2,11 +2,11 @@ package io.github.thebusybiscuit.sensibletoolbox.api;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.Server;
 
+import com.google.common.base.Preconditions;
+
 import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 import io.papermc.lib.PaperLib;
 
 /**
@@ -79,12 +79,6 @@ public enum MinecraftVersion {
     MINECRAFT_1_29(29, "1.29.x"),
     MINECRAFT_1_30(30, "1.30.x"),
 
-    /**
-     * This constant represents Minecraft (Java Edition) Version 1.19
-     * (The "Caves and Cliffs: Part II" Update)
-     *
-     */
-    MINECRAFT_1_19(19, "1.19.x"),
     
     /**
      * This constant represents an exceptional state in which we were unable

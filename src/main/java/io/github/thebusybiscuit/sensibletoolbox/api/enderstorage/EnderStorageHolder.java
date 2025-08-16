@@ -1,12 +1,12 @@
 package io.github.thebusybiscuit.sensibletoolbox.api.enderstorage;
 
+import java.util.UUID;
+
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import io.github.thebusybiscuit.sensibletoolbox.api.STBInventoryHolder;
-
-import java.util.UUID;
 
 /**
  * Represents an STB ender inventory holder.

@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -31,14 +30,13 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 
 import io.github.bakedlibs.dough.items.ItemUtils;
 import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
 import io.github.thebusybiscuit.sensibletoolbox.api.MinecraftVersion;
 import io.github.thebusybiscuit.sensibletoolbox.api.energy.Chargeable;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.StringUtils;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 import me.desht.dhutils.DHUtilsException;
 import me.desht.dhutils.MiscUtil;
 import me.desht.dhutils.blocks.BlockUtil;
