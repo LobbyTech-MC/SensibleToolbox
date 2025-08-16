@@ -32,12 +32,12 @@ public class ChargeCommand extends AbstractCommand {
     @Override
     public boolean execute(Plugin plugin, CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            MiscUtil.errorMessage(sender, "This command can't be run from the console.");
+            MiscUtil.errorMessage(sender, "仅玩家可执行此命令!");
             return true;
         }
 
-        Player player = (Player) sender;
-        ItemStack itemInHand = player.getInventory().getItemInMainHand();
+        Player p = (Player) sender;
+        ItemStack itemInHand = p.getInventory().getItemInMainHand();
         BaseSTBItem item = SensibleToolbox.getItemRegistry().fromItemStack(itemInHand);
         BaseSTBBlock block = null;
         Chargeable chargeable = null;
@@ -45,7 +45,7 @@ public class ChargeCommand extends AbstractCommand {
         if (item instanceof Chargeable) {
             chargeable = (Chargeable) item;
         } else {
-            Block b = player.getTargetBlock((Set<Material>) null, 10);
+            Block b = p.getTargetBlock((Set<Material>) null, 10);
 
             if (Tag.WALL_SIGNS.isTagged(b.getType()) || Tag.STANDING_SIGNS.isTagged(b.getType())) {
                 Sign s = (Sign) b.getState();
@@ -60,7 +60,7 @@ public class ChargeCommand extends AbstractCommand {
         }
 
         if (chargeable == null) {
-            MiscUtil.errorMessage(sender, "Nothing suitable to charge.");
+            MiscUtil.errorMessage(sender, "没有可充能的物品");
             return true;
         }
 
@@ -71,7 +71,7 @@ public class ChargeCommand extends AbstractCommand {
             amount = Integer.parseInt(args[0]);
 
             if (amount >= 0 && amount <= max) {
-                MiscUtil.errorMessage(sender, "Must be in range 0-" + max);
+                MiscUtil.errorMessage(sender, "充能量必须在 0-" + max + " 范围内!");
                 return true;
             }
         } else {
@@ -81,10 +81,10 @@ public class ChargeCommand extends AbstractCommand {
         chargeable.setCharge(amount);
 
         if (item != null) {
-            player.getInventory().setItemInMainHand(item.toItemStack());
+            p.getInventory().setItemInMainHand(item.toItemStack());
         } else if (block != null) {
             block.update(true);
-            MiscUtil.statusMessage(player, "&6" + block.getItemName() + "&- charged to " + STBUtil.getChargeString(chargeable));
+            MiscUtil.statusMessage(p, "&6" + block.getItemName() + "&- 已被充能至 " + STBUtil.getChargeString(chargeable));
         }
 
         return true;

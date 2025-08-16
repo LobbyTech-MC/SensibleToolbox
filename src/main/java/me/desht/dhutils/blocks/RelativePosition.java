@@ -1,5 +1,7 @@
 package me.desht.dhutils.blocks;
 
+import com.google.common.base.Preconditions;
+
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
 import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 
@@ -8,7 +10,7 @@ import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
  * multi-block structure. The position is relative to the block's base
  * location as returned by {@link BaseSTBBlock#getLocation()} and the
  * block's orientation as returned by {@link BaseSTBBlock#getFacing()}
- * 
+ *
  * @author desht
  */
 public class RelativePosition {
@@ -18,7 +20,7 @@ public class RelativePosition {
     private final int left;
 
     public RelativePosition(int front, int up, int left) {
-        Validate.isTrue(front != 0 || up != 0 || left != 0, "At least one of front, up, left must be non-zero");
+        Preconditions.checkArgument(front != 0 || up != 0 || left != 0, "At least one of front, up, left must be non-zero");
         this.front = front;
         this.up = up;
         this.left = left;

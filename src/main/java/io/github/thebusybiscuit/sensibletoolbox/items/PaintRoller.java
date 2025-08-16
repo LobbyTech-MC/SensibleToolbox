@@ -22,7 +22,7 @@ public class PaintRoller extends PaintBrush {
 
     @Override
     public String getItemName() {
-        return "Paint Roller";
+        return "颜料桶";
     }
 
     @Override

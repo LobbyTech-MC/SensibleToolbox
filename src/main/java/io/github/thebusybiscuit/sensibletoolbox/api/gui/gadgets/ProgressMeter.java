@@ -1,5 +1,6 @@
 package io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -13,7 +14,7 @@ import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 /**
  * A progress meter gadget. The GUI that this is added to must be owned by an
  * {@link AbstractProcessingMachine}.
- * 
+ *
  * @author desht
  */
 public class ProgressMeter extends MonitorGadget {
@@ -31,37 +32,37 @@ public class ProgressMeter extends MonitorGadget {
     public ProgressMeter(InventoryGUI gui) {
         super(gui);
 
-        Validate.isTrue(getGUI().getOwningBlock() instanceof AbstractProcessingMachine, "Attempt to install progress meter in non-processing machine " + getGUI().getOwningBlock());
+        Preconditions.checkArgument(getGUI().getOwningBlock() instanceof AbstractProcessingMachine, "Attempt to install progress meter in non-processing machine " + getGUI().getOwningBlock());
 
         machine = (AbstractProcessingMachine) getGUI().getOwningBlock();
-        Validate.isTrue(machine.getProgressCounterSlot() > 0 || machine.getProgressItemSlot() > 0, "At least one of counter slot and item slot must be >= 0!");
+        Preconditions.checkArgument(machine.getProgressCounterSlot() > 0 || machine.getProgressItemSlot() > 0, "At least one of counter slot and item slot must be >= 0!");
 
         this.progressIcon = machine.getProgressIcon().clone();
-        Validate.isTrue(progressIcon.getType().getMaxDurability() > 0, "Material " + progressIcon + " doesn't have a durability!");
+        Preconditions.checkArgument(progressIcon.getType().getMaxDurability() > 0, "Material " + progressIcon + " doesn't have a durability!");
     }
 
     @Override
     public void repaint() {
         if (machine.getProgressCounterSlot() > 0 && machine.getProgressCounterSlot() < getGUI().getInventory().getSize()) {
-            ItemStack stack;
+            ItemStack s;
             double progress = machine.getProgress();
 
             if (progress > 0 && maxProcessingTime > 0) {
-                stack = progressIcon;
-                STBUtil.levelToDurability(stack, (int) (maxProcessingTime - progress), maxProcessingTime);
-                ItemMeta meta = stack.getItemMeta();
+                s = progressIcon;
+                STBUtil.levelToDurability(s, (int) (maxProcessingTime - progress), maxProcessingTime);
+                ItemMeta meta = s.getItemMeta();
                 meta.setDisplayName(machine.getProgressMessage());
                 String[] lore = machine.getProgressLore();
 
                 if (lore.length > 0) {
                     meta.setLore(GUIUtil.makeLore(lore));
                 }
-                stack.setItemMeta(meta);
+                s.setItemMeta(meta);
             } else {
-                stack = STBInventoryGUI.BG_TEXTURE;
+                s = STBInventoryGUI.BG_TEXTURE;
             }
 
-            getGUI().getInventory().setItem(machine.getProgressCounterSlot(), stack);
+            getGUI().getInventory().setItem(machine.getProgressCounterSlot(), s);
         }
 
         if (machine.getProgressItemSlot() > 0 && machine.getProgressItemSlot() < getGUI().getInventory().getSize()) {

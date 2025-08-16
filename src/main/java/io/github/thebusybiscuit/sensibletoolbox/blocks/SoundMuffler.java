@@ -17,15 +17,15 @@ import io.github.thebusybiscuit.sensibletoolbox.api.gui.InventoryGUI;
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.NumericGadget;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
 import io.github.thebusybiscuit.sensibletoolbox.listeners.SoundMufflerListener;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.math.IntRange;
+import io.github.thebusybiscuit.sensibletoolbox.utils.IntRange;
 
 /**
  * The {@link SoundMuffler} muffles or mutes nearby sounds.
  * This item requires ProtocolLib to be installed.
- * 
+ *
  * @author desht
  * @author TheBusyBiscuit
- * 
+ *
  * @see SoundMufflerListener
  *
  */
@@ -51,7 +51,7 @@ public class SoundMuffler extends BaseSTBBlock {
     protected InventoryGUI createGUI() {
         InventoryGUI gui = GUIUtil.createGUI(this, 9, ChatColor.DARK_AQUA + getItemName());
 
-        gui.addGadget(new NumericGadget(gui, 0, "Volume", new IntRange(0, 100), getVolume(), 10, 1, newValue -> {
+        gui.addGadget(new NumericGadget(gui, 0, "音量", new IntRange(0, 100), getVolume(), 10, 1, newValue -> {
             setVolume(newValue);
             return true;
         }));
@@ -87,7 +87,7 @@ public class SoundMuffler extends BaseSTBBlock {
 
     @Override
     public String[] getLore() {
-        return new String[] { "减少附近的声音音量", "例如 §6完全消除 §7生物的叫声", "工作距离: §6当前区块", "右键设备: §6进行设置" };
+        return new String[] { "降低附近的噪音", "范围: " + DISTANCE + " 格", "右键以" + ChatColor.WHITE + "配置此机器" };
     }
 
     @Override
@@ -100,30 +100,30 @@ public class SoundMuffler extends BaseSTBBlock {
     }
 
     @Override
-    public void onBlockRegistered(Location loc, boolean isPlacing) {
+    public void onBlockRegistered(Location l, boolean isPlacing) {
         SensibleToolboxPlugin plugin = ((SensibleToolboxPlugin) getProviderPlugin());
         SoundMufflerListener listener = plugin.getSoundMufflerListener();
         listener.registerMuffler(this);
 
-        super.onBlockRegistered(loc, isPlacing);
+        super.onBlockRegistered(l, isPlacing);
     }
 
     @Override
-    public void onBlockUnregistered(Location loc) {
+    public void onBlockUnregistered(Location l) {
         SensibleToolboxPlugin plugin = ((SensibleToolboxPlugin) getProviderPlugin());
         SoundMufflerListener listener = plugin.getSoundMufflerListener();
         listener.unregisterMuffler(this);
 
-        super.onBlockUnregistered(loc);
+        super.onBlockUnregistered(l);
     }
 
     @Override
-    public void onInteractBlock(PlayerInteractEvent event) {
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && !event.getPlayer().isSneaking()) {
-            getGUI().show(event.getPlayer());
+    public void onInteractBlock(PlayerInteractEvent e) {
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && !e.getPlayer().isSneaking()) {
+            getGUI().show(e.getPlayer());
         }
 
-        super.onInteractBlock(event);
+        super.onInteractBlock(e);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class SoundMuffler extends BaseSTBBlock {
     @Override
     public String[] getSignLabel(BlockFace face) {
         String[] label = super.getSignLabel(face);
-        label[1] = ChatColor.DARK_RED + "Volume " + ChatColor.WHITE + getVolume();
+        label[1] = ChatColor.DARK_RED + "音量: " + ChatColor.WHITE + getVolume();
         return label;
     }
 }

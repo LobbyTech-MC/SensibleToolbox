@@ -9,15 +9,15 @@ import io.github.thebusybiscuit.sensibletoolbox.utils.UnicodeSymbol;
 
 public class PlayerEnderHolder extends STBEnderStorageHolder {
 
-    private final OfflinePlayer player;
+    private final OfflinePlayer p;
 
-    protected PlayerEnderHolder(EnderStorageManager manager, OfflinePlayer player, int frequency) {
+    protected PlayerEnderHolder(EnderStorageManager manager, OfflinePlayer p, int frequency) {
         super(manager, frequency);
-        this.player = player;
+        this.p = p;
     }
 
     public OfflinePlayer getPlayer() {
-        return player;
+        return p;
     }
 
     @Override
@@ -38,24 +38,24 @@ public class PlayerEnderHolder extends STBEnderStorageHolder {
             return false;
         }
 
-        return player.equals(((PlayerEnderHolder) o).player);
+        return p.equals(((PlayerEnderHolder) o).p);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + player.hashCode();
+        result = 31 * result + p.hashCode();
         return result;
     }
 
     @Override
     public String getInventoryTitle() {
-        return ChatColor.DARK_PURPLE + "E-Storage " + ChatColor.DARK_RED + "[Personal " + UnicodeSymbol.NUMBER.toUnicode() + getFrequency() + "]";
+        return ChatColor.DARK_PURPLE + "电子存储 " + ChatColor.DARK_RED + "[私人 " + UnicodeSymbol.NUMBER.toUnicode() + getFrequency() + "]";
     }
 
     @Override
     public String toString() {
-        return "Player Ender Storage " + player.getName() + "#" + getFrequency();
+        return "私人电子存储 " + p.getName() + "#" + getFrequency();
     }
 
     @Override

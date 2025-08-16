@@ -2,6 +2,7 @@ package io.github.thebusybiscuit.sensibletoolbox.api.recipes;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.inventory.ItemStack;
 
 import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
@@ -26,7 +27,7 @@ public class SupplementaryResult {
      *            the chance, out of 1000, that the item will be produced
      */
     public SupplementaryResult(ItemStack result, int chance) {
-        Validate.isTrue(chance > 0 && chance <= 1000, "chance out of range: must be 0 < chance <= 1000");
+        Preconditions.checkArgument(chance > 0 && chance <= 1000, "chance out of range: must be 0 < chance <= 1000");
         this.result = result;
         this.chance = chance;
     }

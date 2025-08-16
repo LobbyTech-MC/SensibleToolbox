@@ -5,11 +5,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 final class SwapRecord {
 
-    private final Player player;
+    private final Player p;
     private final Block block;
     private final Material source;
     private final Material target;
@@ -17,10 +18,12 @@ final class SwapRecord {
     private final MultiBuilder builder;
     private final int slot;
     private final double chargeNeeded;
+    private final BlockFace direction;
+
 
     @ParametersAreNonnullByDefault
-    SwapRecord(Player player, Block block, Material source, Material target, int layersLeft, MultiBuilder builder, int slot, double chargeNeeded) {
-        this.player = player;
+    SwapRecord(Player p, Block block, Material source, Material target, int layersLeft, MultiBuilder builder, int slot, double chargeNeeded, BlockFace direction) {
+        this.p = p;
         this.block = block;
         this.source = source;
         this.target = target;
@@ -28,11 +31,12 @@ final class SwapRecord {
         this.builder = builder;
         this.slot = slot;
         this.chargeNeeded = chargeNeeded;
+        this.direction = direction;
     }
 
     @Nonnull
     public Player getPlayer() {
-        return player;
+        return p;
     }
 
     @Nonnull
@@ -65,6 +69,10 @@ final class SwapRecord {
 
     public double getRequiredCharge() {
         return chargeNeeded;
+    }
+
+    public BlockFace getDirection() {
+        return direction;
     }
 
 }

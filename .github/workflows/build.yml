@@ -1,0 +1,62 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: 21
+          distribution: adopt
+
+      - name: Get latest release tag
+        id: get_latest_tag
+        run: |
+          git fetch --tags
+
+          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "Latest tag: $LATEST_TAG"
+
+          BASE_VERSION=${LATEST_TAG#vReborn-}
+          
+          IFS='.' read -r -a version_parts <<< "$BASE_VERSION"
+          
+          LAST_INDEX=${#version_parts[@]}-1
+          version_parts[$LAST_INDEX]=$((version_parts[$LAST_INDEX]+1))
+          
+          NEW_VERSION="Reborn-${version_parts[0]}.${version_parts[1]}.${version_parts[$LAST_INDEX]}"
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Update version in pom.xml
+        run: |
+          mvn versions:set -DnewVersion="${{ env.NEW_VERSION }}"
+          mvn versions:commit
+
+      - name: Build with Maven
+        run: mvn clean package --file pom.xml
+
+      - name: Rename JAR file
+        run: |
+          # Find the generated JAR file
+          JAR_FILE=$(ls target/*.jar | head -n 1)  # Get the first jar file in target
+          echo "Found JAR file: $JAR_FILE"
+          mv "$JAR_FILE" "SensibleToolbox v${{ env.NEW_VERSION }}.jar"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "v${{ env.NEW_VERSION }}" # Use the incremented version for the tag without extra prefix
+          files: "SensibleToolbox v${{ env.NEW_VERSION }}.jar" # Use the renamed file
+          name: "SensibleToolbox v${{ env.NEW_VERSION }}" # Naming the release
+          body: |
+            Release of version v${{ env.NEW_VERSION }}.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

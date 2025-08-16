@@ -93,7 +93,7 @@ public class EnderBox extends BaseSTBBlock implements EnderTunable, STBInventory
 
     @Override
     public String[] getLore() {
-        return new String[] { "类似 §6末影箱 §7的移动储存器", "可以 §6储存 §7物品,并且拆下不会 §6丢失", "右键设备: 打开末影箱" };
+        return new String[] { "类似 §6末影箱 §7的移动储存器", "可以 §6储存 §7物品,并且拆下不会 §6丢失", "手持末影调频器右键以设置频道", "右键设备: 打开末影箱" };
     }
 
     @Override
@@ -114,20 +114,20 @@ public class EnderBox extends BaseSTBBlock implements EnderTunable, STBInventory
     }
 
     @Override
-    public void onInteractBlock(PlayerInteractEvent event) {
-        super.onInteractBlock(event);
+    public void onInteractBlock(PlayerInteractEvent e) {
+        super.onInteractBlock(e);
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && !event.getPlayer().isSneaking()) {
-            Player player = event.getPlayer();
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && !e.getPlayer().isSneaking()) {
+            Player p = e.getPlayer();
 
-            if (!hasAccessRights(player)) {
-                STBUtil.complain(player, "That " + getItemName() + " is private!");
+            if (!hasAccessRights(p)) {
+                STBUtil.complain(p, "你没有权限打开" + getItemName());
             } else {
-                Inventory inv = isGlobal() ? EnderStorage.getEnderInventory(getEnderFrequency()) : EnderStorage.getEnderInventory(player, getEnderFrequency());
-                player.openInventory(inv);
-                player.playSound(getLocation(), Sound.BLOCK_CHEST_OPEN, 0.5F, 1.0F);
+                Inventory inv = isGlobal() ? EnderStorage.getEnderInventory(getEnderFrequency()) : EnderStorage.getEnderInventory(p, getEnderFrequency());
+                p.openInventory(inv);
+                p.playSound(getLocation(), Sound.BLOCK_CHEST_OPEN, 0.5F, 1.0F);
             }
-            event.setCancelled(true);
+            e.setCancelled(true);
         }
     }
 

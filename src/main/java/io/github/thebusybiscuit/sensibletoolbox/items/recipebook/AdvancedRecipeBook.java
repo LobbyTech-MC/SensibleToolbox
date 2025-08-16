@@ -17,7 +17,7 @@ public class AdvancedRecipeBook extends RecipeBook {
 
     @Override
     public String getItemName() {
-        return "Advanced Recipe Book";
+        return "高级合成环";
     }
 
     @Override
@@ -27,7 +27,7 @@ public class AdvancedRecipeBook extends RecipeBook {
 
     @Override
     public String[] getExtraLore() {
-        return new String[] { "Can pull items from adjacent", "inventories during fabrication" };
+        return new String[] { "制作时可以从临近的容器中提取物品" };
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -31,7 +32,7 @@ public class CommandManager {
     }
 
     public void registerCommand(@Nonnull AbstractCommand cmd) {
-        Validate.notNull(cmd, "Command cannot be null!");
+        Preconditions.checkArgument(cmd != null, "Command cannot be null!");
 
         Debugger.getInstance().debug(2, "register command: " + cmd.getClass().getName());
         cmdList.add(cmd);
@@ -58,15 +59,14 @@ public class CommandManager {
             }
         } else if (possibleMatches.isEmpty()) {
             // no match
-            String s = cmdList.size() == 1 ? "" : "s";
-            MiscUtil.errorMessage(sender, cmdList.size() + " possible matching command" + s + " in " + desc + ":");
+            MiscUtil.errorMessage(sender, "你可能打错了命令，以下是可能匹配的命令: ");
 
             for (AbstractCommand cmd : MiscUtil.asSortedList(cmdList)) {
                 cmd.showUsage(sender, label, "\u2022 ");
             }
         } else {
             // multiple possible matches
-            MiscUtil.errorMessage(sender, possibleMatches.size() + " possible matching commands in " + desc + ":");
+            MiscUtil.errorMessage(sender, "你可能打错了命令，以下是可能匹配的命令: ");
             for (AbstractCommand cmd : MiscUtil.asSortedList(possibleMatches)) {
                 cmd.showUsage(sender, label, "\u2022 ");
             }

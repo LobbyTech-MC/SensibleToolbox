@@ -9,7 +9,11 @@ import java.util.logging.Level;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.base.Preconditions;
+import io.github.thebusybiscuit.sensibletoolbox.listeners.ExplosiveToolListener;
+import net.guizhanss.guizhanlib.updater.GuizhanBuildsUpdater;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -93,6 +97,7 @@ import io.github.thebusybiscuit.sensibletoolbox.items.EnderLeash;
 import io.github.thebusybiscuit.sensibletoolbox.items.EnderTuner;
 import io.github.thebusybiscuit.sensibletoolbox.items.GoldCombineHoe;
 import io.github.thebusybiscuit.sensibletoolbox.items.IronCombineHoe;
+import io.github.thebusybiscuit.sensibletoolbox.items.NetheriteCombineHoe;
 import io.github.thebusybiscuit.sensibletoolbox.items.LandMarker;
 import io.github.thebusybiscuit.sensibletoolbox.items.MoistureChecker;
 import io.github.thebusybiscuit.sensibletoolbox.items.Multimeter;
@@ -156,9 +161,9 @@ import io.github.thebusybiscuit.sensibletoolbox.utils.ItemGlow;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
 import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 import io.papermc.lib.PaperLib;
+import net.guizhanss.guizhanlibplugin.updater.GuizhanUpdater;
 import me.desht.dhutils.DHUtilsException;
 import me.desht.dhutils.Debugger;
-import me.desht.dhutils.MiscUtil;
 import me.desht.dhutils.commands.CommandManager;
 import me.desht.dhutils.configuration.ConfigurationListener;
 import me.desht.dhutils.configuration.ConfigurationManager;
@@ -176,7 +181,7 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
     private boolean protocolLibEnabled = false;
     private SoundMufflerListener soundMufflerListener;
     private boolean enabled = false;
-    private boolean holographicDisplays = false;
+    private boolean decentHolograms = false;
     private BukkitTask energyTask = null;
     private EnderStorageManager enderStorageManager;
     private STBItemRegistry itemRegistry;
@@ -203,19 +208,9 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
         configCache = new ConfigCache(this);
         configCache.processConfig();
 
-        MiscUtil.setColoredConsole(getConfig().getBoolean("colored_console"));
-
-        LogUtils.setLogLevel(getConfig().getString("log_level", "INFO"));
-
-        Debugger.getInstance().setPrefix("[STB] ");
-        Debugger.getInstance().setLevel(getConfig().getInt("debug_level"));
-
-        if (getConfig().getInt("debug_level") > 0) {
-            Debugger.getInstance().setTarget(getServer().getConsoleSender());
-        }
 
         // try to hook other plugins
-        holographicDisplays = getServer().getPluginManager().isPluginEnabled("HolographicDisplays");
+        decentHolograms = getServer().getPluginManager().isPluginEnabled("DecentHolograms");
         setupProtocolLib();
 
         scuRelayIDTracker = new IDTracker<>(this, "scu_relay_id");
@@ -234,7 +229,7 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
         try {
             LocationManager.getManager().load();
         } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "An Error occured while loading Locations...", e);
+            getLogger().log(Level.SEVERE, "An Error occurred while loading Locations...", e);
             setEnabled(false);
             return;
         }
@@ -249,7 +244,7 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
             RecipeUtil.setupRecipes();
             RecipeBook.buildRecipes();
 
-            protectionManager = new ProtectionManager(getServer());
+            protectionManager = new ProtectionManager(this);
         });
 
         getServer().getScheduler().runTaskTimer(this, LocationManager.getManager()::tick, 1L, 1L);
@@ -263,11 +258,26 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
             new SlimefunBridge(this);
         }
 
-        if (getConfig().getBoolean("options.auto-update") && getDescription().getVersion().startsWith("DEV - ")) {
-            PluginUpdater<PrefixedVersion> updater = new GitHubBuildsUpdater(this, getFile(), "Slimefun/SensibleToolbox/master");
-            updater.start();
+        if (getConfig().getBoolean("options.auto-update") && getDescription().getVersion().startsWith("Build")) {
+            if (Bukkit.getPluginManager().isPluginEnabled("GuizhanLibPlugin")) {
+                try {
+                    GuizhanUpdater.start(this, getFile(), "SlimefunGuguProject", "SensibleToolboxReborn", "master");
+                } catch (NoClassDefFoundError e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
+        MiscUtil.setColoredConsole(getConfig().getBoolean("colored_console"));
+
+        LogUtils.setLogLevel(getConfig().getString("log_level", "INFO"));
+
+        Debugger.getInstance().setPrefix("[STB] ");
+        Debugger.getInstance().setLevel(getConfig().getInt("debug_level"));
+
+        if (getConfig().getInt("debug_level") > 0) {
+            Debugger.getInstance().setTarget(getServer().getConsoleSender());
+        }
         enabled = true;
     }
 
@@ -290,11 +300,11 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
 
             // Looks like you are using an unsupported Minecraft Version
             getLogger().log(Level.SEVERE, "#############################################");
-            getLogger().log(Level.SEVERE, "### SensibleToolbox was not installed correctly!");
-            getLogger().log(Level.SEVERE, "### You are using the wrong version of Minecraft!");
+            getLogger().log(Level.SEVERE, "### STB 无法正常加载");
+            getLogger().log(Level.SEVERE, "### 原因: 错误的 Minecraft 版本！");
             getLogger().log(Level.SEVERE, "###");
-            getLogger().log(Level.SEVERE, "### You are using Minecraft v1.{0}", majorVersion);
-            getLogger().log(Level.SEVERE, "### but SensibleToolbox v{0} requires you to be using", getDescription().getVersion());
+            getLogger().log(Level.SEVERE, "### 你正在使用 Minecraft v1.{0}", majorVersion);
+            getLogger().log(Level.SEVERE, "### 但 STB 仅支持 v{0} ", getDescription().getVersion());
             getLogger().log(Level.SEVERE, "### Minecraft {0}", String.join(" / ", getSupportedVersions()));
             getLogger().log(Level.SEVERE, "#############################################");
             return true;
@@ -364,6 +374,7 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
         itemRegistry.registerItem(new IronCombineHoe(), this, configPrefix, permissionNode);
         itemRegistry.registerItem(new GoldCombineHoe(), this, configPrefix, permissionNode);
         itemRegistry.registerItem(new DiamondCombineHoe(), this, configPrefix, permissionNode);
+        itemRegistry.registerItem(new NetheriteCombineHoe(), this, configPrefix, permissionNode);
         itemRegistry.registerItem(new TrashCan(), this, configPrefix, permissionNode);
         itemRegistry.registerItem(new PaintBrush(), this, configPrefix, permissionNode);
         itemRegistry.registerItem(new PaintRoller(), this, configPrefix, permissionNode);
@@ -445,8 +456,10 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
             itemRegistry.registerItem(new SoundMuffler(), this, configPrefix, permissionNode);
         }
 
-        if (isHolographicDisplaysEnabled()) {
+        if (isDecentGologramsEnabled()) {
             itemRegistry.registerItem(new HolographicMonitor(), this, configPrefix, permissionNode);
+        } else {
+            LogUtils.warning("DecentHolograms not detected - holographic functions & machines disabled");
         }
     }
 
@@ -459,6 +472,10 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
         pm.registerEvents(new TrashCanListener(this), this);
         pm.registerEvents(new ElevatorListener(this), this);
         pm.registerEvents(new AnvilListener(this), this);
+
+        if (pm.isPluginEnabled("Slimefun")) {
+            pm.registerEvents(new ExplosiveToolListener(this), this);
+        }
 
         if (isProtocolLibEnabled()) {
             soundMufflerListener = new SoundMufflerListener(this);
@@ -474,7 +491,7 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
 
         if (pLib instanceof ProtocolLib && pLib.isEnabled()) {
             protocolLibEnabled = true;
-            Debugger.getInstance().debug("Hooked ProtocolLib v" + pLib.getDescription().getVersion());
+            Debugger.getInstance().debug("已适配 ProtocolLib v" + pLib.getDescription().getVersion());
         }
 
         if (protocolLibEnabled) {
@@ -482,8 +499,8 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
                 ItemGlow.init(this);
             }
         } else {
-            LogUtils.warning("ProtocolLib not detected - some functionality is reduced:");
-            LogUtils.warning("  No glowing items, Reduced particle effects, Sound Muffler item disabled");
+            LogUtils.warning("未找到 ProtocolLib - 一些功能将被禁用");
+            LogUtils.warning("荧光物品, 粒子效果, 降噪机");
         }
     }
 
@@ -495,8 +512,8 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
         return protocolLibEnabled;
     }
 
-    public boolean isHolographicDisplaysEnabled() {
-        return holographicDisplays;
+    public boolean isDecentGologramsEnabled() {
+        return decentHolograms;
     }
 
     private void registerCommands() {
@@ -518,7 +535,7 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
 
     /**
      * This returns the main instance of the {@link SensibleToolboxPlugin}.
-     * 
+     *
      * @return Our instance of {@link SensibleToolboxPlugin}
      */
     public static SensibleToolboxPlugin getInstance() {
@@ -543,9 +560,9 @@ public class SensibleToolboxPlugin extends JavaPlugin implements ConfigurationLi
     @Override
     public <T> T onConfigurationValidate(ConfigurationManager configurationManager, String key, T oldVal, T newVal) {
         if (key.equals("save_interval")) {
-            Validate.isTrue((Integer) newVal > 0, "save_interval must be > 0");
+            Preconditions.checkArgument((Integer) newVal > 0, "save_interval must be > 0");
         } else if (key.equals("energy.tick_rate")) {
-            Validate.isTrue((Integer) newVal > 0, "energy.tick_rate must be > 0");
+            Preconditions.checkArgument((Integer) newVal > 0, "energy.tick_rate must be > 0");
         } else if (key.startsWith("gui.texture.")) {
             STBUtil.parseMaterialSpec(newVal.toString());
         } else if (key.equals("default_access")) {

@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.base.Strings;
+import com.google.common.base.Preconditions;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -29,6 +31,7 @@ import me.desht.dhutils.MiscUtil;
  * @author desht
  *
  */
+@SuppressWarnings("JavadocDeclaration")
 public abstract class AbstractCommand implements Comparable<AbstractCommand> {
 
     private static final Pattern quotedStringRegex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
@@ -67,7 +70,7 @@ public abstract class AbstractCommand implements Comparable<AbstractCommand> {
     public abstract boolean execute(Plugin plugin, CommandSender sender, String[] args);
 
     public void addAlias(@Nonnull String label) {
-        Validate.notNull(label, "The alias cannot be null");
+        Preconditions.checkArgument(label != null, "The alias cannot be null");
         String[] fields = label.split(" ");
         cmdRecs.add(new CommandRecord(fields));
     }
@@ -218,7 +221,7 @@ public abstract class AbstractCommand implements Comparable<AbstractCommand> {
             indent = "";
         } else {
             int l = prefix.length();
-            indent = sender instanceof Player ? StringUtils.repeat(" ", l + 2) : StringUtils.repeat(" ", l);
+            indent = sender instanceof Player ? Strings.repeat(" ", l + 2) : Strings.repeat(" ", l);
         }
 
         for (int i = 0; i < usage.length; i++) {

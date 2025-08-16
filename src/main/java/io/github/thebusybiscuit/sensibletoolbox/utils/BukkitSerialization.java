@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,7 @@ import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
  * Serialize a Bukkit {@link Inventory} to or from a {@link String}.
  * <p/>
  * Credit for this goes to Comphenix: https://gist.github.com/aadnk/8138186
- * 
+ *
  * @author Comphenix
  * @author desht
  * @author TheBusyBiscuit
@@ -33,7 +34,7 @@ public final class BukkitSerialization {
     }
 
     public static String toBase64(@Nonnull Inventory inventory, int maxItems) {
-        Validate.notNull(inventory, "Cannot serialize a 'null' Inventory!");
+        Preconditions.checkArgument(inventory != null, "Cannot serialize a 'null' Inventory!");
         if (maxItems <= 0 || maxItems > inventory.getSize()) {
             maxItems = inventory.getSize();
         }
@@ -45,8 +46,8 @@ public final class BukkitSerialization {
 
             // Save every element in the list
             for (int i = 0; i < maxItems; i++) {
-                ItemStack stack = inventory.getItem(i);
-                dataOutput.writeObject(stack);
+                ItemStack s = inventory.getItem(i);
+                dataOutput.writeObject(s);
             }
 
             // Serialize that array
@@ -67,10 +68,10 @@ public final class BukkitSerialization {
 
             // Read the serialized inventory
             for (int i = 0; i < maxItems; i++) {
-                ItemStack stack = (ItemStack) dataInput.readObject();
+                ItemStack s = (ItemStack) dataInput.readObject();
 
-                if (stack != null) {
-                    inventory.setItem(i, stack);
+                if (s != null) {
+                    inventory.setItem(i, s);
                 }
             }
 

@@ -20,7 +20,8 @@ import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.AccessControlGad
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.NumericGadget;
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.RedstoneBehaviourGadget;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.math.IntRange;
+import io.github.thebusybiscuit.sensibletoolbox.utils.IntRange;
+
 import me.desht.dhutils.Debugger;
 
 public class BlockUpdateDetector extends BaseSTBBlock {
@@ -74,7 +75,7 @@ public class BlockUpdateDetector extends BaseSTBBlock {
 
     @Override
     public String getItemName() {
-        return "§d红石缓冲发生器";
+        return "§d红石脉冲发生器";
     }
 
     @Override
@@ -84,7 +85,7 @@ public class BlockUpdateDetector extends BaseSTBBlock {
 
     @Override
     public String[] getExtraLore() {
-        return new String[] { "间隔: " + ChatColor.GOLD + getDuration() + "§7分", "持续: " + ChatColor.GOLD + getQuiet() + "§7粉", };
+        return new String[] { "持续时间: " + ChatColor.GOLD + getDuration() + " 刻", "休眠时间: " + ChatColor.GOLD + getQuiet() + " 刻", };
     }
 
     @Override
@@ -99,10 +100,10 @@ public class BlockUpdateDetector extends BaseSTBBlock {
     }
 
     @Override
-    public void onBlockPhysics(BlockPhysicsEvent event) {
-        Block b = event.getBlock();
+    public void onBlockPhysics(BlockPhysicsEvent e) {
+        Block b = e.getBlock();
         long timeNow = getLocation().getWorld().getFullTime();
-        Debugger.getInstance().debug(this + ": BUD physics: time=" + timeNow + ", lastPulse=" + lastPulse + ", duration=" + getDuration());
+        Debugger.getInstance().debug(this + ": STB侦测器更新: time=" + timeNow + ", lastPulse=" + lastPulse + ", duration=" + getDuration());
 
         if (timeNow - lastPulse > getDuration() + getQuiet() && isRedstoneActive()) {
             // emit a signal for one or more ticks
@@ -118,25 +119,25 @@ public class BlockUpdateDetector extends BaseSTBBlock {
     }
 
     @Override
-    public void onInteractBlock(PlayerInteractEvent event) {
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && !event.getPlayer().isSneaking()) {
-            getGUI().show(event.getPlayer());
-            event.setCancelled(true);
+    public void onInteractBlock(PlayerInteractEvent e) {
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && !e.getPlayer().isSneaking()) {
+            getGUI().show(e.getPlayer());
+            e.setCancelled(true);
         }
 
-        super.onInteractBlock(event);
+        super.onInteractBlock(e);
     }
 
     @Override
     protected InventoryGUI createGUI() {
         InventoryGUI gui = GUIUtil.createGUI(this, 9, ChatColor.DARK_PURPLE + getItemName());
 
-        gui.addGadget(new NumericGadget(gui, 1, "间隔", new IntRange(1, Integer.MAX_VALUE), getDuration(), 10, 1, newValue -> {
+        gui.addGadget(new NumericGadget(gui, 1, "持续时间", new IntRange(1, Integer.MAX_VALUE), getDuration(), 10, 1, newValue -> {
             setDuration(newValue);
             return true;
         }));
 
-        gui.addGadget(new NumericGadget(gui, 0, "持续", new IntRange(0, Integer.MAX_VALUE), getQuiet(), 10, 1, newValue -> {
+        gui.addGadget(new NumericGadget(gui, 0, "休眠时间", new IntRange(0, Integer.MAX_VALUE), getQuiet(), 10, 1, newValue -> {
             setQuiet(newValue);
             return true;
         }));
@@ -147,10 +148,10 @@ public class BlockUpdateDetector extends BaseSTBBlock {
     }
 
     @Override
-    public void onBlockUnregistered(Location location) {
+    public void onBlockUnregistered(Location l) {
         // ensure the non-active form of the item is always dropped
         active = false;
-        super.onBlockUnregistered(location);
+        super.onBlockUnregistered(l);
     }
 
     @Override

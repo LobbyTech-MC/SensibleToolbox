@@ -64,7 +64,7 @@ public class PowerMonitor extends BaseSTBBlock {
     protected String[] getSignLabel(BlockFace face) {
         String[] label = super.getSignLabel(face);
 
-        label[2] = ChatColor.DARK_RED + "No cable attached";
+        label[2] = ChatColor.DARK_RED + "未连接能源网";
 
         for (BlockFace f : STBUtil.getMainHorizontalFaces()) {
             EnergyNet net = SensibleToolbox.getEnergyNet(getRelativeLocation(f).getBlock());

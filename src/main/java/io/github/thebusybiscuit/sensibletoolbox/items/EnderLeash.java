@@ -85,12 +85,12 @@ public class EnderLeash extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Ender Leash";
+        return "末影栓绳";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Capture and store one peaceful animal", "Right-click: " + ChatColor.WHITE + "capture/release animal" };
+        return new String[] { "可以捕捉一个友好生物", "右键: " + ChatColor.WHITE + "捕捉/释放生物" };
     }
 
     @Override
@@ -109,37 +109,37 @@ public class EnderLeash extends BaseSTBItem {
     }
 
     @Override
-    public void onInteractEntity(PlayerInteractEntityEvent event) {
-        Entity target = event.getRightClicked();
-        Player player = event.getPlayer();
-        if (event.getHand() == EquipmentSlot.HAND && target instanceof Animals && isPassive(target) && player.getInventory().getItemInMainHand().getAmount() == 1) {
+    public void onInteractEntity(PlayerInteractEntityEvent e) {
+        Entity target = e.getRightClicked();
+        Player p = e.getPlayer();
+        if (e.getHand() == EquipmentSlot.HAND && target instanceof Animals && isPassive(target) && p.getInventory().getItemInMainHand().getAmount() == 1) {
             if (capturedConf == null || !capturedConf.contains("type")) {
                 Animals animal = (Animals) target;
                 if (!checkLeash(animal)) {
-                    STBUtil.complain(player, "Can't capture a leashed animal!");
-                } else if (!verifyOwner(player, animal)) {
-                    STBUtil.complain(player, "This animal is owned by someone else!");
+                    STBUtil.complain(p, "无法捕捉被拴住的动物!");
+                } else if (!verifyOwner(p, animal)) {
+                    STBUtil.complain(p, "这个动物已经有主人了!");
                 } else {
                     capturedConf = freezeEntity(animal);
                     target.getWorld().playEffect(target.getLocation(), Effect.ENDER_SIGNAL, 0);
                     target.remove();
-                    updateHeldItemStack(event.getPlayer(), event.getHand());
+                    updateHeldItemStack(e.getPlayer(), e.getHand());
                 }
             } else {
                 // workaround CB bug to ensure client is updated properly
-                STBUtil.complain(event.getPlayer(), "Ender Leash already has a captured animal");
-                player.updateInventory();
+                STBUtil.complain(e.getPlayer(), "你已经捕捉了一个动物！");
+                p.updateInventory();
             }
         }
-        event.setCancelled(true);
+        e.setCancelled(true);
     }
 
-    private boolean verifyOwner(Player player, Animals animal) {
+    private boolean verifyOwner(Player p, Animals animal) {
         if (animal instanceof Tameable) {
             AnimalTamer owner = ((Tameable) animal).getOwner();
 
-            if (owner != null && !owner.getUniqueId().equals(player.getUniqueId())) {
-                return player.hasPermission("stb.enderleash.captureany");
+            if (owner != null && !owner.getUniqueId().equals(p.getUniqueId())) {
+                return p.hasPermission("stb.enderleash.captureany");
             }
         }
 
@@ -162,8 +162,8 @@ public class EnderLeash extends BaseSTBItem {
     }
 
     @Override
-    public void onInteractItem(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock().getType().isInteractable()) {
+    public void onInteractItem(PlayerInteractEvent e) {
+        if (e.getAction() != Action.RIGHT_CLICK_BLOCK || e.getClickedBlock().getType().isInteractable()) {
             return;
         }
 
@@ -173,13 +173,13 @@ public class EnderLeash extends BaseSTBItem {
                 return;
             }
 
-            Block where = event.getClickedBlock().getRelative(event.getBlockFace());
+            Block where = e.getClickedBlock().getRelative(e.getBlockFace());
             EntityType type = EntityType.valueOf(capturedConf.getString("type"));
-            Entity e = where.getWorld().spawnEntity(where.getLocation().add(0.5, 0.0, 0.5), type);
-            thawEntity((Animals) e, capturedConf);
+            Entity ent = where.getWorld().spawnEntity(where.getLocation().add(0.5, 0.0, 0.5), type);
+            thawEntity((Animals) ent, capturedConf);
             capturedConf = null;
-            updateHeldItemStack(event.getPlayer(), event.getHand());
-            event.setCancelled(true);
+            updateHeldItemStack(e.getPlayer(), e.getHand());
+            e.setCancelled(true);
         }
     }
 

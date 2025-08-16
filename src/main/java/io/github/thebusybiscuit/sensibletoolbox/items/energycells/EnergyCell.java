@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -45,7 +46,7 @@ public abstract class EnergyCell extends BaseSTBItem implements Chargeable {
 
     @Override
     public String[] getLore() {
-        return new String[] { "Stores up to " + UnicodeSymbol.ELECTRICITY.toUnicode() + " " + getMaxCharge() + " SCU" };
+        return new String[] { "可存储 " + UnicodeSymbol.ELECTRICITY.toUnicode() + " " + getMaxCharge() + " SCU" };
     }
 
     @Override
@@ -82,24 +83,28 @@ public abstract class EnergyCell extends BaseSTBItem implements Chargeable {
     }
 
     @Override
-    public void onInteractItem(PlayerInteractEvent event) {
-        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            event.setCancelled(true);
-            chargeHotbarItems(event.getPlayer());
+    public void onInteractItem(PlayerInteractEvent e) {
+        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (e.getHand() == EquipmentSlot.OFF_HAND) {
+                e.setCancelled(true);
+                return;
+            }
+            e.setCancelled(true);
+            chargeHotbarItems(e.getPlayer());
         }
     }
 
-    private void chargeHotbarItems(@Nonnull Player player) {
+    private void chargeHotbarItems(@Nonnull Player p) {
         if (getCharge() > 0) {
-            int held = player.getInventory().getHeldItemSlot();
+            int held = p.getInventory().getHeldItemSlot();
 
             for (int slot = 0; slot < 8; slot++) {
                 if (slot == held) {
                     continue;
                 }
 
-                ItemStack stack = player.getInventory().getItem(slot);
-                BaseSTBItem item = SensibleToolbox.getItemRegistry().fromItemStack(stack);
+                ItemStack s = p.getInventory().getItem(slot);
+                BaseSTBItem item = SensibleToolbox.getItemRegistry().fromItemStack(s);
 
                 if (item instanceof Chargeable) {
                     Chargeable c = (Chargeable) item;
@@ -108,14 +113,13 @@ public abstract class EnergyCell extends BaseSTBItem implements Chargeable {
                     if (toTransfer > 0) {
                         toTransfer = Math.min(toTransfer, getCharge());
                         setCharge(getCharge() - toTransfer);
-                        player.setItemInHand(toItemStack());
+                        p.setItemInHand(toItemStack());
                         c.setCharge(c.getCharge() + toTransfer);
-                        player.getInventory().setItem(slot, item.toItemStack());
+                        p.getInventory().setItem(slot, item.toItemStack());
                         break;
                     }
                 }
             }
         }
     }
-
 }

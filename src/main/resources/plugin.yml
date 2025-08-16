@@ -4,16 +4,18 @@ description: A collection of generally useful tools and utilites
 authors:
 - desht
 - TheBusyBiscuit
+- Sefiraat
+- Bunnky
 
 main: io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin
-api-version: 1.14
+api-version: 1.20
 version: ${project.version}
 
 softdepend:
 - ProtocolLib
-- HolographicDisplays
+- DecentHolograms
 - Slimefun
-- ExoticGarden
+- GuizhanLibPlugin
 
 commands:
    stb:

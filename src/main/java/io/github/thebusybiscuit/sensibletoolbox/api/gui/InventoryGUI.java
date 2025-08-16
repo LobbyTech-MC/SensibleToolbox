@@ -101,7 +101,7 @@ public interface InventoryGUI {
     /**
      * Get the item in the given inventory slot. The slot must have
      * previously been marked as an item slot with
-     * {@link #setSlotType(int, me.desht.sensibletoolbox.api.gui.SlotType)}
+     * {@link #setSlotType(int, io.github.thebusybiscuit.sensibletoolbox.api.gui.SlotType)}
      *
      * @param slot
      *            the slot to check
@@ -113,14 +113,14 @@ public interface InventoryGUI {
     /**
      * Change the item in the given inventory slot. The slot must have
      * previously been marked as an item slot with
-     * {@link #setSlotType(int, me.desht.sensibletoolbox.api.gui.SlotType)}
+     * {@link #setSlotType(int, io.github.thebusybiscuit.sensibletoolbox.api.gui.SlotType)}
      *
      * @param slot
      *            the slot to update
-     * @param stack
+     * @param s
      *            the new item to place in the slot
      */
-    void setItem(int slot, @Nullable ItemStack stack);
+    void setItem(int slot, @Nullable ItemStack s);
 
     /**
      * Get the STB block which owns this GUI.
@@ -151,18 +151,25 @@ public interface InventoryGUI {
     /**
      * Show this GUI to the given player.
      *
-     * @param player
+     * @param p
      *            the player to show the GUI to
      */
-    void show(Player player);
+    void show(Player p);
+
+    /**
+     * Hides this GUI from all players
+     */
+    void hideForAll();
 
     /**
      * Hide this GUI from the given player (pop it down)
      *
-     * @param player
+     * @param p
      *            the player to hide the GUI from
      */
-    void hide(Player player);
+
+
+    void hide(Player p);
 
     /**
      * Get a list of players who currently have this GUI open.

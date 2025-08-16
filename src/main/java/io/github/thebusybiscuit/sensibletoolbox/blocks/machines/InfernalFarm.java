@@ -5,9 +5,11 @@ import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
@@ -38,12 +40,12 @@ public class InfernalFarm extends AutoFarm {
 
     @Override
     public String getItemName() {
-        return "地狱农场机";
+        return "下界农场机";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "§7消耗 §cSCU §7量子能量自动耕作和收割", "§7仅限地狱疣", "§7工作范围: "+ ChatColor.GOLD + RADIUS + " §7x " + ChatColor.GOLD + RADIUS +"","§7工作条件: 放在低于作物 §6一格 §7的地方", "§7也就是与土壤 §6平齐 §7地方" };
+        return new String[] { "§7消耗 §cSCU §7量子能量自动耕作和收割", "§7仅限下界疣", "§7工作范围: "+ ChatColor.GOLD + RADIUS + " §7x " + ChatColor.GOLD + RADIUS +"","§7工作条件: 放在低于作物 §6一格 §7的地方", "§7也就是与土壤 §6平齐 §7地方" };
     }
 
     @Override
@@ -63,6 +65,20 @@ public class InfernalFarm extends AutoFarm {
     }
 
     @Override
+    public void onBlockRegistered(Location l, boolean isPlacing) {
+        int i = RADIUS;
+        Block block = l.getBlock();
+
+        for (int x = -i; x <= i; x++) {
+            for (int z = -i; z <= i; z++) {
+                blocks.add(block.getRelative(x, 2, z));
+            }
+        }
+        //Without this, the machine stops updating the charge after a restart.
+        super.onBlockRegistered(l, isPlacing);
+    }
+
+    @Override
     public void onServerTick() {
         if (!isJammed()) {
             if (getCharge() >= getScuPerCycle()) {
@@ -73,7 +89,14 @@ public class InfernalFarm extends AutoFarm {
                         if (ageable.getAge() >= ageable.getMaximumAge()) {
                             setCharge(getCharge() - getScuPerCycle());
 
-                            ageable.setAge(0);
+                            BlockData data = crop.getBlockData();
+                            if (ageable instanceof Ageable) {
+                                Ageable m_ageable = (Ageable) data;
+                                m_ageable.setAge(0);
+                                data = m_ageable;
+                            }
+
+                            crop.setBlockData(data);
                             crop.getWorld().playEffect(crop.getLocation(), Effect.STEP_SOUND, crop.getType());
                             setJammed(!output(Material.NETHER_WART));
                             break;
@@ -84,7 +107,6 @@ public class InfernalFarm extends AutoFarm {
         } else if (buffer != null) {
             setJammed(!output(buffer));
         }
-
         super.onServerTick();
     }
 

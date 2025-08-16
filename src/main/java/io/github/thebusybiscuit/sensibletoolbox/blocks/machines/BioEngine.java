@@ -63,7 +63,7 @@ public class BioEngine extends Generator {
         fuelItems.addFuel(new ItemStack(Material.SUGAR_CANE), true, 8, 100);
         fuelItems.addFuel(new ItemStack(Material.NETHER_WART), true, 12, 140);
         fuelItems.addFuel(new ItemStack(Material.DIRT), true, 0.5, 20);
-        fuelItems.addFuel(new ItemStack(Material.SHORT_GRASS), true, 0.5, 20);
+        fuelItems.addFuel(new ItemStack(Material.GRASS_BLOCK), true, 0.5, 20);
 
         for (Material flower : Tag.SMALL_FLOWERS.getValues()) {
             fuelItems.addFuel(new ItemStack(flower), true, 11, 80);
@@ -161,7 +161,7 @@ public class BioEngine extends Generator {
         if (!super.isValidUpgrade(player, upgrade))
             return false;
         if (!(upgrade instanceof RegulatorUpgrade)) {
-            STBUtil.complain(player, upgrade.getItemName() + " 不会使他 " + getItemName());
+            STBUtil.complain(player, "你不能对" + getItemName() + "使用" + upgrade.getItemName());
             return false;
         }
         return true;
@@ -245,8 +245,8 @@ public class BioEngine extends Generator {
     }
 
     private void pullItemIntoProcessing(int inputSlot) {
-        ItemStack stack = getInventoryItem(inputSlot);
-        currentFuel = fuelItems.get(stack);
+        ItemStack s = getInventoryItem(inputSlot);
+        currentFuel = fuelItems.get(s);
 
         if (getRegulatorAmount() > 0 && getCharge() + currentFuel.getTotalFuelValue() >= getMaxCharge() && getCharge() > 0) {
             // Regulator prevents pulling fuel in unless there's definitely
@@ -254,11 +254,11 @@ public class BioEngine extends Generator {
             return;
         }
 
-        setProcessing(makeProcessingItem(currentFuel, stack));
+        setProcessing(makeProcessingItem(currentFuel, s));
         getProgressMeter().setMaxProgress(currentFuel.getBurnTime());
         setProgress(currentFuel.getBurnTime());
-        stack.setAmount(stack.getAmount() - 1);
-        setInventoryItem(inputSlot, stack);
+        s.setAmount(s.getAmount() - 1);
+        setInventoryItem(inputSlot, s);
         update(false);
     }
 

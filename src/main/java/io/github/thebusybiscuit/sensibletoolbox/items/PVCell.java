@@ -66,12 +66,12 @@ public class PVCell extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "PV Cell";
+        return "光伏电池";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Photovoltaic Cell", "Insert into a solar generator", "R-click solar: insert directly" };
+        return new String[] { "这是一个光伏电池", "可以插入太阳能发电机", "右键太阳能发电机以插入" };
     }
 
     @Override
@@ -98,28 +98,28 @@ public class PVCell extends BaseSTBItem {
     }
 
     @Override
-    public void onInteractItem(PlayerInteractEvent event) {
-        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Player player = event.getPlayer();
+    public void onInteractItem(PlayerInteractEvent e) {
+        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Player p = e.getPlayer();
 
-            if (event.getClickedBlock() != null) {
-                BaseSTBBlock stb = SensibleToolbox.getBlockAt(event.getClickedBlock().getLocation(), true);
+            if (e.getClickedBlock() != null) {
+                BaseSTBBlock stb = SensibleToolbox.getBlockAt(e.getClickedBlock().getLocation(), true);
 
                 if (stb instanceof BasicSolarCell) {
-                    int nInserted = ((BasicSolarCell) stb).insertItems(event.getItem(), event.getBlockFace(), false, player.getUniqueId());
+                    int nInserted = ((BasicSolarCell) stb).insertItems(e.getItem(), e.getBlockFace(), false, p.getUniqueId());
 
                     if (nInserted > 0) {
-                        if (event.getHand() == EquipmentSlot.HAND) {
-                            player.getInventory().setItemInMainHand(null);
+                        if (e.getHand() == EquipmentSlot.HAND) {
+                            p.getInventory().setItemInMainHand(null);
                         } else {
-                            player.getInventory().setItemInOffHand(null);
+                            p.getInventory().setItemInOffHand(null);
                         }
-                        player.playSound(event.getClickedBlock().getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 0.6F);
+                        p.playSound(e.getClickedBlock().getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 0.6F);
                     }
                 }
             }
-            player.updateInventory();
-            event.setCancelled(true);
+            p.updateInventory();
+            e.setCancelled(true);
         }
     }
 
@@ -148,9 +148,9 @@ public class PVCell extends BaseSTBItem {
         int sec = lifespan / 20;
 
         if (sec >= 60) {
-            return ChatColor.WHITE + "Lifetime: " + ChatColor.YELLOW.toString() + (sec / 60) + " min";
+            return ChatColor.WHITE + "可用时间: " + ChatColor.YELLOW.toString() + (sec / 60) + " 分钟";
         } else {
-            return ChatColor.WHITE + "Lifetime: " + ChatColor.YELLOW.toString() + sec + " sec";
+            return ChatColor.WHITE + "可用时间: " + ChatColor.YELLOW.toString() + sec + " 秒";
         }
     }
 }

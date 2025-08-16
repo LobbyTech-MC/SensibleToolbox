@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.ChatColor;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
@@ -27,6 +28,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.Recipe;
@@ -77,16 +79,16 @@ public abstract class BaseSTBItem implements Comparable<BaseSTBItem>, InventoryG
      * enchantments on an item stack are preserved when the STB item is converted
      * back to the item stack.
      *
-     * @param stack
+     * @param s
      *            an item stack
      */
-    public final void storeEnchants(@Nonnull ItemStack stack) {
-        enchants = stack.getEnchantments();
+    public final void storeEnchants(@Nonnull ItemStack s) {
+        enchants = s.getEnchantments();
     }
 
     @ParametersAreNonnullByDefault
-    protected void updateHeldItemStack(Player player, EquipmentSlot hand) {
-        PlayerInventory inv = player.getInventory();
+    protected void updateHeldItemStack(Player p, EquipmentSlot hand) {
+        PlayerInventory inv = p.getInventory();
         if (hand == EquipmentSlot.HAND) {
             ItemStack item = inv.getItemInMainHand();
             inv.setItemInMainHand(toItemStack(item.getAmount()));
@@ -110,7 +112,7 @@ public abstract class BaseSTBItem implements Comparable<BaseSTBItem>, InventoryG
      */
     public final boolean checkPlayerPermission(@Nonnull Permissible player, @Nonnull ItemAction action) {
         String prefix = SensibleToolboxPlugin.getInstance().getItemRegistry().getPermissionPrefix(this);
-        Validate.notNull(prefix, "Can't determine permission node prefix for " + getItemTypeID());
+        Preconditions.checkArgument(prefix != null, "Can't determine permission node prefix for " + getItemTypeID());
         return player.hasPermission(prefix + "." + action.getNode() + "." + getItemTypeID());
     }
 
@@ -229,34 +231,34 @@ public abstract class BaseSTBItem implements Comparable<BaseSTBItem>, InventoryG
     /**
      * Called when a player interacts with a block or air while holding an STB item.
      *
-     * @param event
+     * @param e
      *            the interaction event.
      */
-    public void onInteractItem(PlayerInteractEvent event) {}
+    public void onInteractItem(PlayerInteractEvent e) {}
 
     /**
      * Called when a player attempts to consume an STB item (which must be food or potion).
      *
-     * @param event
+     * @param e
      *            the consume event
      */
-    public void onItemConsume(PlayerItemConsumeEvent event) {}
+    public void onItemConsume(PlayerItemConsumeEvent e) {}
 
     /**
      * Called when a player interacts with an entity while holding an STB item.
      *
-     * @param event
+     * @param e
      *            the interaction event
      */
-    public void onInteractEntity(PlayerInteractEntityEvent event) {}
+    public void onInteractEntity(PlayerInteractEntityEvent e) {}
 
     /**
      * Called when a player rolls the mouse wheel while sneaking and holding an STB item.
      *
-     * @param event
+     * @param e
      *            the held item change event
      */
-    public void onItemHeld(PlayerItemHeldEvent event) {}
+    public void onItemHeld(PlayerItemHeldEvent e) {}
 
     /**
      * Define the item into which this item would be smelted in a vanilla
@@ -294,10 +296,10 @@ public abstract class BaseSTBItem implements Comparable<BaseSTBItem>, InventoryG
      * The handler is called with EventPriority.MONITOR, so the event outcome must not be altered by
      * this handler.
      *
-     * @param event
+     * @param e
      *            the block break event
      */
-    public void onBreakBlockWithItem(BlockBreakEvent event) {}
+    public void onBreakBlockWithItem(BlockBreakEvent e) {}
 
     /**
      * Create an ItemStack with one item from this STB item, serializing any item-specific data into the ItemStack.
@@ -326,6 +328,7 @@ public abstract class BaseSTBItem implements Comparable<BaseSTBItem>, InventoryG
         String suffix = getDisplaySuffix() == null ? "" : SUFFIX_SEPARATOR + getDisplaySuffix();
         im.setDisplayName(DISPLAY_COLOR + getItemName() + suffix);
         im.setLore(buildLore());
+        im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
         // any serialized data from the object goes in the ItemStack attributes
         YamlConfiguration conf = freeze();

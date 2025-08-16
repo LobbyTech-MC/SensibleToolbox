@@ -44,18 +44,13 @@ public class EjectorUpgrade extends AbstractMachineUpgrade implements Directiona
     }
 
     @Override
-    public boolean hasGlow() {
-        return true;
-    }
-
-    @Override
     public Material getMaterial() {
         return Material.QUARTZ;
     }
 
     @Override
     public String getItemName() {
-        return "Ejector Upgrade";
+        return "输出升级";
     }
 
     @Override
@@ -65,7 +60,7 @@ public class EjectorUpgrade extends AbstractMachineUpgrade implements Directiona
 
     @Override
     public String[] getLore() {
-        return new String[] { "Place in a machine block ", "Auto-ejects finished items", "L-Click block: set ejection direction" };
+        return new String[] { "放置在机器中 ", "自动输出物品", "左键方块设置输出方向" };
     }
 
     @Override
@@ -82,29 +77,29 @@ public class EjectorUpgrade extends AbstractMachineUpgrade implements Directiona
     }
 
     @Override
-    public void onInteractItem(PlayerInteractEvent event) {
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            setFacingDirection(event.getBlockFace().getOppositeFace());
-            updateHeldItemStack(event.getPlayer(), event.getHand());
-            event.setCancelled(true);
-        } else if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+    public void onInteractItem(PlayerInteractEvent e) {
+        if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
+            setFacingDirection(e.getBlockFace().getOppositeFace());
+            updateHeldItemStack(e.getPlayer(), e.getHand());
+            e.setCancelled(true);
+        } else if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             // open ejector configuration GUI
-            Block b = event.getClickedBlock();
+            Block b = e.getClickedBlock();
             BaseSTBMachine machine = b == null ? null : SensibleToolbox.getBlockAt(b.getLocation(), BaseSTBMachine.class, true);
 
             if (b == null || machine == null && !b.getType().isInteractable()) {
-                InventoryGUI gui = createGUI(event.getPlayer());
-                gui.show(event.getPlayer());
-                event.setCancelled(true);
+                InventoryGUI gui = createGUI(e.getPlayer());
+                gui.show(e.getPlayer());
+                e.setCancelled(true);
             }
         }
     }
 
-    private InventoryGUI createGUI(Player player) {
-        InventoryGUI gui = GUIUtil.createGUI(player, this, 27, ChatColor.DARK_RED + "Ejector Configuration");
-        gui.addLabel("Module Direction", DIRECTION_LABEL_SLOT, null, "Set the direction in which the", "machine should eject finished items");
+    private InventoryGUI createGUI(Player p) {
+        InventoryGUI gui = GUIUtil.createGUI(p, this, 27, ChatColor.DARK_RED + "输出升级配置");
+        gui.addLabel("方向", DIRECTION_LABEL_SLOT, null, "机器工作完毕后，物品输出的方向");
 
-        ItemStack texture = GUIUtil.makeTexture(getMaterial(), "Ejection Direction");
+        ItemStack texture = GUIUtil.makeTexture(getMaterial(), "输出方向");
         DirectionGadget dg = new DirectionGadget(gui, 13, texture);
         dg.setAllowSelf(false);
         gui.addGadget(dg);
@@ -123,7 +118,7 @@ public class EjectorUpgrade extends AbstractMachineUpgrade implements Directiona
     }
 
     @Override
-    public void onGUIClosed(HumanEntity player) {
-        player.setItemInHand(toItemStack(player.getItemInHand().getAmount()));
+    public void onGUIClosed(HumanEntity p) {
+        p.setItemInHand(toItemStack(p.getItemInHand().getAmount()));
     }
 }

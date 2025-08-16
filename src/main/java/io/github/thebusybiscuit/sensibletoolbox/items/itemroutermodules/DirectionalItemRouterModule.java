@@ -40,10 +40,10 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
 
     private static final String LIST_ITEM = ChatColor.LIGHT_PURPLE + UnicodeSymbol.CENTERED_POINT.toUnicode() + " " + ChatColor.AQUA;
 
-    private static final ItemStack WHITE_BUTTON = GUIUtil.makeTexture(Material.WHITE_WOOL, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "Whitelist", "Module will only process", "items which match the filter.");
-    private static final ItemStack BLACK_BUTTON = GUIUtil.makeTexture(Material.BLACK_WOOL, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "Blacklist", "Module will NOT process", "items which match the filter.");
-    private static final ItemStack OFF_BUTTON = GUIUtil.makeTexture(Material.LIGHT_BLUE_STAINED_GLASS, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "Termination OFF", "Subsequent modules in the", "Item Router will process items", "as normal.");
-    private static final ItemStack ON_BUTTON = GUIUtil.makeTexture(Material.ORANGE_WOOL, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "Termination ON", "If this module processes an", "item, the Item Router will", "not process any more items", "on this tick.");
+    private static final ItemStack WHITE_BUTTON = GUIUtil.makeTexture(Material.WHITE_WOOL, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "白名单", "仅处理匹配的物品");
+    private static final ItemStack BLACK_BUTTON = GUIUtil.makeTexture(Material.BLACK_WOOL, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "黑名单", "仅处理不匹配的物品");
+    private static final ItemStack OFF_BUTTON = GUIUtil.makeTexture(Material.LIGHT_BLUE_STAINED_GLASS, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "处理顺序(关)", "当这个升级正在处理物品时，", "机器将继续处理其他物品");
+    private static final ItemStack ON_BUTTON = GUIUtil.makeTexture(Material.ORANGE_WOOL, ChatColor.WHITE.toString() + ChatColor.UNDERLINE + "处理顺序(开)", "当这个升级正在处理物品时，", "机器将不会处理其他物品");
 
     public static final int FILTER_LABEL_SLOT = 0;
     public static final int DIRECTION_LABEL_SLOT = 5;
@@ -56,11 +56,11 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
     /**
      * Run this module's action.
      *
-     * @param loc
+     * @param l
      *            the location of the module's owning item router
      * @return true if the module did some work on this tick
      */
-    public abstract boolean execute(Location loc);
+    public abstract boolean execute(Location l);
 
     public DirectionalItemRouterModule() {
         // default filter: blacklist, no items
@@ -105,10 +105,10 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
         } else {
             String[] lore = new String[(filter.size() + 1) / 2 + 2];
             String what = filter.isWhiteList() ? "白名单" : "黑名单";
-            lore[0] = ChatColor.GOLD.toString() + filter.size() + " 个物品在 " + what;
+            lore[0] = ChatColor.GOLD.toString() + filter.size() + " 个 " + what + " 物品";
 
             if (isTerminator()) {
-                lore[0] += ", " + ChatColor.BOLD + "Terminating";
+                lore[0] += ", " + ChatColor.BOLD + "处理顺序(开)";
             }
 
             lore[1] = ChatColor.GOLD + filter.getFilterType().getLabel();
@@ -153,30 +153,30 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
     }
 
     @Override
-    public void onInteractItem(PlayerInteractEvent event) {
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+    public void onInteractItem(PlayerInteractEvent e) {
+        if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
             // set module direction based on clicked block face
-            setFacingDirection(event.getBlockFace().getOppositeFace());
-            event.getPlayer().getInventory().setItem(event.getHand(), toItemStack(event.getItem().getAmount()));
-            event.setCancelled(true);
-        } else if (event.getAction() == Action.LEFT_CLICK_AIR && event.getPlayer().isSneaking()) {
+            setFacingDirection(e.getBlockFace().getOppositeFace());
+            e.getPlayer().getInventory().setItem(e.getHand(), toItemStack(e.getItem().getAmount()));
+            e.setCancelled(true);
+        } else if (e.getAction() == Action.LEFT_CLICK_AIR && e.getPlayer().isSneaking()) {
             // unset module direction
             setFacingDirection(BlockFace.SELF);
-            event.getPlayer().getInventory().setItem(event.getHand(), toItemStack(event.getItem().getAmount()));
-            event.setCancelled(true);
-        } else if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            ItemRouter rtr = event.getClickedBlock() == null ? null : SensibleToolbox.getBlockAt(event.getClickedBlock().getLocation(), ItemRouter.class, true);
-            if (event.getClickedBlock() == null || (rtr == null && !event.getClickedBlock().getType().isInteractable())) {
+            e.getPlayer().getInventory().setItem(e.getHand(), toItemStack(e.getItem().getAmount()));
+            e.setCancelled(true);
+        } else if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            ItemRouter rtr = e.getClickedBlock() == null ? null : SensibleToolbox.getBlockAt(e.getClickedBlock().getLocation(), ItemRouter.class, true);
+            if (e.getClickedBlock() == null || (rtr == null && !e.getClickedBlock().getType().isInteractable())) {
                 // open module configuration GUI
-                gui = createGUI(event.getPlayer());
-                gui.show(event.getPlayer());
-                event.setCancelled(true);
+                gui = createGUI(e.getPlayer());
+                gui.show(e.getPlayer());
+                e.setCancelled(true);
             }
         }
     }
 
-    private InventoryGUI createGUI(Player player) {
-        InventoryGUI inventory = GUIUtil.createGUI(player, this, 36, ChatColor.DARK_RED + "Module Configuration");
+    private InventoryGUI createGUI(Player p) {
+        InventoryGUI inventory = GUIUtil.createGUI(p, this, 36, ChatColor.DARK_RED + "升级配置");
 
         inventory.addGadget(new ToggleButton(inventory, 28, getFilter().isWhiteList(), WHITE_BUTTON, BLACK_BUTTON, newValue -> {
             if (getFilter() != null) {
@@ -193,15 +193,15 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
             return true;
         }));
 
-        inventory.addLabel("Filtered Items", FILTER_LABEL_SLOT, null, "Place up to 9 items", "in the filter " + UnicodeSymbol.ARROW_RIGHT.toUnicode());
+        inventory.addLabel("过滤物品", FILTER_LABEL_SLOT, null, "最多 9 种物品", "在这个升级中 " + UnicodeSymbol.ARROW_RIGHT.toUnicode());
         for (int slot : filterSlots) {
             inventory.setSlotType(slot, SlotType.ITEM);
         }
         populateFilterInventory(inventory.getInventory());
 
-        inventory.addLabel("Module Direction", DIRECTION_LABEL_SLOT, null, "Set the direction that", "the module works in", "once installed in an", "Item Router");
+        inventory.addLabel("方向", DIRECTION_LABEL_SLOT, null, "设置模块在机器中安装后的工作方向");
         ItemStack texture = new ItemStack(new ItemRouter().getMaterial());
-        GUIUtil.setDisplayName(texture, "No Direction");
+        GUIUtil.setDisplayName(texture, "未设置方向");
         inventory.addGadget(new DirectionGadget(inventory, 16, texture));
 
         return inventory;
@@ -209,8 +209,8 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
 
     private void populateFilterInventory(Inventory inv) {
         int n = 0;
-        for (ItemStack stack : filter.getFilterList()) {
-            inv.setItem(filterSlots[n], stack);
+        for (ItemStack s : filter.getFilterList()) {
+            inv.setItem(filterSlots[n], s);
             n++;
             if (n >= filterSlots.length) {
                 break;
@@ -226,53 +226,59 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
     }
 
     @Override
-    public boolean onSlotClick(HumanEntity player, int slot, ClickType click, ItemStack inSlot, ItemStack onCursor) {
+    public boolean onSlotClick(HumanEntity p, int slot, ClickType click, ItemStack inSlot, ItemStack onCursor) {
         if (onCursor.getType() == Material.AIR) {
             gui.getInventory().setItem(slot, null);
         } else {
-            ItemStack stack = onCursor.clone();
-            stack.setAmount(1);
-            gui.getInventory().setItem(slot, stack);
+            ItemStack s = onCursor.clone();
+            s.setAmount(1);
+            gui.getInventory().setItem(slot, s);
         }
         return false;
     }
 
     @Override
-    public boolean onPlayerInventoryClick(HumanEntity player, int slot, ClickType click, ItemStack inSlot, ItemStack onCursor) {
+    public boolean onPlayerInventoryClick(HumanEntity p, int slot, ClickType click, ItemStack inSlot, ItemStack onCursor) {
         return true;
     }
 
     @Override
-    public int onShiftClickInsert(HumanEntity player, int slot, ItemStack toInsert) {
+    public int onShiftClickInsert(HumanEntity p, int slot, ItemStack toInsert) {
         return 0;
     }
 
     @Override
-    public boolean onShiftClickExtract(HumanEntity player, int slot, ItemStack toExtract) {
+    public boolean onShiftClickExtract(HumanEntity p, int slot, ItemStack toExtract) {
         return false;
     }
 
     @Override
-    public boolean onClickOutside(HumanEntity player) {
+    public boolean onClickOutside(HumanEntity p) {
         return false;
     }
 
     @Override
-    public void onGUIClosed(HumanEntity player) {
+    public void onGUIClosed(HumanEntity p) {
         filter.clear();
 
         for (int slot : filterSlots) {
-            ItemStack stack = gui.getInventory().getItem(slot);
+            ItemStack s = gui.getInventory().getItem(slot);
 
-            if (stack != null) {
-                filter.addItem(stack);
+            if (s != null) {
+                filter.addItem(s);
             }
         }
 
-        player.setItemInHand(toItemStack(player.getItemInHand().getAmount()));
+        p.setItemInHand(toItemStack(p.getItemInHand().getAmount()));
     }
 
-    protected boolean doPull(BlockFace from, Location loc) {
+    protected boolean doPull(BlockFace from, Location l) {
+
+        if (getItemRouter() != null && getItemRouter().getBufferItem() != null) {
+            if (getFilter() != null && !getFilter().shouldPass(getItemRouter().getBufferItem())) {
+                return false;
+            }
+        }
         ItemStack inBuffer = getItemRouter().getBufferItem();
 
         if (inBuffer != null && inBuffer.getAmount() >= inBuffer.getType().getMaxStackSize()) {
@@ -280,7 +286,7 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
         }
 
         int nToPull = getItemRouter().getStackSize();
-        Location targetLoc = getTargetLocation(loc);
+        Location targetLoc = getTargetLocation(l);
         ItemStack pulled;
         BaseSTBBlock stb = SensibleToolbox.getBlockAt(targetLoc, true);
 
@@ -303,9 +309,9 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
         return false;
     }
 
-    protected boolean vanillaInsertion(Block target, int amount, BlockFace side) {
+    protected boolean vanillaInsertion(Block target, int amount, BlockFace face) {
         ItemStack buffer = getItemRouter().getBufferItem();
-        int nInserted = VanillaInventoryUtils.vanillaInsertion(target, buffer, amount, side, false, getItemRouter().getOwner());
+        int nInserted = VanillaInventoryUtils.vanillaInsertion(target, buffer, amount, face, false, getItemRouter().getOwner());
 
         if (nInserted == 0) {
             // no insertion happened
@@ -317,8 +323,8 @@ public abstract class DirectionalItemRouterModule extends ItemRouterModule imple
         }
     }
 
-    protected Location getTargetLocation(Location loc) {
+    protected Location getTargetLocation(Location l) {
         BlockFace face = getFacing();
-        return loc.clone().add(face.getModX(), face.getModY(), face.getModZ());
+        return l.clone().add(face.getModX(), face.getModY(), face.getModZ());
     }
 }

@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -174,22 +175,15 @@ public final class STBUtil {
 
     @Nullable
     public static Material getCropType(@Nonnull Material seedType) {
-        switch (seedType) {
-            case WHEAT_SEEDS:
-                return Material.WHEAT;
-            case POTATO:
-                return Material.POTATOES;
-            case CARROT:
-                return Material.CARROTS;
-            case PUMPKIN_SEEDS:
-                return Material.PUMPKIN_STEM;
-            case MELON_SEEDS:
-                return Material.MELON_STEM;
-            case BEETROOT_SEEDS:
-                return Material.BEETROOTS;
-            default:
-                return null;
-        }
+        return switch (seedType) {
+            case WHEAT_SEEDS -> Material.WHEAT;
+            case POTATO -> Material.POTATOES;
+            case CARROT -> Material.CARROTS;
+            case PUMPKIN_SEEDS -> Material.PUMPKIN_STEM;
+            case MELON_SEEDS -> Material.MELON_STEM;
+            case BEETROOT_SEEDS -> Material.BEETROOTS;
+            default -> null;
+        };
     }
 
     /**
@@ -223,15 +217,15 @@ public final class STBUtil {
     public static ChatColor dyeColorToChatColor(@Nonnull DyeColor dyeColor) {
         switch (dyeColor) {
             case BLACK:
+            case GRAY:
                 return ChatColor.DARK_GRAY;
             case BLUE:
                 return ChatColor.DARK_BLUE;
             case BROWN:
+            case ORANGE:
                 return ChatColor.GOLD;
             case CYAN:
                 return ChatColor.AQUA;
-            case GRAY:
-                return ChatColor.DARK_GRAY;
             case GREEN:
                 return ChatColor.DARK_GREEN;
             case LIGHT_BLUE:
@@ -239,9 +233,6 @@ public final class STBUtil {
             case LIME:
                 return ChatColor.GREEN;
             case MAGENTA:
-                return ChatColor.LIGHT_PURPLE;
-            case ORANGE:
-                return ChatColor.GOLD;
             case PINK:
                 return ChatColor.LIGHT_PURPLE;
             case PURPLE:
@@ -285,24 +276,6 @@ public final class STBUtil {
             case GREEN_WOOL:
             case RED_WOOL:
             case BLACK_WOOL:
-                return true;
-            case WHITE_CARPET:
-            case ORANGE_CARPET:
-            case MAGENTA_CARPET:
-            case LIGHT_BLUE_CARPET:
-            case YELLOW_CARPET:
-            case LIME_CARPET:
-            case PINK_CARPET:
-            case GRAY_CARPET:
-            case LIGHT_GRAY_CARPET:
-            case CYAN_CARPET:
-            case PURPLE_CARPET:
-            case BLUE_CARPET:
-            case BROWN_CARPET:
-            case GREEN_CARPET:
-            case RED_CARPET:
-            case BLACK_CARPET:
-                return true;
             case GLASS:
             case WHITE_STAINED_GLASS:
             case ORANGE_STAINED_GLASS:
@@ -320,7 +293,22 @@ public final class STBUtil {
             case GREEN_STAINED_GLASS:
             case RED_STAINED_GLASS:
             case BLACK_STAINED_GLASS:
-                return true;
+            case WHITE_CARPET:
+            case ORANGE_CARPET:
+            case MAGENTA_CARPET:
+            case LIGHT_BLUE_CARPET:
+            case YELLOW_CARPET:
+            case LIME_CARPET:
+            case PINK_CARPET:
+            case GRAY_CARPET:
+            case LIGHT_GRAY_CARPET:
+            case CYAN_CARPET:
+            case PURPLE_CARPET:
+            case BLUE_CARPET:
+            case BROWN_CARPET:
+            case GREEN_CARPET:
+            case RED_CARPET:
+            case BLACK_CARPET:
             case GLASS_PANE:
             case WHITE_STAINED_GLASS_PANE:
             case ORANGE_STAINED_GLASS_PANE:
@@ -338,7 +326,6 @@ public final class STBUtil {
             case GREEN_STAINED_GLASS_PANE:
             case RED_STAINED_GLASS_PANE:
             case BLACK_STAINED_GLASS_PANE:
-                return true;
             case TERRACOTTA:
             case WHITE_TERRACOTTA:
             case ORANGE_TERRACOTTA:
@@ -356,7 +343,6 @@ public final class STBUtil {
             case GREEN_TERRACOTTA:
             case RED_TERRACOTTA:
             case BLACK_TERRACOTTA:
-                return true;
             case WHITE_CONCRETE:
             case ORANGE_CONCRETE:
             case MAGENTA_CONCRETE:
@@ -373,6 +359,7 @@ public final class STBUtil {
             case GREEN_CONCRETE:
             case RED_CONCRETE:
             case BLACK_CONCRETE:
+                return true;
             default:
                 return false;
         }
@@ -448,17 +435,17 @@ public final class STBUtil {
      * Get a display-formatted string for the given ItemStack. The item stack's metadata is
      * taken into account, as it the size of the stack.
      *
-     * @param stack
+     * @param s
      *            the item stack
      * @return a formatted description of the item stack
      */
     @Nonnull
-    public static String describeItemStack(@Nullable ItemStack stack) {
-        if (stack == null) {
-            return "nothing";
+    public static String describeItemStack(@Nullable ItemStack s) {
+        if (s == null) {
+            return "无物品";
         }
 
-        return stack.getAmount() + " x " + ItemUtils.getItemName(stack);
+        return s.getAmount() + " x " + ItemUtils.getItemName(s);
     }
 
     /**
@@ -473,10 +460,10 @@ public final class STBUtil {
      * @return a new ItemStack with the given title and lore
      */
     public static ItemStack makeStack(Material material, String title, String... lore) {
-        ItemStack stack = new ItemStack(material);
+        ItemStack s = new ItemStack(material);
 
         if (title != null) {
-            ItemMeta meta = stack.getItemMeta();
+            ItemMeta meta = s.getItemMeta();
             meta.setDisplayName(title);
             List<String> newLore = new ArrayList<>(lore.length);
 
@@ -485,9 +472,9 @@ public final class STBUtil {
             }
 
             meta.setLore(newLore);
-            stack.setItemMeta(meta);
+            s.setItemMeta(meta);
         }
-        return stack;
+        return s;
     }
 
     /**
@@ -507,7 +494,7 @@ public final class STBUtil {
      *
      * @param block
      *            the block to check
-     * 
+     *
      * @return true if the block is an infinite water source
      */
     public static boolean isInfiniteWaterSource(@Nonnull Block block) {
@@ -545,86 +532,86 @@ public final class STBUtil {
      * Check if the given item can be used to fabricate items via vanilla
      * recipes.
      *
-     * @param stack
+     * @param s
      *            the item stack to check
      * @return true if the item can be used to fabricate with, false otherwise
      */
-    public static boolean canFabricateWith(@Nullable ItemStack stack) {
-        return stack != null && stack.getType() == Material.CRAFTING_TABLE;
+    public static boolean canFabricateWith(@Nullable ItemStack s) {
+        return s != null && s.getType() == Material.CRAFTING_TABLE;
     }
 
     /**
      * Send an audible alert to the given player indicating a problem of some
      * kind.
      *
-     * @param player
+     * @param p
      *            the player
      */
-    public static void complain(@Nonnull Player player) {
-        Validate.notNull(player, "Cannot complain to nobody");
-        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, 1.0F);
+    public static void complain(@Nonnull Player p) {
+        Preconditions.checkArgument(p != null, "Cannot complain to nobody");
+        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, 1.0F);
     }
 
     /**
      * Send an error message to the given player, along with an audible alert.
      *
-     * @param player
+     * @param p
      *            the player
      * @param message
      *            the message text
      */
-    public static void complain(Player player, String message) {
-        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, 1.0F);
-        MiscUtil.errorMessage(player, message);
+    public static void complain(Player p, String message) {
+        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, 1.0F);
+        MiscUtil.errorMessage(p, message);
     }
 
-    public static void complain(HumanEntity player, String message) {
-        if (player instanceof Player) {
-            complain((Player) player, message);
+    public static void complain(HumanEntity p, String message) {
+        if (p instanceof Player) {
+            complain((Player) p, message);
         }
     }
 
     /**
      * Give the items to a player, dropping any excess items on the ground.
      *
-     * @param player
+     * @param p
      *            the player
      * @param stacks
      *            one or more item stacks
      */
-    public static void giveItems(HumanEntity player, ItemStack stacks) {
-        Map<Integer, ItemStack> excess = player.getInventory().addItem(stacks);
+    public static void giveItems(HumanEntity p, ItemStack stacks) {
+        Map<Integer, ItemStack> excess = p.getInventory().addItem(stacks);
 
-        for (ItemStack stack : excess.values()) {
-            player.getWorld().dropItemNaturally(player.getLocation(), stack);
+        for (ItemStack s : excess.values()) {
+            p.getWorld().dropItemNaturally(p.getLocation(), s);
         }
     }
 
     @Nonnull
-    public static List<String> dumpItemStack(@Nullable ItemStack stack) {
-        if (stack == null) {
+    public static List<String> dumpItemStack(@Nullable ItemStack s) {
+        if (s == null) {
             return Collections.emptyList();
         }
 
         List<String> l = new ArrayList<>();
-        l.add("Quantity: " + stack.getAmount());
-        l.add("Material/Data: " + stack.getType() + ":" + stack.getDurability());
+        l.add("数量: " + s.getAmount());
+        l.add("材质: " + s.getType() + ":" + s.getDurability());
 
-        if (stack.hasItemMeta()) {
-            ItemMeta meta = stack.getItemMeta();
-            l.add("Display name: " + meta.getDisplayName());
+        if (s.hasItemMeta()) {
+            ItemMeta meta = s.getItemMeta();
+            l.add("显示名字: " + meta.getDisplayName());
 
             if (meta.hasLore()) {
-                l.add("Lore: [" + Joiner.on(",").join(meta.getLore()) + "]");
+                l.add("描述: [" + Joiner.on(",").join(meta.getLore()) + "]");
             }
 
             if (meta.hasEnchants()) {
                 for (Map.Entry<Enchantment, Integer> e : meta.getEnchants().entrySet()) {
-                    l.add("Enchant " + e.getKey() + " = " + e.getValue());
+                    l.add("附魔 " + e.getKey() + " = " + e.getValue());
                 }
             }
         } else {
-            l.add("No metadata");
+            l.add("没有 metadata");
         }
 
         return l;
@@ -659,20 +646,21 @@ public final class STBUtil {
         boolean glowing = false;
 
         for (int i = 1; i < fields.length; i++) {
-            if (StringUtils.isNumeric(fields[i])) {
+            // I went with STBUtil here, I couldn't figure out an alternative.
+            if (STBUtil.isNumeric(fields[i])) {
                 amount = Integer.parseInt(fields[i]);
             } else if (fields[i].equalsIgnoreCase("glow")) {
                 glowing = true;
             }
         }
 
-        ItemStack stack = new ItemStack(material, amount);
+        ItemStack s = new ItemStack(material, amount);
 
         if (glowing && SensibleToolboxPlugin.getInstance().isProtocolLibEnabled()) {
-            ItemGlow.setGlowing(stack, true);
+            ItemGlow.setGlowing(s, true);
         }
 
-        return stack;
+        return s;
     }
 
     /**
@@ -686,8 +674,8 @@ public final class STBUtil {
      * @return the number of 90-degree rotations between the faces
      */
     public static int getFaceRotation(BlockFace face1, BlockFace face2) {
-        Validate.isTrue(face1.getModY() == 0 && Math.abs(face1.getModX() + face1.getModZ()) == 1, "invalid face " + face1);
-        Validate.isTrue(face2.getModY() == 0 && Math.abs(face2.getModX() + face2.getModZ()) == 1, "invalid face " + face2);
+        Preconditions.checkArgument(face1.getModY() == 0 && Math.abs(face1.getModX() + face1.getModZ()) == 1, "invalid face " + face1);
+        Preconditions.checkArgument(face2.getModY() == 0 && Math.abs(face2.getModX() + face2.getModZ()) == 1, "invalid face " + face2);
 
         if (face1 == face2) {
             return 0;
@@ -709,7 +697,7 @@ public final class STBUtil {
      * @return the rotated face
      */
     public static BlockFace getRotatedFace(BlockFace face, int rotation) {
-        Validate.isTrue(face.getModY() == 0 && Math.abs(face.getModX() + face.getModZ()) == 1, "invalid face " + face);
+        Preconditions.checkArgument(face.getModY() == 0 && Math.abs(face.getModX() + face.getModZ()) == 1, "invalid face " + face);
 
         switch (rotation) {
             case 0:
@@ -741,20 +729,20 @@ public final class STBUtil {
      * Encode the given level as a proportion of the given maximum as an item
      * durability; useful for displaying in the item's durability bar.
      *
-     * @param stack
+     * @param s
      *            the item stack
      * @param val
      *            the value to encode, between 0 and <em>max</em>
      * @param max
      *            the maximum value
      */
-    public static void levelToDurability(ItemStack stack, int val, int max) {
-        short maxDur = stack.getType().getMaxDurability();
-        Validate.isTrue(maxDur > 0, "Item stack " + stack + " does not have a durability bar!");
-        Validate.isTrue(val >= 0 && val <= max, "Value " + val + " out of range 0.." + max);
+    public static void levelToDurability(ItemStack s, int val, int max) {
+        short maxDur = s.getType().getMaxDurability();
+        Preconditions.checkArgument(maxDur > 0, "Item stack " + s + " does not have a durability bar!");
+        Preconditions.checkArgument(val >= 0 && val <= max, "Value " + val + " out of range 0.." + max);
         float d = val / (float) max;
         short dur = (short) (maxDur * d);
-        stack.setDurability((short) (Math.max(1, maxDur - dur)));
+        s.setDurability((short) (Math.max(1, maxDur - dur)));
     }
 
     /**
@@ -799,7 +787,7 @@ public final class STBUtil {
      */
     @Nullable
     public static Material getWallSign(@Nonnull Material signType) {
-        Validate.notNull(signType, "The Sign Type cannot be null");
+        Preconditions.checkArgument(signType != null, "The Sign Type cannot be null");
 
         if (SensibleToolboxPlugin.getMinecraftVersion().isAtLeast(MinecraftVersion.MINECRAFT_1_16)) {
             if (signType == Material.CRIMSON_SIGN) {
@@ -885,7 +873,7 @@ public final class STBUtil {
      */
     @Nullable
     public static String getPlayerNameFromUUID(@Nonnull UUID uuid) {
-        Validate.notNull(uuid, "UUID cannot be null!");
+        Preconditions.checkArgument(uuid != null, "UUID cannot be null!");
         return Bukkit.getOfflinePlayer(uuid).getName();
     }
 
@@ -934,6 +922,18 @@ public final class STBUtil {
     @Nonnull
     public static BlockFace[] getAllHorizontalFaces() {
         return ALL_HORIZONTAL_BLOCK_FACES;
+    }
+
+    public static String getDirectionString(BlockFace face) {
+        return switch (face) {
+            case NORTH -> "北";
+            case SOUTH -> "南";
+            case EAST -> "东";
+            case WEST -> "西";
+            case UP -> "上";
+            case DOWN -> "下";
+            default -> "未知方向";
+        };
     }
 
 }

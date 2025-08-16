@@ -54,17 +54,17 @@ public class EnderBag extends BaseSTBItem implements EnderTunable {
 
     @Override
     public String getItemName() {
-        return "Ender Bag";
+        return "下界背包";
     }
 
     @Override
     public String getDisplaySuffix() {
-        return (isGlobal() ? "Global" : "Personal") + " " + UnicodeSymbol.NUMBER.toUnicode() + getEnderFrequency();
+        return (isGlobal() ? "公开" : "私有") + " " + UnicodeSymbol.NUMBER.toUnicode() + getEnderFrequency();
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "R-click: open bag", UnicodeSymbol.ARROW_UP.toUnicode() + " + R-click ender box: sync " + UnicodeSymbol.NUMBER.toUnicode() };
+        return new String[] { "右键打开背包 ", UnicodeSymbol.ARROW_UP.toUnicode() + " 右键下界箱以链接 " + UnicodeSymbol.NUMBER.toUnicode() };
     }
 
     @Override
@@ -97,33 +97,33 @@ public class EnderBag extends BaseSTBItem implements EnderTunable {
     }
 
     @Override
-    public void onInteractItem(PlayerInteractEvent event) {
-        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Block clicked = event.getClickedBlock();
-            Player player = event.getPlayer();
+    public void onInteractItem(PlayerInteractEvent e) {
+        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Block clicked = e.getClickedBlock();
+            Player p = e.getPlayer();
 
             if (clicked != null) {
                 // shift-right-click an ender bag against an ender box to copy its frequency
                 EnderBox box = SensibleToolbox.getBlockAt(clicked.getLocation(), EnderBox.class, true);
 
-                if (box != null && player.isSneaking()) {
+                if (box != null && p.isSneaking()) {
                     if (getEnderFrequency() != box.getEnderFrequency()) {
                         setEnderFrequency(box.getEnderFrequency());
                         setGlobal(box.isGlobal());
-                        updateHeldItemStack(player, event.getHand());
-                        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 2.0F);
+                        updateHeldItemStack(p, e.getHand());
+                        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 2.0F);
                     }
 
-                    event.setCancelled(true);
+                    e.setCancelled(true);
                     return;
                 } else if (clicked.getType().isInteractable()) {
                     return;
                 }
             }
 
-            Inventory inv = isGlobal() ? EnderStorage.getEnderInventory(getEnderFrequency()) : EnderStorage.getEnderInventory(player, getEnderFrequency());
-            player.openInventory(inv);
-            event.setCancelled(true);
+            Inventory inv = isGlobal() ? EnderStorage.getEnderInventory(getEnderFrequency()) : EnderStorage.getEnderInventory(p, getEnderFrequency());
+            p.openInventory(inv);
+            e.setCancelled(true);
         }
     }
 }

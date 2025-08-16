@@ -3,6 +3,7 @@ package io.github.thebusybiscuit.sensibletoolbox.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -32,7 +33,7 @@ public class RedrawCommand extends AbstractCommand {
 
         if (hasOption("w")) {
             World w = Bukkit.getWorld(getStringOption("w"));
-            Validate.notNull(w, "Unknown world: " + getStringOption("w"));
+            Preconditions.checkArgument(w != null, "Unknown world: " + getStringOption("w"));
             redrawn = redraw(w, type);
         } else {
             for (World w : Bukkit.getWorlds()) {
@@ -40,8 +41,7 @@ public class RedrawCommand extends AbstractCommand {
             }
         }
 
-        String s = redrawn == 1 ? "" : "s";
-        MiscUtil.statusMessage(sender, redrawn + " STB block" + s + " redrawn.");
+        MiscUtil.statusMessage(sender, redrawn + " 个 STB 方块被修复.");
         return true;
     }
 

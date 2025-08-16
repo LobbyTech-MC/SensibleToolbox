@@ -145,11 +145,11 @@ public class BasicSolarCell extends BaseSTBMachine implements LightMeterHolder {
 
     @Override
     public ItemStack extractItems(BlockFace face, ItemStack receiver, int amount, UUID uuid) {
-        ItemStack stack = super.extractItems(face, receiver, amount, uuid);
-        if (stack != null) {
+        ItemStack s = super.extractItems(face, receiver, amount, uuid);
+        if (s != null) {
             rescanPVCell();
         }
-        return stack;
+        return s;
     }
 
     @Override
@@ -200,7 +200,7 @@ public class BasicSolarCell extends BaseSTBMachine implements LightMeterHolder {
 
     @Override
     public String[] getLore() {
-        return new String[] { "可以产生" + getPowerOutput() + " SCU/帧的能量", "机器内需要放置 §6光伏电池 §7才能工作" };
+        return new String[] { "可以产生" + getPowerOutput() + " SCU/红石刻 的能量", "机器内需要放置 §6光伏电池 §7才能工作" };
     }
 
     @Override
@@ -269,19 +269,19 @@ public class BasicSolarCell extends BaseSTBMachine implements LightMeterHolder {
     }
 
     @Override
-    public void onBlockRegistered(Location location, boolean isPlacing) {
+    public void onBlockRegistered(Location l, boolean isPlacing) {
         if (isPlacing) {
-            drawPVLayer(location.getBlock().getRelative(BlockFace.UP));
+            drawPVLayer(l.getBlock().getRelative(BlockFace.UP));
         }
-        super.onBlockRegistered(location, isPlacing);
+        super.onBlockRegistered(l, isPlacing);
     }
 
     @Override
-    public void onBlockUnregistered(Location location) {
+    public void onBlockUnregistered(Location l) {
         // remove any pv cell in the gui; pv level is stored separately
         getGUI().setItem(PV_CELL_SLOT, null);
 
-        super.onBlockUnregistered(location);
+        super.onBlockUnregistered(l);
     }
 
     @Nonnull
@@ -296,15 +296,15 @@ public class BasicSolarCell extends BaseSTBMachine implements LightMeterHolder {
 
     @Override
     public void onInteractBlock(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
+        Player p = event.getPlayer();
 
-        if (event.getItem() == null && event.getAction() == Action.LEFT_CLICK_BLOCK && player.isSneaking()) {
-            ItemStack stack = extractItems(event.getBlockFace(), null, 1, event.getPlayer().getUniqueId());
+        if (event.getItem() == null && event.getAction() == Action.LEFT_CLICK_BLOCK && p.isSneaking()) {
+            ItemStack s = extractItems(event.getBlockFace(), null, 1, event.getPlayer().getUniqueId());
 
-            if (stack != null) {
+            if (s != null) {
                 Block block = event.getClickedBlock();
-                block.getWorld().dropItemNaturally(block.getLocation(), stack);
-                player.playSound(block.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 0.6F);
+                block.getWorld().dropItemNaturally(block.getLocation(), s);
+                p.playSound(block.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 0.6F);
             }
         }
         super.onInteractBlock(event);
@@ -379,7 +379,7 @@ public class BasicSolarCell extends BaseSTBMachine implements LightMeterHolder {
     protected InventoryGUI createGUI() {
         InventoryGUI gui = super.createGUI();
 
-        gui.addLabel("PV Cell", 0, null, "把光伏电池放在这里");
+        gui.addLabel("光伏电池", 0, null, "把光伏电池放在这里");
         gui.setSlotType(PV_CELL_SLOT, SlotType.ITEM);
 
         drawPVCell(gui);
@@ -412,7 +412,7 @@ public class BasicSolarCell extends BaseSTBMachine implements LightMeterHolder {
             ChatColor cc = STBUtil.dyeColorToChatColor(dc);
             double mult = getChargeMultiplier(effectiveLightLevel);
 
-            return GUIUtil.makeTexture(ColoredMaterial.WOOL.get(dc.ordinal()), ChatColor.WHITE + "效率: " + cc + (int) (getChargeMultiplier(effectiveLightLevel) * 100) + "%", ChatColor.GRAY + "Power Output: " + getPowerOutput() * mult + " SCU/t");
+            return GUIUtil.makeTexture(ColoredMaterial.WOOL.get(dc.ordinal()), ChatColor.WHITE + "效率: " + cc + (int) (getChargeMultiplier(effectiveLightLevel) * 100) + "%", ChatColor.GRAY + "每刻产电: " + getPowerOutput() * mult + " SCU");
         }
     }
 

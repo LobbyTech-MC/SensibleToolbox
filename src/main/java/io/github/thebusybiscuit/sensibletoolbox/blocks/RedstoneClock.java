@@ -21,7 +21,7 @@ import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.NumericGadget;
 import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.RedstoneBehaviourGadget;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
-import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.math.IntRange;
+import io.github.thebusybiscuit.sensibletoolbox.utils.IntRange;
 
 public class RedstoneClock extends BaseSTBBlock {
 
@@ -45,7 +45,7 @@ public class RedstoneClock extends BaseSTBBlock {
     protected InventoryGUI createGUI() {
         InventoryGUI gui = GUIUtil.createGUI(this, 9, ChatColor.DARK_RED + getItemName());
 
-        gui.addGadget(new NumericGadget(gui, 0, "脉冲频率", new IntRange(1, Integer.MAX_VALUE), getInterval(), 10, 1, newValue -> {
+        gui.addGadget(new NumericGadget(gui, 0, "间隔", new IntRange(1, Integer.MAX_VALUE), getInterval(), 10, 1, newValue -> {
             if (newValue > getOnDuration()) {
                 setInterval(newValue);
                 return true;
@@ -54,7 +54,7 @@ public class RedstoneClock extends BaseSTBBlock {
             }
         }));
 
-        gui.addGadget(new NumericGadget(gui, 1, "脉冲间隔", new IntRange(1, Integer.MAX_VALUE), getOnDuration(), 10, 1, newValue -> {
+        gui.addGadget(new NumericGadget(gui, 1, "持续时间", new IntRange(1, Integer.MAX_VALUE), getOnDuration(), 10, 1, newValue -> {
             if (newValue < getInterval()) {
                 setOnDuration(newValue);
                 return true;
@@ -122,7 +122,7 @@ public class RedstoneClock extends BaseSTBBlock {
 
     @Override
     public String[] getExtraLore() {
-        String l = BaseSTBItem.LORE_COLOR + "间隔: " + ChatColor.GOLD + getInterval() + LORE_COLOR + "帧, 持续: " + ChatColor.GOLD + getOnDuration() + LORE_COLOR + "帧";
+        String l = BaseSTBItem.LORE_COLOR + "间隔: " + ChatColor.GOLD + getInterval() + LORE_COLOR + "红石刻, 持续时间: " + ChatColor.GOLD + getOnDuration() + LORE_COLOR + "红石刻";
         return new String[] { l };
     }
 
@@ -133,8 +133,8 @@ public class RedstoneClock extends BaseSTBBlock {
 
     @Override
     public void onServerTick() {
-        Location loc = getLocation();
-        Block b = loc.getBlock();
+        Location l = getLocation();
+        Block b = l.getBlock();
         long time = getTicksLived();
 
         if (time % getInterval() == 0 && isRedstoneActive()) {
@@ -176,19 +176,18 @@ public class RedstoneClock extends BaseSTBBlock {
     }
 
     @Override
-    public void onInteractBlock(PlayerInteractEvent event) {
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && !event.getPlayer().isSneaking()) {
-            getGUI().show(event.getPlayer());
+    public void onInteractBlock(PlayerInteractEvent e) {
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && !e.getPlayer().isSneaking()) {
+            getGUI().show(e.getPlayer());
+            e.setCancelled(true);
         }
-
-        super.onInteractBlock(event);
     }
 
     @Override
-    public void onBlockUnregistered(Location location) {
+    public void onBlockUnregistered(Location l) {
         // ensure the non-active form of the item is always dropped
         active = false;
-        super.onBlockUnregistered(location);
+        super.onBlockUnregistered(l);
     }
 
     @Override

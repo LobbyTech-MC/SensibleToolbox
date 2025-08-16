@@ -1,5 +1,8 @@
 package io.github.thebusybiscuit.sensibletoolbox.api.filters;
 
+import com.google.common.base.Preconditions;
+import org.bukkit.inventory.ItemStack;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +16,7 @@ import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
 /**
  * A class which can filter items based on several criteria: whitelist/blacklist,
  * filter by material, by block data or by item metadata.
- * 
+ *
  * @author desht
  * @author TheBusyBiscuit
  */
@@ -79,24 +82,24 @@ public class Filter implements Cloneable {
     /**
      * Add an item to this filter.
      *
-     * @param stack
+     * @param s
      *            the item to add
      */
-    public void addItem(@Nonnull ItemStack stack) {
-        filteredItems.add(stack);
+    public void addItem(@Nonnull ItemStack s) {
+        filteredItems.add(s);
     }
 
     /**
      * Check if this filter, with its current items/whitelisting/filter-type,
      * should allow the given item to pass.
      *
-     * @param stack
+     * @param s
      *            the item to check
-     * 
+     *
      * @return true if the filter should pass the item; false otherwise
      */
-    public boolean shouldPass(@Nonnull ItemStack stack) {
-        Validate.notNull(stack, "Cannot filter null ItemStacks");
+    public boolean shouldPass(@Nonnull ItemStack s) {
+        Preconditions.checkArgument(s != null, "Cannot filter null ItemStacks");
 
         if (filteredItems.isEmpty()) {
             return !whiteList;
@@ -105,7 +108,7 @@ public class Filter implements Cloneable {
         switch (filterType) {
             case MATERIAL:
                 for (ItemStack f : filteredItems) {
-                    if (f.getType() == stack.getType()) {
+                    if (f.getType() == s.getType()) {
                         return whiteList;
                     }
                 }
@@ -113,7 +116,7 @@ public class Filter implements Cloneable {
                 return !whiteList;
             case ITEM_META:
                 for (ItemStack f : filteredItems) {
-                    if (f.isSimilar(stack)) {
+                    if (f.isSimilar(s)) {
                         return whiteList;
                     }
                 }
@@ -198,7 +201,7 @@ public class Filter implements Cloneable {
      *            the filtering type
      */
     public void setFilterType(@Nonnull FilterType filterType) {
-        Validate.notNull(filterType, "FilterType cannot be null!");
+        Preconditions.checkArgument(filterType != null, "FilterType cannot be null!");
         this.filterType = filterType;
     }
 }

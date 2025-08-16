@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,7 +35,7 @@ public class GiveCommand extends AbstractCommand {
             target = Bukkit.getPlayer(args[2]);
 
             if (target == null) {
-                MiscUtil.errorMessage(sender, args[2] + " is not a valid Player or not online!");
+                MiscUtil.errorMessage(sender, args[2] + " 不是有效的玩家 (可能玩家已下线)");
                 return true;
             }
         } else {
@@ -42,13 +43,13 @@ public class GiveCommand extends AbstractCommand {
                 if (STBUtil.isNumeric(args[1])) {
                     amount = Integer.parseInt(args[1]);
                 } else {
-                    MiscUtil.errorMessage(sender, args[1] + " is not a valid amount!");
+                    MiscUtil.errorMessage(sender, args[1] + " 不是一个有效的整数");
                     return true;
                 }
             }
 
             if (!(sender instanceof Player)) {
-                MiscUtil.errorMessage(sender, "This command can't be run from the console.");
+                MiscUtil.errorMessage(sender, "仅玩家可执行此命令!");
                 return true;
             }
 
@@ -57,9 +58,9 @@ public class GiveCommand extends AbstractCommand {
 
         String id = args[0].replace(" ", "").toLowerCase(Locale.ROOT);
         BaseSTBItem item = SensibleToolbox.getItemRegistry().getItemById(id);
-        Validate.notNull(item, "Unknown SensibleToolbox item: " + args[0]);
+        Preconditions.checkArgument(item != null, "Unknown SensibleToolbox item: " + args[0]);
         target.getInventory().addItem(item.toItemStack(amount));
-        MiscUtil.statusMessage(target, "You received " + amount + " x &6" + item.getItemName() + "&-.");
+        MiscUtil.statusMessage(target, "你收到了 " + amount + " x &6" + item.getItemName() + "&-.");
         return true;
     }
 

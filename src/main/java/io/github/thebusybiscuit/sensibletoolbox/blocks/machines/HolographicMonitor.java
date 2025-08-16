@@ -1,5 +1,7 @@
 package io.github.thebusybiscuit.sensibletoolbox.blocks.machines;
 
+import eu.decentsoftware.holograms.api.DHAPI;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -8,7 +10,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 
-import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
 import io.github.thebusybiscuit.sensibletoolbox.api.SensibleToolbox;
 import io.github.thebusybiscuit.sensibletoolbox.api.energy.EnergyNet;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
@@ -16,6 +17,8 @@ import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
 import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
 import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import me.filoghost.holographicdisplays.api.internal.HolographicDisplaysAPIProvider;
+
+import java.util.Arrays;
 
 public class HolographicMonitor extends BaseSTBBlock {
 
@@ -66,8 +69,6 @@ public class HolographicMonitor extends BaseSTBBlock {
         if (hologram == null) {
             return;
         }
-        
-        this.hologram.getLines().clear();
 
         for (BlockFace f : STBUtil.getMainHorizontalFaces()) {
             EnergyNet net = SensibleToolbox.getEnergyNet(getRelativeLocation(f).getBlock());
@@ -81,28 +82,28 @@ public class HolographicMonitor extends BaseSTBBlock {
                     prefix = ChatColor.DARK_RED + "" + ChatColor.BOLD + "-";
                 }
 
-                this.hologram.getLines().appendText(prefix + " " + ChatColor.GRAY + STBUtil.getCompactDouble(Double.valueOf(String.valueOf(stat).replace("-", ""))) + " SCU/t");
+                String line = prefix + " " + ChatColor.GRAY + STBUtil.getCompactDouble(Double.valueOf(String.valueOf(stat).replace("-", ""))) + " SCU/t";
+                DHAPI.setHologramLines(hologram, Arrays.asList(line));
                 break;
             }
         }
     }
 
     @Override
-    public void onBlockRegistered(Location location, boolean isPlacing) {
-        super.onBlockRegistered(location, isPlacing);
+    public void onBlockRegistered(Location l, boolean isPlacing) {
+        super.onBlockRegistered(l, isPlacing);
 
         onServerTick();
-        
-        HolographicDisplaysAPIProvider impl = HolographicDisplaysAPIProvider.getImplementation();
-        HolographicDisplaysAPI hologramapi = impl.getHolographicDisplaysAPI(SensibleToolboxPlugin.getInstance());
-
-        this.hologram = hologramapi.createHologram(getLocation().add(0.5, 1.4, 0.5));
+        this.hologram = DHAPI.createHologram("holo_monitor_" + System.currentTimeMillis(), getLocation().add(0.5, 1.4, 0.5));
+        DHAPI.setHologramLines(hologram, Arrays.asList("加载中...", "整理数据中..."));
+        onServerTick();
     }
 
     @Override
-    public void onBlockUnregistered(Location location) {
-        super.onBlockUnregistered(location);
-
-        this.hologram.delete();
+    public void onBlockUnregistered(Location l) {
+        super.onBlockUnregistered(l);
+        if (hologram != null) {
+            hologram.delete();
+        }
     }
 }

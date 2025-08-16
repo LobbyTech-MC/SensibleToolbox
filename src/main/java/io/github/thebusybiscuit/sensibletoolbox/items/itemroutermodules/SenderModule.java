@@ -6,7 +6,9 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapelessRecipe;
@@ -53,13 +55,13 @@ public class SenderModule extends DirectionalItemRouterModule {
     }
 
     @Override
-    public boolean execute(Location loc) {
+    public boolean execute(Location l) {
         if (getItemRouter() != null && getItemRouter().getBufferItem() != null) {
             if (getFilter() != null && !getFilter().shouldPass(getItemRouter().getBufferItem())) {
                 return false;
             }
             Debugger.getInstance().debug(2, "sender in " + getItemRouter() + " has: " + getItemRouter().getBufferItem());
-            Block b = loc.getBlock();
+            Block b = l.getBlock();
             Block target = b.getRelative(getFacing());
             int nToInsert = getItemRouter().getStackSize();
 
@@ -74,7 +76,7 @@ public class SenderModule extends DirectionalItemRouterModule {
                     int nReceived = receiver.receiveItem(toSend, getItemRouter().getOwner());
                     getItemRouter().reduceBuffer(nReceived);
 
-                    if (nReceived > 0 && SensibleToolbox.getPluginInstance().getConfigCache().getParticleLevel() >= 2) {
+                    if (nReceived > 0 && SensibleToolbox.getInstance().getConfigCache().getParticleLevel() >= 2) {
                         playSenderParticles(getItemRouter(), receiver.getItemRouter());
 
                     }
@@ -83,17 +85,23 @@ public class SenderModule extends DirectionalItemRouterModule {
                 }
             } else {
                 BaseSTBBlock stb = SensibleToolbox.getBlockAt(target.getLocation(), true);
-
                 if (stb instanceof STBInventoryHolder) {
                     ItemStack toInsert = getItemRouter().getBufferItem().clone();
                     toInsert.setAmount(Math.min(nToInsert, toInsert.getAmount()));
-                    int nInserted = ((STBInventoryHolder) stb).insertItems(toInsert, getFacing().getOppositeFace(), false, getItemRouter().getOwner());
+                    int nInserted = ((STBInventoryHolder) stb).insertItems(
+                        toInsert,
+                        getFacing().getOppositeFace(),
+                        false,
+                        getItemRouter().getOwner()
+                    );
                     getItemRouter().reduceBuffer(nInserted);
                     return nInserted > 0;
-                } else {
-                    // vanilla inventory holder?
-                    return vanillaInsertion(target, nToInsert, getFacing().getOppositeFace());
                 }
+            }
+
+            BlockState state = target.getState();
+            if (state instanceof InventoryHolder) {
+                return vanillaInsertion(target, nToInsert, getFacing().getOppositeFace());
             }
         }
         return false;

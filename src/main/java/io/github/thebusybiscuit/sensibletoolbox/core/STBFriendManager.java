@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import io.github.thebusybiscuit.sensibletoolbox.SensibleToolboxPlugin;
@@ -62,7 +63,7 @@ public class STBFriendManager implements FriendManager {
     @Override
     @Nonnull
     public Set<UUID> getFriends(@Nonnull UUID id) {
-        Validate.notNull(id, "Cannot get friends for null!");
+        Preconditions.checkArgument(id != null, "Cannot get friends for null!");
 
         return friendMap.computeIfAbsent(id, key -> new HashSet<>());
     }
@@ -115,7 +116,7 @@ public class STBFriendManager implements FriendManager {
         String separator = File.separator;
         String fileName;
 
-        // Remove the path upto the filename.
+        // Remove the path up to the filename.
         int lastSeparatorIndex = name.lastIndexOf(separator);
 
         if (lastSeparatorIndex == -1) {

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.common.base.Joiner;
@@ -17,7 +18,7 @@ import me.desht.dhutils.MiscUtil;
 
 /**
  * Represents the custom recipes known by a specific type of machine.
- * 
+ *
  * @author desht
  */
 public class CustomRecipeCollection {
@@ -34,7 +35,7 @@ public class CustomRecipeCollection {
      *            wildcarded (data value ignored)
      */
     public void addCustomRecipe(@Nonnull CustomRecipe recipe, boolean allowWild) {
-        Validate.notNull(recipe, "A custom recipe cannot be null");
+        Preconditions.checkArgument(recipe != null, "A custom recipe cannot be null");
         String key = recipe.makeKey(false);
         ProcessingResult pr = new ProcessingResult(recipe.getResult(), recipe.getProcessingTime());
         recipes.put(key, pr);
@@ -105,15 +106,15 @@ public class CustomRecipeCollection {
         }
         List<String> l = new ArrayList<>(input.length);
 
-        for (ItemStack stack : input) {
-            if (stack == null) {
+        for (ItemStack s : input) {
+            if (s == null) {
                 if (shaped) {
                     l.add("");
                 } else {
                     throw new IllegalArgumentException("null items not allowed for shapeless recipes");
                 }
             } else {
-                l.add(stack.getAmount() + "x" + RecipeUtil.makeRecipeKey(ignoreData, stack));
+                l.add(s.getAmount() + "x" + RecipeUtil.makeRecipeKey(ignoreData, s));
             }
         }
 

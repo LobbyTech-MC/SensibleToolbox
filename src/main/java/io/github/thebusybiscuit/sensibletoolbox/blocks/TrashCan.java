@@ -81,7 +81,7 @@ public class TrashCan extends BaseSTBBlock implements STBInventoryHolder {
                 l.getWorld().playSound(l, Sound.ENTITY_GENERIC_EAT, 1.0F, 1.0F);
             }
 
-            Debugger.getInstance().debug(this + ": trash emptied");
+            Debugger.getInstance().debug(this + ": 垃圾桶已被清空");
             d.getInventory().clear();
         }
     }

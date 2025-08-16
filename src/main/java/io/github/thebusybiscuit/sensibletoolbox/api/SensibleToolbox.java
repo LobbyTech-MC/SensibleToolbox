@@ -26,7 +26,7 @@ public final class SensibleToolbox {
      *
      * @return the SensibleToolboxPlugin instance
      */
-    public static SensibleToolboxPlugin getPluginInstance() {
+    public static SensibleToolboxPlugin getInstance() {
         if (instance == null) {
             instance = (SensibleToolboxPlugin) Bukkit.getPluginManager().getPlugin("SensibleToolbox");
 
@@ -45,24 +45,24 @@ public final class SensibleToolbox {
      * @return the STB item registry
      */
     public static ItemRegistry getItemRegistry() {
-        return getPluginInstance().getItemRegistry();
+        return getInstance().getItemRegistry();
     }
 
     /**
      * Given a location, return the STB block at that location, if any.
      *
-     * @param location
+     * @param l
      *            the location to check
      * @return the STB block at that location, or null if there is none
      */
-    public static BaseSTBBlock getBlockAt(Location location) {
-        return LocationManager.getManager().get(location);
+    public static BaseSTBBlock getBlockAt(Location l) {
+        return LocationManager.getManager().get(l);
     }
 
     /**
      * Given a location, return the STB block at that location, if any.
      *
-     * @param location
+     * @param l
      *            the location to check
      * @param checkSign
      *            if true and the location contains a sign, then also
@@ -70,14 +70,14 @@ public final class SensibleToolbox {
      *            to
      * @return the STB block at that location, or null if there is none
      */
-    public static BaseSTBBlock getBlockAt(Location location, boolean checkSign) {
-        return LocationManager.getManager().get(location, checkSign);
+    public static BaseSTBBlock getBlockAt(Location l, boolean checkSign) {
+        return LocationManager.getManager().get(l, checkSign);
     }
 
     /**
      * Given a location, return the STB block at that location, if any.
      *
-     * @param location
+     * @param l
      *            the location to check
      * @param type
      *            the block must be an instance or a subclass of this type
@@ -87,8 +87,8 @@ public final class SensibleToolbox {
      *            to
      * @return the STB block at that location, or null if there is no block of the given type
      */
-    public static <T extends BaseSTBBlock> T getBlockAt(Location location, Class<T> type, boolean checkSign) {
-        return LocationManager.getManager().get(location, type, checkSign);
+    public static <T extends BaseSTBBlock> T getBlockAt(Location l, Class<T> type, boolean checkSign) {
+        return LocationManager.getManager().get(l, type, checkSign);
     }
 
     /**
@@ -99,7 +99,7 @@ public final class SensibleToolbox {
      * @return the friend manager
      */
     public static FriendManager getFriendManager() {
-        return getPluginInstance().getFriendManager();
+        return getInstance().getFriendManager();
     }
 
     /**
@@ -109,10 +109,10 @@ public final class SensibleToolbox {
      *            the block to check
      */
     public static EnergyNet getEnergyNet(Block block) {
-        return getPluginInstance().getEnergyNetManager().getEnergyNet(block);
+        return getInstance().getEnergyNetManager().getEnergyNet(block);
     }
 
     public static ProtectionManager getProtectionManager() {
-        return getPluginInstance().getProtectionManager();
+        return getInstance().getProtectionManager();
     }
 }

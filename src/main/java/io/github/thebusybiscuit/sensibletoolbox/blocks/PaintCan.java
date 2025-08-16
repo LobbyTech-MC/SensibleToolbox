@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Strings;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
@@ -19,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -126,12 +128,12 @@ public class PaintCan extends BaseSTBBlock implements LevelReporter {
 
     @Override
     public String getItemName() {
-        return "§d染缸";
+        return "§d涂料罐";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "使用 §6刷子 §7右键染缸可以给 §6刷子 §7补充墨水", "直接右键 §6染缸 §7可以打开染色面板", "可以放入 §6牛奶 §7和 §6染料 §7混合颜色", "也可以给物品染色" };
+        return new String[] { "使用 §6刷子 §7右键涂料罐可以给 §6刷子 §7补充墨水", "直接右键 §6涂料罐 §7可以打开染色面板", "可以放入 §6牛奶 §7和 §6染料 §7混合颜色", "也可以给物品染色" };
     }
 
     @Override
@@ -145,48 +147,50 @@ public class PaintCan extends BaseSTBBlock implements LevelReporter {
     }
 
     @Override
-    public void onInteractBlock(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        ItemStack stack = event.getItem();
+    public void onInteractBlock(PlayerInteractEvent e) {
+        Player p = e.getPlayer();
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            PaintBrush brush = SensibleToolbox.getItemRegistry().fromItemStack(stack, PaintBrush.class);
+        if (e.getHand() == EquipmentSlot.HAND && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            ItemStack s = p.getInventory().getItemInMainHand();
+            PaintBrush brush = SensibleToolbox.getItemRegistry().fromItemStack(s, PaintBrush.class);
 
-            if (brush == null) {
-                // refilling a paintbrush/roller from the can is handled in the PaintBrush object
-                getGUI().show(player);
+            if (brush != null) {
+                super.onInteractBlock(e);
+            } else {
+                getGUI().show(p);
                 LevelMonitor monitor = getPaintLevelMonitor();
 
                 if (monitor != null) {
                     monitor.repaint();
                 }
-            }
 
-            event.setCancelled(true);
-        } else {
-            super.onInteractBlock(event);
+                e.setCancelled(true);
+            }
+        }
+        if (e.getAction() == Action.LEFT_CLICK_BLOCK){
+            super.onInteractBlock(e);
         }
     }
 
     @Override
     public InventoryGUI createGUI() {
         InventoryGUI gui = GUIUtil.createGUI(this, 27, ChatColor.DARK_RED + getItemName());
-        gui.addLabel("Ingredients", 0, null, "To mix paint:", "▶ Place a milk bucket & dye", "To dye items:", "▶ Place any dyeable item");
+        gui.addLabel("原料", 0, null, "▶ 放置奶桶和染料以混色", "▶ 放置可染色物品以染色");
 
         for (int slot : ITEM_SLOTS) {
             gui.setSlotType(slot, SlotType.ITEM);
         }
 
-        String[] lore = new String[] { "Combine milk & dye to make paint", "or dye any colorable item", "with existing paint" };
-        gui.addGadget(new ButtonGadget(gui, 12, "Mix or Dye", lore, MIX_TEXTURE, () -> {
+        String[] lore = new String[] { "将奶桶和染料放入其中并混合染料", "将可染色物品放入其中并染色" };
+        gui.addGadget(new ButtonGadget(gui, 12, "混/染色", lore, MIX_TEXTURE, () -> {
             if (tryMix()) {
-                Location loc = getLocation();
-                loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_SPLASH, 1.0F, 1.0F);
+                Location l = getLocation();
+                l.getWorld().playSound(l, Sound.ENTITY_GENERIC_SPLASH, 1.0F, 1.0F);
             }
         }));
 
-        lore = new String[] { "Caution: This will empty the", "paint tank and can't be undone!" };
-        gui.addGadget(new ButtonGadget(gui, 13, ChatColor.RED.toString() + ChatColor.UNDERLINE + "☠ Empty Paint ☠", lore, EMPTY_TEXTURE, this::emptyPaintCan));
+        lore = new String[] { "染料罐将会永久清空! (真的很久!)" };
+        gui.addGadget(new ButtonGadget(gui, 13, ChatColor.RED.toString() + ChatColor.UNDERLINE + "☠ 空 ☠", lore, EMPTY_TEXTURE, this::emptyPaintCan));
 
         levelMonitorId = gui.addMonitor(new LevelMonitor(gui, this));
         gui.addGadget(new AccessControlGadget(gui, 8));
@@ -205,11 +209,11 @@ public class PaintCan extends BaseSTBBlock implements LevelReporter {
 
     @Override
     public ItemStack getLevelIcon() {
-        ItemStack stack = new ItemStack(Material.LEATHER_LEGGINGS);
-        LeatherArmorMeta meta = (LeatherArmorMeta) stack.getItemMeta();
+        ItemStack s = new ItemStack(Material.LEATHER_LEGGINGS);
+        LeatherArmorMeta meta = (LeatherArmorMeta) s.getItemMeta();
         meta.setColor(getColor().getColor());
-        stack.setItemMeta(meta);
-        return stack;
+        s.setItemMeta(meta);
+        return s;
     }
 
     @Override
@@ -220,13 +224,13 @@ public class PaintCan extends BaseSTBBlock implements LevelReporter {
     @Override
     public String getLevelMessage() {
         ChatColor cc = STBUtil.dyeColorToChatColor(getColor());
-        return ChatColor.WHITE + "Paint Level: " + getPaintLevel() + "/" + MAX_PAINT_LEVEL + " " + cc + getColor();
+        return ChatColor.WHITE + "染色进度: " + getPaintLevel() + "/" + MAX_PAINT_LEVEL + " " + cc + getColor();
     }
 
     private void emptyPaintCan() {
         setPaintLevel(0);
-        Location loc = getLocation();
-        loc.getWorld().playSound(loc, Sound.ENTITY_PLAYER_SPLASH, 1.0F, 1.0F);
+        Location l = getLocation();
+        l.getWorld().playSound(l, Sound.ENTITY_PLAYER_SPLASH, 1.0F, 1.0F);
     }
 
     @Nullable
@@ -239,25 +243,25 @@ public class PaintCan extends BaseSTBBlock implements LevelReporter {
     }
 
     @Override
-    public boolean onSlotClick(HumanEntity player, int slot, ClickType click, ItemStack inSlot, ItemStack onCursor) {
+    public boolean onSlotClick(HumanEntity p, int slot, ClickType click, ItemStack inSlot, ItemStack onCursor) {
         return onCursor.getType() == Material.AIR || validItem(onCursor);
     }
 
     @Override
-    public boolean onPlayerInventoryClick(HumanEntity player, int slot, ClickType click, ItemStack inSlot, ItemStack onCursor) {
+    public boolean onPlayerInventoryClick(HumanEntity p, int slot, ClickType click, ItemStack inSlot, ItemStack onCursor) {
         return true;
     }
 
     @Override
-    public int onShiftClickInsert(HumanEntity player, int slot, ItemStack toInsert) {
+    public int onShiftClickInsert(HumanEntity p, int slot, ItemStack toInsert) {
         if (!validItem(toInsert)) {
             return 0;
         } else {
             Map<Integer, ItemStack> excess = getGUI().getInventory().addItem(toInsert);
             int inserted = toInsert.getAmount();
 
-            for (ItemStack stack : excess.values()) {
-                inserted -= stack.getAmount();
+            for (ItemStack s : excess.values()) {
+                inserted -= s.getAmount();
             }
 
             return inserted;
@@ -265,26 +269,26 @@ public class PaintCan extends BaseSTBBlock implements LevelReporter {
     }
 
     @Override
-    public boolean onShiftClickExtract(HumanEntity player, int slot, ItemStack toExtract) {
+    public boolean onShiftClickExtract(HumanEntity p, int slot, ItemStack toExtract) {
         return true;
     }
 
     @Override
-    public boolean onClickOutside(HumanEntity player) {
+    public boolean onClickOutside(HumanEntity p) {
         return false;
     }
 
     @Override
-    public void onGUIClosed(HumanEntity player) {
+    public void onGUIClosed(HumanEntity p) {
         if (getGUI().getViewers().size() == 1) {
             // last player closing inventory - eject any remaining items
-            Location loc = getLocation();
+            Location l = getLocation();
 
             for (int slot : ITEM_SLOTS) {
                 ItemStack item = getGUI().getInventory().getItem(slot);
 
                 if (item != null) {
-                    loc.getWorld().dropItemNaturally(getLocation(), item);
+                    l.getWorld().dropItemNaturally(getLocation(), item);
                     getGUI().getInventory().setItem(slot, null);
                 }
             }
@@ -302,7 +306,7 @@ public class PaintCan extends BaseSTBBlock implements LevelReporter {
         ChatColor cc = STBUtil.dyeColorToChatColor(getColor());
         res[1] = cc.toString() + getColor();
         res[2] = getPaintLevel() + "/" + getMaxPaintLevel();
-        res[3] = cc + StringUtils.repeat("◼", (getPaintLevel() * 13) / getMaxPaintLevel());
+        res[3] = cc + Strings.repeat("◼", (getPaintLevel() * 13) / getMaxPaintLevel());
         return res;
     }
 
@@ -322,17 +326,17 @@ public class PaintCan extends BaseSTBBlock implements LevelReporter {
 
         // first try to find a milk bucket, dye and/or wool
         for (int slot : ITEM_SLOTS) {
-            ItemStack stack = inventory.getItem(slot);
-            if (stack != null) {
-                if (stack.getType() == Material.MILK_BUCKET && !stack.hasItemMeta() && bucketSlot == -1) {
+            ItemStack s = inventory.getItem(slot);
+            if (s != null) {
+                if (s.getType() == Material.MILK_BUCKET && !s.hasItemMeta() && bucketSlot == -1) {
                     bucketSlot = slot;
-                } else if (STBUtil.isDye(stack.getType()) && !stack.hasItemMeta() && dyeSlot == -1) {
+                } else if (STBUtil.isDye(s.getType()) && !s.hasItemMeta() && dyeSlot == -1) {
                     dyeSlot = slot;
-                } else if (validItem(stack) && dyeableSlot == -1) {
+                } else if (validItem(s) && dyeableSlot == -1) {
                     dyeableSlot = slot;
                 } else {
                     // not an item we want - eject it
-                    getLocation().getWorld().dropItemNaturally(getLocation(), stack);
+                    getLocation().getWorld().dropItemNaturally(getLocation(), s);
                     inventory.setItem(slot, null);
                 }
             }
@@ -375,8 +379,8 @@ public class PaintCan extends BaseSTBBlock implements LevelReporter {
 
             Debugger.getInstance().debug(this + ": paint mixed! now " + getPaintLevel() + " " + getColor());
 
-            Location loc = getLocation();
-            loc.getWorld().playSound(loc, Sound.ENTITY_GENERIC_SPLASH, 1.0F, 1.0F);
+            Location l = getLocation();
+            l.getWorld().playSound(l, Sound.ENTITY_GENERIC_SPLASH, 1.0F, 1.0F);
 
             inventory.setItem(bucketSlot, new ItemStack(Material.BUCKET));
             dyeStack.setAmount(dyeStack.getAmount() - toUse);

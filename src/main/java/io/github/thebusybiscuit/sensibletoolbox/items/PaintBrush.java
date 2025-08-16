@@ -40,8 +40,8 @@ import io.github.thebusybiscuit.sensibletoolbox.api.gui.gadgets.ButtonGadget;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBBlock;
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBItem;
 import io.github.thebusybiscuit.sensibletoolbox.blocks.PaintCan;
-import io.github.thebusybiscuit.sensibletoolbox.utils.HoloMessage;
 import io.github.thebusybiscuit.sensibletoolbox.utils.STBUtil;
+import io.github.thebusybiscuit.sensibletoolbox.utils.HoloMessage;
 import io.github.thebusybiscuit.sensibletoolbox.utils.UnicodeSymbol;
 
 import me.desht.dhutils.Debugger;
@@ -104,19 +104,19 @@ public class PaintBrush extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Paintbrush";
+        return "画笔";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Paints colorable blocks:", " Wool, carpet, stained clay/glass", "R-click block: paint up to " + getMaxBlocksAffected() + " blocks", UnicodeSymbol.ARROW_UP.toUnicode() + " + R-click block: paint block", UnicodeSymbol.ARROW_UP.toUnicode() + " + R-click air: empty brush", "R-click paintings: Change artwork", };
+        return new String[] { "支持对羊毛, 地毯, 陶瓦, 玻璃，混凝土染色", "右键方块对 " + getMaxBlocksAffected() + " 个方块染色", UnicodeSymbol.ARROW_UP.toUnicode() + " 右键以对方块染色", UnicodeSymbol.ARROW_UP.toUnicode() + " 右键空气以清除画笔", "右键画以改变画作", };
     }
 
     @Override
     public ItemStack toItemStack(int amount) {
-        ItemStack stack = super.toItemStack(amount);
-        STBUtil.levelToDurability(stack, getPaintLevel(), getMaxPaintLevel());
-        return stack;
+        ItemStack s = super.toItemStack(amount);
+        STBUtil.levelToDurability(s, getPaintLevel(), getMaxPaintLevel());
+        return s;
     }
 
     @Override
@@ -138,39 +138,40 @@ public class PaintBrush extends BaseSTBItem {
     }
 
     @Override
-    public void onInteractItem(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
+    public void onInteractItem(PlayerInteractEvent e) {
+        Player p = e.getPlayer();
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Block b = event.getClickedBlock();
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Block b = e.getClickedBlock();
             BaseSTBBlock stb = SensibleToolbox.getBlockAt(b.getLocation(), true);
 
             if (stb instanceof PaintCan) {
                 refillFromCan((PaintCan) stb);
+                e.setCancelled(true);
             } else if (okToColor(b, stb)) {
-                int painted = paint(player, b);
+                int painted = paint(p, b);
 
                 if (painted > 0) {
-                    player.playSound(player.getLocation(), Sound.BLOCK_WATER_AMBIENT, 1.0F, 1.5F);
+                    p.playSound(p.getLocation(), Sound.BLOCK_WATER_AMBIENT, 1.0F, 1.5F);
                 }
             }
-        } else if (event.getAction() == Action.RIGHT_CLICK_AIR && player.isSneaking()) {
+        } else if (e.getAction() == Action.RIGHT_CLICK_AIR && p.isSneaking()) {
             setPaintLevel(0);
         }
 
-        updateHeldItemStack(event.getPlayer(), event.getHand());
-        event.setCancelled(true);
+        updateHeldItemStack(e.getPlayer(), e.getHand());
+        e.setCancelled(true);
     }
 
-    private int paint(@Nonnull Player player, @Nonnull Block b) {
+    private int paint(@Nonnull Player p, @Nonnull Block b) {
         // Bukkit Colorable interface doesn't cover all colorable blocks at this time, only Wool
-        if (player.isSneaking()) {
+        if (p.isSneaking()) {
             // paint a single block
-            return paintBlocks(player, b);
+            return paintBlocks(p, b);
         } else {
             // paint multiple blocks around the clicked block
             Block[] blocks = findBlocksAround(b);
-            return paintBlocks(player, blocks);
+            return paintBlocks(p, blocks);
         }
     }
 
@@ -210,32 +211,33 @@ public class PaintBrush extends BaseSTBItem {
     }
 
     @Override
-    public void onInteractEntity(PlayerInteractEntityEvent event) {
-        if (!event.getHand().equals(EquipmentSlot.HAND)) {
+    public void onInteractEntity(PlayerInteractEntityEvent e) {
+        if (!e.getHand().equals(EquipmentSlot.HAND)) {
             return;
         }
-        event.setCancelled(true);
+        e.setCancelled(true);
 
         if (getPaintLevel() <= 0) {
             return;
         }
 
-        Entity e = event.getRightClicked();
+        Entity ent = e.getRightClicked();
         int paintUsed = 0;
 
-        if (e instanceof Colorable) {
-            ((Colorable) e).setColor(getColor());
+        if (ent instanceof Colorable) {
+            ((Colorable) ent).setColor(getColor());
             paintUsed = 1;
-        } else if (e instanceof Painting) {
-            Art art = ((Painting) e).getArt();
+        } else if (ent instanceof Painting) {
+            Painting painting = (Painting) ent;
+            Art art = painting.getArt();
 
             if (getPaintLevel() >= art.getBlockHeight() * art.getBlockWidth()) {
-                openArtworkMenu(event.getPlayer(), event.getHand(), (Painting) e);
+                openArtworkMenu(e.getPlayer(), e.getHand(), painting);
             } else {
-                Location loc = e.getLocation().add(0, -art.getBlockHeight() / 2.0, 0);
-                HoloMessage.popup(event.getPlayer(), loc, ChatColor.RED + "Not enough paint!");
+                Location l = ent.getLocation().add(0, -art.getBlockHeight() / 2.0, 0);
+                HoloMessage.popup(e.getPlayer(), l, 5, ChatColor.RED + "没有足够的染料");
             }
-        } else if (e instanceof Wolf) {
+        } else if (ent instanceof Wolf) {
             Wolf wolf = (Wolf) e;
             wolf.setCollarColor(getColor());
             paintUsed = 1;
@@ -243,8 +245,8 @@ public class PaintBrush extends BaseSTBItem {
 
         if (paintUsed > 0) {
             setPaintLevel(getPaintLevel() - paintUsed);
-            updateHeldItemStack(event.getPlayer(), event.getHand());
-            event.getPlayer().playSound(e.getLocation(), Sound.BLOCK_WATER_AMBIENT, 1.0F, 1.5F);
+            updateHeldItemStack(e.getPlayer(), e.getHand());
+            e.getPlayer().playSound(ent.getLocation(), Sound.BLOCK_WATER_AMBIENT, 1.0F, 1.5F);
         }
     }
 
@@ -283,11 +285,11 @@ public class PaintBrush extends BaseSTBItem {
         }
     }
 
-    private int paintBlocks(@Nonnull Player player, Block... blocks) {
+    private int paintBlocks(@Nonnull Player p, Block... blocks) {
         int painted = 0;
 
         for (Block b : blocks) {
-            if (!SensibleToolbox.getProtectionManager().hasPermission(player, b, Interaction.PLACE_BLOCK)) {
+            if (!SensibleToolbox.getProtectionManager().hasPermission(p, b, Interaction.PLACE_BLOCK)) {
                 continue;
             }
 
@@ -325,11 +327,11 @@ public class PaintBrush extends BaseSTBItem {
         Painting editingPainting = painting;
 
         Art[] other = getOtherArt(painting.getArt());
-        InventoryGUI menu = GUIUtil.createGUI(p, this, 9, ChatColor.DARK_PURPLE + "Select Artwork");
+        InventoryGUI menu = GUIUtil.createGUI(p, this, 9, ChatColor.DARK_PURPLE + "选择画作");
 
         int i = 0;
         for (Art art : other) {
-            menu.addGadget(new ButtonGadget(menu, i, new CustomItemStack(Material.PAINTING, art.name(), "", "&7Click to select this artwork"), new Runnable() {
+            menu.addGadget(new ButtonGadget(menu, i, new CustomItemStack(Material.PAINTING, art.name(), "", "&7点击选择画作"), new Runnable() {
 
                 @Override
                 public void run() {

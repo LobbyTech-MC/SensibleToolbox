@@ -39,14 +39,14 @@ public class SetcfgCommand extends AbstractCommand {
             }
 
             Object res = configManager.get(key);
-            MiscUtil.statusMessage(sender, key + " is now set to '&e" + res + "&-'");
+            MiscUtil.statusMessage(sender, key + " 已被修改为 '&e" + res + "&-'");
 
             if (key.startsWith("items_enabled.")) {
-                MiscUtil.statusMessage(sender, "Changes will take effect when server is reloaded/restarted");
+                MiscUtil.statusMessage(sender, "修改将在下一次服务器重启后生效");
             }
         } catch (DHUtilsException e) {
             MiscUtil.errorMessage(sender, e.getMessage());
-            MiscUtil.errorMessage(sender, "Use /stb getcfg to list all valid keys");
+            MiscUtil.errorMessage(sender, "使用 /stb getcfg 以查看所有配置");
         } catch (IllegalArgumentException e) {
             MiscUtil.errorMessage(sender, e.getMessage());
         }

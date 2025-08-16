@@ -26,12 +26,12 @@ public class RecipeCommand extends AbstractCommand {
     @Override
     public boolean execute(Plugin plugin, CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            MiscUtil.errorMessage(sender, "This command can't be run from the console.");
+            MiscUtil.errorMessage(sender, "仅玩家可执行此命令!");
             return true;
         }
 
-        Player player = (Player) sender;
-        Inventory inv = player.getInventory();
+        Player p = (Player) sender;
+        Inventory inv = p.getInventory();
         RecipeBook book = null;
         int slot;
 
@@ -43,7 +43,7 @@ public class RecipeCommand extends AbstractCommand {
         }
 
         if (book == null) {
-            MiscUtil.errorMessage(sender, "You must have a Recipe Book in your inventory to search for recipes!");
+            MiscUtil.errorMessage(sender, "你必须持有一本配方书才能搜索配方!");
             return true;
         }
 
@@ -51,8 +51,8 @@ public class RecipeCommand extends AbstractCommand {
         book.setInventorySlot(slot);
         book.setRecipeNameFilter(filter);
         book.goToItemList();
-        Block b = player.getTargetBlock((Set<Material>) null, 4);
-        book.openBook(player, STBUtil.canFabricateWith(b) ? b : null);
+        Block b = p.getTargetBlock((Set<Material>) null, 4);
+        book.openBook(p, STBUtil.canFabricateWith(b) ? b : null);
         return true;
     }
 }

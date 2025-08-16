@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Keyed;
@@ -49,8 +50,8 @@ public class STBItemRegistry implements ItemRegistry, Keyed {
 
     @ParametersAreNonnullByDefault
     public STBItemRegistry(Plugin plugin, String registryKey) {
-        Validate.notNull(plugin, "The Plugin cannot be null");
-        Validate.notNull(registryKey, "The registry cannot be null");
+        Preconditions.checkArgument(plugin != null, "The Plugin cannot be null");
+        Preconditions.checkArgument(registryKey != null, "The registry cannot be null");
 
         this.namespacedKey = new NamespacedKey(plugin, registryKey);
     }
@@ -85,7 +86,7 @@ public class STBItemRegistry implements ItemRegistry, Keyed {
         }
 
         String id = item.getItemTypeID();
-        Validate.isTrue(id.length() <= MAX_ITEM_ID_LENGTH, "Item ID '" + id + "' is too long! (32 chars max)");
+        Preconditions.checkArgument(id.length() <= MAX_ITEM_ID_LENGTH, "Item ID '" + id + "' is too long! (32 chars max)");
 
         ReflectionDetails<T> details = new ReflectionDetails<>((Class<T>) item.getClass());
         reflectionDetailsMap.put(id, details);
@@ -129,30 +130,30 @@ public class STBItemRegistry implements ItemRegistry, Keyed {
     }
 
     @Override
-    public BaseSTBItem fromItemStack(@Nullable ItemStack stack) {
-        if (stack == null) {
+    public BaseSTBItem fromItemStack(@Nullable ItemStack s) {
+        if (s == null) {
             return null;
         }
 
-        Configuration conf = getItemAttributes(stack);
+        Configuration conf = getItemAttributes(s);
         BaseSTBItem item = getItemById(conf.getString("*TYPE"), conf);
 
         if (item != null) {
-            item.storeEnchants(stack);
+            item.storeEnchants(s);
         }
 
         return item;
     }
 
     @Nonnull
-    private Configuration getItemAttributes(@Nonnull ItemStack stack) {
-        Validate.notNull(stack, "ItemStack cannot be null!");
+    private Configuration getItemAttributes(@Nonnull ItemStack s) {
+        Preconditions.checkArgument(s != null, "ItemStack cannot be null!");
 
-        if (!stack.hasItemMeta()) {
+        if (!s.hasItemMeta()) {
             return new MemoryConfiguration();
         }
 
-        Optional<String> optional = PersistentDataAPI.getOptionalString(stack.getItemMeta(), namespacedKey);
+        Optional<String> optional = PersistentDataAPI.getOptionalString(s.getItemMeta(), namespacedKey);
 
         if (optional.isPresent()) {
             return YamlConfiguration.loadConfiguration(new StringReader(optional.get()));
@@ -162,8 +163,8 @@ public class STBItemRegistry implements ItemRegistry, Keyed {
     }
 
     @Override
-    public <T extends BaseSTBItem> T fromItemStack(ItemStack stack, Class<T> type) {
-        BaseSTBItem item = fromItemStack(stack);
+    public <T extends BaseSTBItem> T fromItemStack(ItemStack s, Class<T> type) {
+        BaseSTBItem item = fromItemStack(s);
 
         if (item != null && type.isAssignableFrom(item.getClass())) {
             return type.cast(item);
@@ -194,13 +195,13 @@ public class STBItemRegistry implements ItemRegistry, Keyed {
     }
 
     @Override
-    public boolean isSTBItem(ItemStack stack) {
-        return isSTBItem(stack, null);
+    public boolean isSTBItem(ItemStack s) {
+        return isSTBItem(s, null);
     }
 
     @Override
-    public boolean isSTBItem(ItemStack stack, Class<? extends BaseSTBItem> c) {
-        BaseSTBItem item = fromItemStack(stack);
+    public boolean isSTBItem(ItemStack s, Class<? extends BaseSTBItem> c) {
+        BaseSTBItem item = fromItemStack(s);
         if (c == null) {
             return item != null;
         } else {

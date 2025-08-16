@@ -36,8 +36,7 @@ public class ValidateCommand extends STBAbstractCommand {
     public boolean execute(Plugin plugin, CommandSender sender, String[] args) {
         for (World world : Bukkit.getWorlds()) {
             int fixed = validate(plugin, world);
-            String s = fixed == 1 ? "" : "s";
-            MiscUtil.statusMessage(sender, "Fixed up &e" + fixed + "&- block" + s + " in world &6" + world.getName());
+            MiscUtil.statusMessage(sender, "在世界&6" + world.getName() + " &r中修复了 &e" + fixed + "&- 个方块");
         }
 
         return true;
@@ -48,8 +47,8 @@ public class ValidateCommand extends STBAbstractCommand {
         Set<Block> fixed = new HashSet<>();
 
         for (BaseSTBBlock stb : LocationManager.getManager().listBlocks(world, false)) {
-            Location loc = stb.getLocation();
-            Block b = loc.getBlock();
+            Location l = stb.getLocation();
+            Block b = l.getBlock();
             Material material = stb.getMaterial();
 
             Debugger.getInstance().debug("compare: block " + b + " vs. STB: " + stb + " - " + material);
@@ -66,7 +65,7 @@ public class ValidateCommand extends STBAbstractCommand {
             }
 
             for (RelativePosition rp : stb.getBlockStructure()) {
-                Block b2 = stb.getAuxiliaryBlock(loc, rp);
+                Block b2 = stb.getAuxiliaryBlock(l, rp);
 
                 if (repairMeta(plugin, b2, stb, BaseSTBBlock.STB_MULTI_BLOCK)) {
                     fixed.add(b2);

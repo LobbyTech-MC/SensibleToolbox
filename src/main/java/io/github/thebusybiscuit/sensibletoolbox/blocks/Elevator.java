@@ -3,6 +3,7 @@ package io.github.thebusybiscuit.sensibletoolbox.blocks;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -59,7 +60,7 @@ public class Elevator extends BaseSTBBlock implements Colorable {
 
     @Override
     public String[] getLore() {
-        return new String[] { "在同一 §6垂直方向 §7内 §6上下 §7放置微型电梯", "按下 §6跳跃 §7来上升,则 §6蹲下 §7为下降", };
+        return new String[] { "在同一 §6垂直方向 §7内 §6上下 §7放置微型电梯", "按下 §6跳跃 §7来上升,则 §6蹲下 §7为下降" };
     }
 
     @Override
@@ -78,7 +79,7 @@ public class Elevator extends BaseSTBBlock implements Colorable {
         Block b = getLocation().getBlock();
         Elevator res = null;
 
-        while (b.getY() > 0 && b.getY() < b.getWorld().getMaxHeight()) {
+        while (b.getY() > b.getWorld().getMinHeight() && b.getY() < b.getWorld().getMaxHeight()) {
             b = b.getRelative(direction);
 
             if (b.getType().isSolid()) {

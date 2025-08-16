@@ -2,13 +2,9 @@ package io.github.thebusybiscuit.sensibletoolbox.blocks.machines;
 
 import javax.annotation.Nonnull;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import com.google.common.base.Preconditions;
+
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
@@ -118,7 +114,7 @@ public class AutoBuilder extends BaseSTBMachine {
 
     @Override
     public String getItemName() {
-        return "§d量子建筑机";
+        return "§d量子建造机";
     }
 
     @Override
@@ -172,11 +168,13 @@ public class AutoBuilder extends BaseSTBMachine {
         gui.setSlotType(LANDMARKER_SLOT_2, SlotType.ITEM);
 
         gui.addGadget(new AutoBuilderGadget(gui, MODE_SLOT));
-        gui.addGadget(new ButtonGadget(gui, START_BUTTON_SLOT, "Start", null, null, () -> {
+        gui.addGadget(new ButtonGadget(gui, START_BUTTON_SLOT, "开始/停止", null, null, () -> {
             if (getStatus() == BuilderStatus.RUNNING) {
                 stop(false);
+                updateAttachedLabelSigns();
             } else {
                 startup();
+                updateAttachedLabelSigns();
             }
         }));
 
@@ -263,18 +261,25 @@ public class AutoBuilder extends BaseSTBMachine {
             OfflinePlayer owner = Bukkit.getOfflinePlayer(getOwner());
 
             switch (getBuildMode()) {
-                case CLEAR:
+                case CLEAR -> {
                     if (!SensibleToolbox.getProtectionManager().hasPermission(owner, b, Interaction.BREAK_BLOCK)) {
                         setStatus(BuilderStatus.NO_PERMISSION);
+                        updateAttachedLabelSigns();
                         return;
                     }
-
                     // just skip over any "unbreakable" blocks (bedrock, ender portal etc.)
-                    if (b.getType().getHardness() < 3600000) {
+                    if (b.getType().getHardness() != -1.0F) {
                         scuNeeded = baseScuPerOp * b.getType().getHardness();
+                        if (b.isLiquid()){
+                            scuNeeded = baseScuPerOp * 5;
+                        }
 
                         if (scuNeeded > getCharge()) {
-                            advanceBuildPos = false;
+                            if (b.getType().getHardness() >= 0F && (b.getType().isSolid() || b.isLiquid())) {
+                                advanceBuildPos = false;
+                                setStatus(BuilderStatus.HALTED);
+                                updateAttachedLabelSigns();
+                            }
                         } else if (b.getType() != Material.AIR) {
                             b.getWorld().playEffect(b.getLocation(), Effect.STEP_SOUND, b.getType());
                             BaseSTBBlock stb = SensibleToolbox.getBlockAt(b.getLocation());
@@ -284,17 +289,27 @@ public class AutoBuilder extends BaseSTBMachine {
                             } else {
                                 b.setType(Material.AIR);
                             }
+                        } else if (b.getType() == Material.AIR) {
+                            b.getWorld()
+                                .spawnParticle(
+                                    Particle.ASH,
+                                    b.getX() + 0.5,
+                                    b.getY() + 1.0,
+                                    b.getZ() + 0.5,
+                                    30,
+                                    0.75,
+                                    0.15,
+                                    0.75
+                                );
                         }
                     }
-                    break;
-                case FILL:
-                case WALLS:
-                case FRAME:
-                    if (!SensibleToolbox.getProtectionManager().hasPermission(owner, b, Interaction.PLACE_BLOCK)) {
+                }
+                case FILL, WALLS, FRAME -> {
+                    if (!SensibleToolbox.getProtectionManager().hasPermission(owner, b, Interaction.PLACE_BLOCK))  {
                         setStatus(BuilderStatus.NO_PERMISSION);
+                        updateAttachedLabelSigns();
                         return;
                     }
-
                     if (shouldBuildHere()) {
                         scuNeeded = baseScuPerOp;
                         if (scuNeeded > getCharge()) {
@@ -305,13 +320,26 @@ public class AutoBuilder extends BaseSTBMachine {
                             if (item == null) {
                                 setStatus(BuilderStatus.NO_INVENTORY);
                                 advanceBuildPos = false;
+                                setStatus(BuilderStatus.HALTED);
+                                updateAttachedLabelSigns();
                             } else {
                                 b.setType(item.getType());
                                 b.getWorld().playEffect(b.getLocation(), Effect.STEP_SOUND, b.getType());
                             }
                         }
+                    } else {
+                        b.getWorld()
+                            .spawnParticle(Particle.ASH,
+                                           b.getX() + 0.5,
+                                           b.getY() + 1.0,
+                                           b.getZ() + 0.5,
+                                           30,
+                                           0.75,
+                                           0.15,
+                                           0.75
+                            );
                     }
-                    break;
+                }
             }
 
             if (scuNeeded <= getCharge()) {
@@ -332,6 +360,7 @@ public class AutoBuilder extends BaseSTBMachine {
                         if (getBuildMode().getYDirection() < 0 && buildY < workArea.getLowerY() || getBuildMode().getYDirection() > 0 && buildY > workArea.getUpperY()) {
                             // finished!
                             stop(true);
+                            updateAttachedLabelSigns();
                         }
                     }
                 }
@@ -342,16 +371,12 @@ public class AutoBuilder extends BaseSTBMachine {
     }
 
     private boolean shouldBuildHere() {
-        switch (getBuildMode()) {
-            case FILL:
-                return true;
-            case WALLS:
-                return onOuterFace();
-            case FRAME:
-                return onOuterEdge();
-            default:
-                return false;
-        }
+        return switch (getBuildMode()) {
+            case FILL -> true;
+            case WALLS -> onOuterFace();
+            case FRAME -> onOuterEdge();
+            default -> false;
+        };
     }
 
     private boolean onOuterFace() {
@@ -375,9 +400,9 @@ public class AutoBuilder extends BaseSTBMachine {
     }
 
     private ItemStack fetchNextBuildItem() {
-        ItemStack stack = getGUI().getItem(getInputSlots()[invSlot]);
+        ItemStack s = getGUI().getItem(getInputSlots()[invSlot]);
 
-        if (stack == null) {
+        if (s == null) {
             int scanSlot = invSlot;
 
             for (int i = 0; i < getInputSlots().length; i++) {
@@ -396,18 +421,18 @@ public class AutoBuilder extends BaseSTBMachine {
                 return null;
             } else {
                 invSlot = scanSlot;
-                stack = getGUI().getItem(getInputSlots()[invSlot]);
+                s = getGUI().getItem(getInputSlots()[invSlot]);
             }
         }
 
-        if (stack.getAmount() == 1) {
+        if (s.getAmount() == 1) {
             setInventoryItem(getInputSlots()[invSlot], null);
-            return stack;
+            return s;
         } else {
-            ItemStack res = stack.clone();
+            ItemStack res = s.clone();
             res.setAmount(1);
-            stack.setAmount(stack.getAmount() - 1);
-            setInventoryItem(getInputSlots()[invSlot], stack);
+            s.setAmount(s.getAmount() - 1);
+            setInventoryItem(getInputSlots()[invSlot], s);
             return res;
         }
     }
@@ -466,9 +491,9 @@ public class AutoBuilder extends BaseSTBMachine {
     }
 
     @Override
-    public boolean acceptsItemType(ItemStack stack) {
+    public boolean acceptsItemType(ItemStack s) {
         // solid blocks, no special metadata
-        return stack.getType().isSolid() && !stack.hasItemMeta();
+        return s.getType().isSolid() && !s.hasItemMeta();
     }
 
     @Override
@@ -478,14 +503,15 @@ public class AutoBuilder extends BaseSTBMachine {
                 if (onCursor.getType() != Material.AIR) {
                     LandMarker item = SensibleToolbox.getItemRegistry().fromItemStack(onCursor, LandMarker.class);
                     if (item != null) {
-                        ItemStack stack = onCursor.clone();
-                        stack.setAmount(1);
-                        getGUI().getInventory().setItem(slot, stack);
+                        ItemStack s = onCursor.clone();
+                        s.setAmount(1);
+                        getGUI().getInventory().setItem(slot, s);
                     }
                 } else if (inSlot != null) {
                     getGUI().getInventory().setItem(slot, null);
                 }
                 setStatus(setupWorkArea());
+                updateAttachedLabelSigns();
             }
 
             // we just put a copy of the land marker into the builder
@@ -508,7 +534,7 @@ public class AutoBuilder extends BaseSTBMachine {
             if (((LandMarker) item).getMarkedLocation() != null) {
                 insertLandMarker(toInsert);
             } else {
-                STBUtil.complain((Player) player, "你没有标记标记点!");
+                STBUtil.complain((Player) player, "你没有标记任何位置!");
             }
             // we just put a copy of the land marker into the builder
             return 0;
@@ -518,16 +544,17 @@ public class AutoBuilder extends BaseSTBMachine {
     }
 
     private void insertLandMarker(ItemStack toInsert) {
-        ItemStack stack = toInsert.clone();
-        stack.setAmount(1);
+        ItemStack s = toInsert.clone();
+        s.setAmount(1);
 
         if (getInventoryItem(LANDMARKER_SLOT_1) == null) {
-            setInventoryItem(LANDMARKER_SLOT_1, stack);
+            setInventoryItem(LANDMARKER_SLOT_1, s);
             setStatus(setupWorkArea());
         } else if (getInventoryItem(LANDMARKER_SLOT_2) == null) {
-            setInventoryItem(LANDMARKER_SLOT_2, stack);
+            setInventoryItem(LANDMARKER_SLOT_2, s);
             setStatus(setupWorkArea());
         }
+        updateAttachedLabelSigns();
     }
 
     @Override
@@ -582,7 +609,32 @@ public class AutoBuilder extends BaseSTBMachine {
     @Override
     protected String[] getSignLabel(BlockFace face) {
         String[] label = super.getSignLabel(face);
-        label[2] = "-( " + STBUtil.dyeColorToChatColor(getStatus().getColor()) + "⬤" + ChatColor.WHITE + " )-";
+
+        if (getStatus() == BuilderStatus.FINISHED){
+            label[1] = ChatColor.WHITE + "已完成";
+        } else if (getStatus() == BuilderStatus.READY) {
+            label[1] = ChatColor.GREEN + "已待机";
+        } else if (getStatus() == BuilderStatus.NO_PERMISSION) {
+            label[1] = ChatColor.RED + "无权限";
+        } else if (getStatus() == BuilderStatus.HALTED) {
+            label[1] = ChatColor.BLACK + "已暂停";
+        } else if (getStatus() == BuilderStatus.PAUSED) {
+            label[1] = ChatColor.RED + "已停止";
+        } else if (getStatus() == BuilderStatus.NO_WORKAREA) {
+            label[1] = ChatColor.YELLOW + "请设置区域";
+        } else if (getStatus() == BuilderStatus.RUNNING) {
+            label[1] = ChatColor.BLUE + "正在处理: " + buildX + ":" + buildY + ":" + buildZ;
+        } else if (getStatus() == BuilderStatus.TOO_FAR) {
+            label[1] = ChatColor.RED + "太远了";
+        } else if (getStatus() == BuilderStatus.TOO_NEAR) {
+            label[1] = ChatColor.RED + "太近了";
+        } else if (getStatus() == BuilderStatus.LM_WORLDS_DIFFERENT) {
+            label[1] = ChatColor.RED + "两点设置在了不相同的世界";
+        } else if (getStatus() == BuilderStatus.NO_INVENTORY) {
+            label[1] = ChatColor.RED + "没有足够的物品";
+        }
+
+        label[2] = ChatColor.WHITE + "-( " + STBUtil.dyeColorToChatColor(getStatus().getColor()) + "⬤" + ChatColor.WHITE + " )-";
         return label;
     }
 
@@ -644,14 +696,14 @@ public class AutoBuilder extends BaseSTBMachine {
         public boolean resetBuildPosition() {
             // returning true causes the build position to be reset
             // when the Start button is pressed
-            return this != PAUSED && this != NO_INVENTORY;
+            return this != PAUSED && this != NO_INVENTORY && this != HALTED;
         }
     }
 
     private class AutoBuilderGadget extends CyclerGadget<AutoBuilderMode> {
 
         protected AutoBuilderGadget(InventoryGUI gui, int slot) {
-            super(gui, slot, "Build Mode");
+            super(gui, slot, "建造模式");
             add(AutoBuilderMode.CLEAR, ChatColor.YELLOW, Material.WHITE_STAINED_GLASS, "清除区域的所有方块");
             add(AutoBuilderMode.FILL, ChatColor.YELLOW, Material.BRICK, "使用清除物来清除区域内所有方块");
             add(AutoBuilderMode.WALLS, ChatColor.YELLOW, Material.COBBLESTONE_WALL, "利用库存在建筑区周围筑墙");
@@ -667,6 +719,7 @@ public class AutoBuilder extends BaseSTBMachine {
         @Override
         protected void apply(BaseSTBItem stbItem, AutoBuilderMode newValue) {
             ((AutoBuilder) getGUI().getOwningBlock()).setBuildMode(newValue);
+            updateAttachedLabelSigns();
         }
 
         @Override

@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Farmland;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -39,13 +40,13 @@ public class MoistureChecker extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Moisture Checker";
+        return "成熟度检查器";
     }
 
     @Override
     public String[] getLore() {
         int r = getRadius() * 2 + 1;
-        return new String[] { "Tests the saturation level", " of a " + r + "x" + r + " area of farmland.", "R-click: " + ChatColor.WHITE + "use" };
+        return new String[] { "检查 " + r + "x" + r + " 范围内耕地的成熟度", "右键以" + ChatColor.WHITE + "使用" };
     }
 
     @Override
@@ -53,16 +54,11 @@ public class MoistureChecker extends BaseSTBItem {
         SimpleCircuit sc = new SimpleCircuit();
         registerCustomIngredients(sc);
         ShapedRecipe recipe = new ShapedRecipe(getKey(), toItemStack());
-        recipe.shape("S", "C", "I");
+        recipe.shape("SCI", "   ", "   ");
         recipe.setIngredient('S', Material.OAK_SIGN);
         recipe.setIngredient('C', sc.getMaterial());
         recipe.setIngredient('I', Material.GOLDEN_SWORD);
         return recipe;
-    }
-
-    @Override
-    public boolean hasGlow() {
-        return true;
     }
 
     protected int getRadius() {
@@ -70,11 +66,11 @@ public class MoistureChecker extends BaseSTBItem {
     }
 
     @Override
-    public void onInteractItem(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
+    public void onInteractItem(PlayerInteractEvent e) {
+        Player p = e.getPlayer();
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Block b = event.getClickedBlock();
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Block b = e.getClickedBlock();
 
             if (STBUtil.isCrop(b.getType())) {
                 b = b.getRelative(BlockFace.DOWN);
@@ -95,17 +91,17 @@ public class MoistureChecker extends BaseSTBItem {
             if (!l.isEmpty()) {
                 Bukkit.getScheduler().runTask(getProviderPlugin(), () -> {
                     for (Location loc : l) {
-                        player.sendBlockChange(loc, getWoolFromSaturationlevel(loc.getBlock()));
+                        p.sendBlockChange(loc, getWoolFromSaturationlevel(loc.getBlock()));
                     }
                 });
 
                 Bukkit.getScheduler().runTaskLater(getProviderPlugin(), () -> {
                     for (Location loc : l) {
-                        player.sendBlockChange(loc, loc.getBlock().getBlockData());
+                        p.sendBlockChange(loc, loc.getBlock().getBlockData());
                     }
                 }, 30L);
 
-                event.setCancelled(true);
+                e.setCancelled(true);
             }
         }
     }
@@ -116,18 +112,24 @@ public class MoistureChecker extends BaseSTBItem {
         int saturation = SoilSaturation.getSaturationLevel(b);
         saturation = Math.max(0, saturation - (int) delta);
 
-        if (saturation < 10) {
-            return Material.YELLOW_WOOL.createBlockData();
-        } else if (saturation < 30) {
-            return Material.BROWN_WOOL.createBlockData();
-        } else if (saturation < 50) {
-            return Material.GREEN_WOOL.createBlockData();
-        } else if (saturation < 70) {
-            return Material.LIGHT_BLUE_WOOL.createBlockData();
-        } else if (saturation < 90) {
-            return Material.CYAN_WOOL.createBlockData();
+        Farmland farmland = (Farmland) b.getBlockData();
+        if (farmland.getMoisture() != 0)
+        {
+            if (saturation < 10) {
+                return Material.YELLOW_WOOL.createBlockData();
+            } else if (saturation < 30) {
+                return Material.BROWN_WOOL.createBlockData();
+            } else if (saturation < 50) {
+                return Material.GREEN_WOOL.createBlockData();
+            } else if (saturation < 70) {
+                return Material.LIGHT_BLUE_WOOL.createBlockData();
+            } else if (saturation < 90) {
+                return Material.CYAN_WOOL.createBlockData();
+            } else {
+                return Material.BLUE_WOOL.createBlockData();
+            }
         } else {
-            return Material.BLUE_WOOL.createBlockData();
+            return Material.BLACK_WOOL.createBlockData();
         }
     }
 }

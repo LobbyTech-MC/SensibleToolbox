@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -66,16 +67,17 @@ public class AutoForester extends AutoFarmingMachine {
     }
 
     @Override
-    public void onBlockRegistered(Location location, boolean isPlacing) {
+    public void onBlockRegistered(Location l, boolean isPlacing) {
         int i = RADIUS / 2;
+        Block block = l.getBlock();
 
         for (int x = -i; x <= i; x++) {
             for (int z = -i; z <= i; z++) {
-                blocks.add(new Location(location.getWorld(), location.getBlockX() + (double) x, location.getBlockY() + 2.0, location.getBlockZ() + (double) z).getBlock());
+                blocks.add(block.getRelative(x, 2, z));
             }
         }
 
-        super.onBlockRegistered(location, isPlacing);
+        super.onBlockRegistered(l, isPlacing);
     }
 
     @Override
@@ -105,7 +107,11 @@ public class AutoForester extends AutoFarmingMachine {
                             Optional<Material> sapling = MaterialConverter.getSaplingFromLog(b.getType());
 
                             if (sapling.isPresent()) {
-                                b.setType(sapling.get());
+                                if (Tag.DIRT.isTagged(b.getRelative(BlockFace.DOWN).getType())) {
+                                    b.setType(sapling.get());
+                                } else {
+                                    b.setType(Material.AIR);
+                                }
                             } else {
                                 b.setType(Material.AIR);
                             }
@@ -126,13 +132,13 @@ public class AutoForester extends AutoFarmingMachine {
 
     private boolean output(@Nonnull Material m) {
         for (int slot : getOutputSlots()) {
-            ItemStack stack = getInventoryItem(slot);
-            if (stack == null || (stack.getType() == m && stack.getAmount() < stack.getMaxStackSize())) {
-                if (stack == null) {
-                    stack = new ItemStack(m);
+            ItemStack s = getInventoryItem(slot);
+            if (s == null || (s.getType() == m && s.getAmount() < s.getMaxStackSize())) {
+                if (s == null) {
+                    s = new ItemStack(m);
                 }
 
-                setInventoryItem(slot, new CustomItemStack(stack, stack.getAmount() + 1));
+                setInventoryItem(slot, new CustomItemStack(s, s.getAmount() + 1));
                 buffer = null;
                 return true;
             }

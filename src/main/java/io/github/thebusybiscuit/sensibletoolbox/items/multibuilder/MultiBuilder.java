@@ -11,8 +11,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.guizhanss.guizhanlib.minecraft.utils.compatibility.EnchantmentX;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -20,8 +22,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
@@ -43,19 +46,19 @@ import io.github.thebusybiscuit.sensibletoolbox.utils.UnicodeSymbol;
 import io.github.thebusybiscuit.sensibletoolbox.utils.VanillaInventoryUtils;
 
 import me.desht.dhutils.Debugger;
-import me.desht.dhutils.blocks.BlockAndPosition;
-import me.desht.dhutils.blocks.BlockUtil;
 import me.desht.dhutils.cost.ItemCost;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 
 public class MultiBuilder extends BaseSTBItem implements Chargeable {
 
-    public static final int MAX_BUILD_BLOCKS = 9;
+    public static final int MAX_BUILD_BLOCKS = 4;
+    public static final int MAX_TOTAL_BLOCKS = 16;
     public static final int DEF_SCU_PER_OPERATION = 40;
     private static final Map<UUID, LinkedBlockingQueue<SwapRecord>> swapQueues = new HashMap<>();
     private BuildingMode mode;
     private double charge;
     private Material material;
+    private boolean isBuilding = false;
 
     public MultiBuilder() {
         super();
@@ -93,7 +96,7 @@ public class MultiBuilder extends BaseSTBItem implements Chargeable {
 
     @Override
     public int getChargeRate() {
-        return 100;
+        return 500;
     }
 
     @Override
@@ -112,19 +115,17 @@ public class MultiBuilder extends BaseSTBItem implements Chargeable {
 
     @Override
     public String[] getLore() {
-        switch (getMode()) {
-            case BUILD:
-                return new String[] { "L-click block: " + ChatColor.WHITE + "preview", "R-click block: " + ChatColor.WHITE + "build", UnicodeSymbol.ARROW_UP.toUnicode() + " + R-click block: " + ChatColor.WHITE + "build one", UnicodeSymbol.ARROW_UP.toUnicode() + " + mouse-wheel: " + ChatColor.WHITE + "EXCHANGE mode" };
-            case EXCHANGE:
-                return new String[] { "L-click block: " + ChatColor.WHITE + "exchange one block", "R-click block: " + ChatColor.WHITE + "exchange many blocks", UnicodeSymbol.ARROW_UP.toUnicode() + " + R-click block: " + ChatColor.WHITE + "set target block", UnicodeSymbol.ARROW_UP.toUnicode() + " + mouse-wheel: " + ChatColor.WHITE + "BUILD mode" };
-            default:
-                return new String[0];
-        }
+        return switch (getMode()) {
+            case BUILD ->
+                new String[]{"左键方块: " + ChatColor.WHITE + "预览", "右键方块: " + ChatColor.WHITE + "建造", UnicodeSymbol.ARROW_UP.toUnicode() + " 右键方块: " + ChatColor.WHITE + "建造一个", ChatColor.YELLOW + UnicodeSymbol.ARROW_UP.toUnicode() + " 右键空气: 切换模式"};
+            case EXCHANGE ->
+                new String[]{"左键方块: " + ChatColor.WHITE + "设置模板方块", "右键方块 " + ChatColor.WHITE + "交换方块", UnicodeSymbol.ARROW_UP.toUnicode() + " 右键方块: " + ChatColor.WHITE + "交换一个方块", ChatColor.YELLOW + UnicodeSymbol.ARROW_UP.toUnicode() + " 右键空气: 切换模式"};
+        };
     }
 
     @Override
     public String[] getExtraLore() {
-        return new String[] { STBUtil.getChargeString(this) };
+        return new String[]{STBUtil.getChargeString(this)};
     }
 
     @Override
@@ -152,32 +153,38 @@ public class MultiBuilder extends BaseSTBItem implements Chargeable {
     public String getDisplaySuffix() {
         switch (getMode()) {
             case BUILD:
-                return "Build";
+                return "建造";
             case EXCHANGE:
-                String s = material == null ? "" : " [" + ItemUtils.getItemName(new ItemStack(material)) + "]";
-                return "Swap " + s;
+                String s = material == null ? "" : ItemUtils.getItemName(new ItemStack(material));
+                return "交换 " + s;
             default:
                 return null;
         }
     }
 
     @Override
-    public void onInteractItem(PlayerInteractEvent event) {
+    public void onInteractItem(PlayerInteractEvent e) {
+        if (e.getAction() == Action.RIGHT_CLICK_AIR && e.getPlayer().isSneaking()) {
+            if (getMode() == BuildingMode.BUILD) {
+                setMode(BuildingMode.EXCHANGE);
+            } else if (getMode() == BuildingMode.EXCHANGE) {
+                setMode(BuildingMode.BUILD);
+            }
+        }
+
+        updateHeldItemStack(e.getPlayer(), EquipmentSlot.HAND);
+
         switch (getMode()) {
-            case BUILD:
-                handleBuildMode(event);
-                break;
-            case EXCHANGE:
-                handleExchangeMode(event);
-                break;
-            default:
-                break;
+            case BUILD -> handleBuildMode(e);
+            case EXCHANGE -> handleExchangeMode(e);
+            default -> {
+            }
         }
     }
 
     @Override
-    public void onItemHeld(PlayerItemHeldEvent event) {
-        int delta = event.getNewSlot() - event.getPreviousSlot();
+    public void onItemHeld(PlayerItemHeldEvent e) {
+        int delta = e.getNewSlot() - e.getPreviousSlot();
 
         if (delta == 0) {
             return;
@@ -197,65 +204,101 @@ public class MultiBuilder extends BaseSTBItem implements Chargeable {
         }
 
         setMode(BuildingMode.values()[o]);
-        updateHeldItemStack(event.getPlayer(), EquipmentSlot.HAND);
+        updateHeldItemStack(e.getPlayer(), EquipmentSlot.HAND);
     }
 
-    private void handleExchangeMode(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        Block clicked = event.getClickedBlock();
+    @EventHandler
+    private void handleExchangeMode(PlayerInteractEvent e) {
+        Player p = e.getPlayer();
+        Block clicked = e.getClickedBlock();
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (player.isSneaking()) {
-                // set the target material
-                material = clicked.getType();
-                updateHeldItemStack(player, event.getHand());
-            } else if (material != null) {
-                // replace multiple blocks
-                int sharpness = event.getItem().getEnchantmentLevel(Enchantment.SHARPNESS);
-                int layers = 3 + sharpness;
-                startSwap(event.getPlayer(), event.getItem(), this, clicked, material, layers);
-                Debugger.getInstance().debug(this + ": replacing " + layers + " layers of blocks");
+        if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
+            e.setCancelled(true);
+            material = clicked.getType();
+            updateHeldItemStack(p, e.getHand());
+        } else if (e.getAction() == Action.RIGHT_CLICK_BLOCK && material != null) {
+            e.setCancelled(true);
+
+            int amount = howMuchDoesPlayerHave(p, material);
+            if (amount <= 0) {
+                p.sendMessage(ChatColor.RED + "你没有足够的 " + ChatColor.WHITE + material.name() + ChatColor.RED + " 去交换!");
+                return;
             }
 
-            event.setCancelled(true);
-        } else if (event.getAction() == Action.LEFT_CLICK_BLOCK && material != null) {
-            // replace a single block
-            startSwap(event.getPlayer(), event.getItem(), this, clicked, material, 0);
-            event.setCancelled(true);
+            if (p.isSneaking()) {
+                startSwap(p, e.getItem(), this, clicked, material, 0);
+            } else if (material != null) {
+                int sharpness = e.getItem().getEnchantmentLevel(EnchantmentX.SHARPNESS);
+                int layers = MAX_BUILD_BLOCKS + sharpness * 3;
+
+                int exchangedCount = Math.min(layers, MAX_TOTAL_BLOCKS);
+
+                startSwap(p, e.getItem(), this, clicked, material, exchangedCount - 1);
+            }
         }
     }
 
     @ParametersAreNonnullByDefault
-    private void startSwap(Player player, ItemStack item, MultiBuilder builder, Block origin, Material target, int maxBlocks) {
-        LinkedBlockingQueue<SwapRecord> queue = swapQueues.get(player.getWorld().getUID());
+    private void startSwap(Player p,
+                           ItemStack item,
+                           MultiBuilder builder,
+                           Block origin,
+                           Material target,
+                           int maxBlocks
+    ) {
+        LinkedBlockingQueue<SwapRecord> queue = swapQueues.get(p.getWorld().getUID());
 
         if (queue == null) {
             queue = new LinkedBlockingQueue<>();
-            swapQueues.put(player.getWorld().getUID(), queue);
+            swapQueues.put(p.getWorld().getUID(), queue);
         }
 
         if (queue.isEmpty()) {
-            new QueueSwapper(queue).runTaskTimer(SensibleToolbox.getPluginInstance(), 1L, 1L);
+            new QueueSwapper(queue).runTaskTimer(SensibleToolbox.getInstance(), 1L, 1L);
+        }
+
+        if (maxBlocks < 0) {
+            maxBlocks = 0;
         }
 
         int chargePerOp = getItemConfig().getInt("scu_per_op", DEF_SCU_PER_OPERATION);
-        double chargeNeeded = chargePerOp * Math.pow(0.8, item.getEnchantmentLevel(Enchantment.EFFICIENCY));
-        queue.add(new SwapRecord(player, origin, origin.getType(), target, maxBlocks, builder, -1, chargeNeeded));
+        double chargeNeeded = chargePerOp * Math.pow(0.8, item.getEnchantmentLevel(EnchantmentX.EFFICIENCY));
+
+        if (p.getGameMode() == GameMode.CREATIVE) {
+            chargeNeeded = 0;
+        }
+
+        Debugger.getInstance().debug("Starting swap: Player=" + p.getName() + ", MaxBlocks=" + maxBlocks);
+
+        queue.add(new SwapRecord(
+            p,
+            origin,
+            origin.getType(),
+            target,
+            maxBlocks,
+            builder,
+            -1,
+            chargeNeeded,
+            p.getFacing()
+        ));
     }
 
     private int howMuchDoesPlayerHave(Player p, Material mat) {
         int amount = 0;
 
-        for (ItemStack stack : p.getInventory()) {
-            if (stack != null && !stack.hasItemMeta() && stack.getType() == mat) {
-                amount += stack.getAmount();
+        for (ItemStack s : p.getInventory()) {
+            if (s != null && !s.hasItemMeta() && s.getType() == mat) {
+                amount += s.getAmount();
+            }
+            if (p.getGameMode() == GameMode.CREATIVE) {
+                amount = 64;
             }
         }
 
         return amount;
     }
 
-    protected boolean canReplace(Player player, Block b) {
+    protected boolean canReplace(Player p, Block b) {
         // Check for non-replaceable block types.
         // STB Blocks
         if (SensibleToolbox.getBlockAt(b.getLocation(), true) != null) {
@@ -267,174 +310,189 @@ public class MultiBuilder extends BaseSTBItem implements Chargeable {
         } else if (SensibleToolboxPlugin.getInstance().isSlimefunEnabled() && BlockStorage.hasBlockInfo(b)) {
             return false;
             // Unbreakable Blocks
-        } else if (b.getType().getHardness() >= 3600000) {
+        } else if (b.getType().getHardness() == -1) {
             return false;
         } else {
             // Block is replaceable, return permission to break
-            return SensibleToolbox.getProtectionManager().hasPermission(player, b, Interaction.BREAK_BLOCK);
+            return SensibleToolbox.getProtectionManager().hasPermission(p, b, Interaction.BREAK_BLOCK);
         }
     }
 
-    private void handleBuildMode(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private void handleBuildMode(PlayerInteractEvent e) {
 
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Set<Block> blocks = getBuildCandidates(player, event.getItem(), event.getClickedBlock(), event.getBlockFace());
+        if (e.isCancelled()) {
+            return;
+        }
 
-            if (!blocks.isEmpty()) {
-                if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    doBuild(player, event.getHand(), event.getItem(), event.getClickedBlock(), blocks);
-                } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-                    showBuildPreview(player, blocks);
+        Player p = e.getPlayer();
+
+        if (isBuilding) {
+            return;
+        }
+
+        isBuilding = true;
+
+        try {
+            if (e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                Set<Block> blocks = getBuildCandidates(
+                    p,
+                    e.getItem(),
+                    e.getClickedBlock(),
+                    e.getBlockFace()
+                );
+
+                if (!blocks.isEmpty()) {
+                    if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                        doBuild(
+                            p,
+                            e.getHand(),
+                            e.getItem(),
+                            e.getClickedBlock(),
+                            blocks,
+                            e.getBlockFace()
+                        );
+                    } else if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
+                        showBuildPreview(p, blocks);
+                    }
                 }
+                e.setCancelled(true);
             }
-
-            event.setCancelled(true);
+        } finally {
+            isBuilding = false; // Release the lock
         }
     }
 
-    private void showBuildPreview(Player player, Set<Block> blocks) {
+    private void showBuildPreview(Player p, Set<Block> blocks) {
         Bukkit.getScheduler().runTask(getProviderPlugin(), () -> {
             for (Block b : blocks) {
-                player.sendBlockChange(b.getLocation(), Material.WHITE_STAINED_GLASS.createBlockData());
+                p.sendBlockChange(b.getLocation(), Material.WHITE_STAINED_GLASS.createBlockData());
             }
         });
 
         Bukkit.getScheduler().runTaskLater(getProviderPlugin(), () -> {
             for (Block b : blocks) {
-                player.sendBlockChange(b.getLocation(), b.getBlockData());
+                p.sendBlockChange(b.getLocation(), b.getBlockData());
             }
         }, 20L);
     }
 
-    private void doBuild(Player player, EquipmentSlot hand, ItemStack item, Block source, Set<Block> actualBlocks) {
+    private void doBuild(Player p,
+                         EquipmentSlot hand,
+                         ItemStack item,
+                         Block source,
+                         Set<Block> actualBlocks,
+                         BlockFace face
+    ) {
         int chargePerOp = getItemConfig().getInt("scu_per_op", DEF_SCU_PER_OPERATION);
-        double chargeNeeded = chargePerOp * actualBlocks.size() * Math.pow(0.8, item.getEnchantmentLevel(Enchantment.EFFICIENCY));
-        // we know at this point that the tool has sufficient charge and that the player has sufficient material
-        setCharge(getCharge() - chargeNeeded);
-        ItemCost cost = new ItemCost(source.getType(), actualBlocks.size());
-        cost.apply(player);
+        double chargeNeeded = chargePerOp * actualBlocks.size() * Math.pow(
+            0.8,
+            item.getEnchantmentLevel(EnchantmentX.EFFICIENCY)
+        );
 
-        for (Block b : actualBlocks) {
-            b.setType(source.getType(), true);
+        if (p.getGameMode() != GameMode.CREATIVE) {
+            if (getCharge() < chargeNeeded) {
+                p.sendMessage(ChatColor.RED + "能量不足!");
+                return;
+            }
+
+            setCharge(getCharge() - chargeNeeded);
+            ItemCost cost = new ItemCost(source.getType(), actualBlocks.size());
+            cost.apply(p);
         }
 
-        updateHeldItemStack(player, hand);
-        player.playSound(player.getLocation(), Sound.BLOCK_STONE_BREAK, 1.0F, 1.0F);
+        final int[] cappedBlocks = {Math.min(actualBlocks.size(), MAX_TOTAL_BLOCKS)};
+
+        Bukkit.getScheduler().runTaskLater(getProviderPlugin(), () -> {
+            for (Block b : actualBlocks) {
+                b.setType(source.getType(), true);
+                if (cappedBlocks[0] > 0) {
+                    b.setType(source.getType(), true);
+                    cappedBlocks[0]--;
+                }
+            }
+
+            String direction = STBUtil.getDirectionString(face);
+            p.sendMessage(ChatColor.YELLOW + "建造了 " + ChatColor.WHITE + actualBlocks.size() + ChatColor.YELLOW + " 个方块 " + direction);
+        }, 2L);
+
+        updateHeldItemStack(p, hand);
+        p.playSound(p.getLocation(), Sound.BLOCK_STONE_BREAK, 1.0F, 1.0F);
     }
 
     @Nonnull
-    private Set<Block> getBuildCandidates(Player player, ItemStack item, Block clickedBlock, BlockFace blockFace) {
-        int sharpness = item.getEnchantmentLevel(Enchantment.SHARPNESS);
-        double chargePerOp = getItemConfig().getInt("scu_per_op", DEF_SCU_PER_OPERATION) * Math.pow(0.8, item.getEnchantmentLevel(Enchantment.EFFICIENCY));
+    private Set<Block> getBuildCandidates(Player p, ItemStack item, Block clickedBlock, BlockFace blockFace) {
+        int sharpness = item.getEnchantmentLevel(EnchantmentX.SHARPNESS);
+        int baseBlocks = MAX_BUILD_BLOCKS;
+
+        if (sharpness > 0) {
+            baseBlocks += Math.min(sharpness * 3, 12);
+        }
+
+        double chargePerOp = getItemConfig().getInt("scu_per_op", DEF_SCU_PER_OPERATION) * Math.pow(
+            0.8,
+            item.getEnchantmentLevel(EnchantmentX.EFFICIENCY)
+        );
         int ch = (int) (getCharge() / chargePerOp);
 
+        if (p.getGameMode() == GameMode.CREATIVE) {
+            ch = 10000;
+        }
+
         if (ch == 0) {
-            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 0.5F);
+            p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 0.5F);
             return Collections.emptySet();
         }
 
-        int max = MAX_BUILD_BLOCKS + sharpness * 3;
+        int max = Math.min(baseBlocks, ch);
         Material clickedType = clickedBlock.getType();
-        max = Math.min(Math.min(max, howMuchDoesPlayerHave(player, clickedType)), ch);
-        return floodFill(player, clickedBlock.getRelative(blockFace), blockFace.getOppositeFace(), getBuildFaces(blockFace), max);
+        max = Math.min(max, howMuchDoesPlayerHave(p, clickedType));
+
+        return lineBuild(p, clickedBlock.getRelative(blockFace), blockFace, getBuildFaces(blockFace), max);
     }
 
     @Nonnull
-    private Set<Block> floodFill(Player player, Block origin, BlockFace face, BuildFace buildFace, int max) {
-        Block b = origin.getRelative(face);
-        LinkedBlockingQueue<Block> queue = new LinkedBlockingQueue<>();
-        queue.add(origin);
+    private Set<Block> lineBuild(Player p, Block origin, BlockFace face, BuildFace buildFace, int max) {
         Set<Block> result = new HashSet<>();
+        Block nextBlock = origin;
 
-        while (!queue.isEmpty()) {
-            Block b0 = queue.poll();
-            Block b1 = b0.getRelative(face);
+        Location playerLocation = p.getLocation();
+        double playerX = playerLocation.getX();
+        double playerY = playerLocation.getY();
+        double playerZ = playerLocation.getZ();
 
-            if (result.size() >= max) {
+        double playerHitboxHeight = 1.8;
+        double playerHitboxWidth = 0.6;
+
+        while (result.size() < max && nextBlock.isEmpty() && canReplace(p, nextBlock)) {
+            Location blockLocation = nextBlock.getLocation().add(0.5, 0.5, 0.5);
+            double blockX = blockLocation.getX();
+            double blockY = blockLocation.getY();
+            double blockZ = blockLocation.getZ();
+
+            boolean intersectsPlayer = (Math.abs(playerX - blockX) < playerHitboxWidth)
+                && (Math.abs(playerY - blockY) < playerHitboxHeight)
+                && (Math.abs(playerZ - blockZ) < playerHitboxWidth);
+
+            if (intersectsPlayer) {
                 break;
             }
 
-            if ((b0.isEmpty() || b0.isLiquid() || b0.getType() == Material.TALL_GRASS) && b1.getType() == b.getType() && !result.contains(b0) && canReplace(player, b0)) {
-                result.add(b0);
-
-                for (BlockFace f : buildFace.getFaces()) {
-                    if (!player.isSneaking() || filterFace(player, face, f)) {
-                        queue.add(b0.getRelative(f));
-                    }
-                }
-            }
+            result.add(nextBlock);
+            nextBlock = nextBlock.getRelative(face);
         }
 
         return result;
     }
 
-    private boolean filterFace(Player player, BlockFace clickedFace, BlockFace face) {
-        switch (clickedFace) {
-            case NORTH:
-            case SOUTH:
-            case EAST:
-            case WEST:
-                BlockAndPosition pos = BlockUtil.getTargetPoint(player, null, 5);
-                double frac = pos.point.getY() % 1;
-
-                if (frac > 0.85 || frac < 0.15) {
-                    return face.getModY() != 0;
-                } else {
-                    return face.getModY() == 0;
-                }
-            case UP:
-            case DOWN:
-                BlockFace playerFace = getRotation(player.getLocation());
-
-                if (playerFace == BlockFace.EAST || playerFace == BlockFace.WEST) {
-                    return face.getModZ() == 0;
-                } else if (playerFace == BlockFace.NORTH || playerFace == BlockFace.SOUTH) {
-                    return face.getModX() == 0;
-                }
-
-                break;
-            default:
-                break;
-        }
-        return true;
-    }
-
-    private BlockFace getRotation(Location loc) {
-        double rot = (loc.getYaw() - 90) % 360;
-
-        if (rot < 0) {
-            rot += 360;
-        }
-
-        if ((0 <= rot && rot < 45) || (315 <= rot && rot < 360.0)) {
-            return BlockFace.NORTH;
-        } else if (45 <= rot && rot < 135) {
-            return BlockFace.EAST;
-        } else if (135 <= rot && rot < 225) {
-            return BlockFace.SOUTH;
-        } else if (225 <= rot && rot < 315) {
-            return BlockFace.WEST;
-        } else {
-            throw new IllegalArgumentException("impossible rotation: " + rot);
-        }
-    }
-
     @Nonnull
     private BuildFace getBuildFaces(@Nonnull BlockFace face) {
-        switch (face) {
-            case NORTH:
-            case SOUTH:
-                return BuildFace.NORTH_SOUTH;
-            case EAST:
-            case WEST:
-                return BuildFace.EAST_WEST;
-            case UP:
-            case DOWN:
-                return BuildFace.UP_DOWN;
-            default:
-                throw new IllegalArgumentException("invalid face: " + face);
-        }
+        return switch (face) {
+            case NORTH, SOUTH -> BuildFace.NORTH_SOUTH;
+            case EAST, WEST -> BuildFace.EAST_WEST;
+            case UP, DOWN -> BuildFace.UP_DOWN;
+            default -> throw new IllegalArgumentException("invalid face: " + face);
+        };
     }
 
 }

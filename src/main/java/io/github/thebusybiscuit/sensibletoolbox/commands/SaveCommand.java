@@ -22,7 +22,7 @@ public class SaveCommand extends AbstractCommand {
         SensibleToolboxPlugin sPlugin = (SensibleToolboxPlugin) plugin;
         LocationManager.getManager().save();
         ((STBFriendManager) sPlugin.getFriendManager()).save();
-        MiscUtil.statusMessage(sender, "STB persisted data saved");
+        MiscUtil.statusMessage(sender, "STB 数据已保存");
         return true;
     }
 }

@@ -24,12 +24,12 @@ public class ThoroughnessUpgrade extends AbstractMachineUpgrade {
 
     @Override
     public String getItemName() {
-        return "Thoroughness Upgrade";
+        return "资源升级";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Place in a machine block", "Speed: x0.7", "Power Usage: x1.6", "Bonus Output: +" + BONUS_OUTPUT_CHANCE + "%" };
+        return new String[] { "放置在机器中", "速度: x0.7", "耗电量: x1.6", "输出: +" + BONUS_OUTPUT_CHANCE + "%" };
     }
 
     @Override
@@ -43,10 +43,5 @@ public class ThoroughnessUpgrade extends AbstractMachineUpgrade {
         recipe.setIngredient('E', Material.SPIDER_EYE);
         recipe.setIngredient('G', Material.GLASS_PANE);
         return recipe;
-    }
-
-    @Override
-    public boolean hasGlow() {
-        return true;
     }
 }

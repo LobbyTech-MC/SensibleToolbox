@@ -5,43 +5,46 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 
-public class DiamondCombineHoe extends CombineHoe {
+public class NetheriteCombineHoe extends CombineHoe {
 
-    public DiamondCombineHoe() {
+    public NetheriteCombineHoe() {
         super();
     }
 
-    public DiamondCombineHoe(ConfigurationSection conf) {
+    public NetheriteCombineHoe(ConfigurationSection conf) {
         super(conf);
     }
 
     @Override
     public Material getMaterial() {
-        return Material.DIAMOND_HOE;
+        return Material.NETHERITE_HOE;
     }
 
     @Override
     public String getItemName() {
-        return "钻质多功能锄";
+        return "下界合金多功能锄";
+    }
+
+
+    public boolean hasGlow() {
+        return true;
     }
 
     @Override
     public Recipe getMainRecipe() {
         ShapedRecipe recipe = new ShapedRecipe(getKey(), toItemStack());
+        DiamondCombineHoe hoe = new DiamondCombineHoe();
+        registerCustomIngredients(hoe);
         recipe.shape("SSS", "HCW", "SSS");
         recipe.setIngredient('S', Material.STRING);
-        recipe.setIngredient('H', Material.DIAMOND_HOE);
-        recipe.setIngredient('C', Material.CHEST);
-        recipe.setIngredient('W', Material.DIAMOND_SWORD);
+        recipe.setIngredient('H', Material.NETHERITE_HOE);
+        recipe.setIngredient('C', hoe.getMaterial());
+        recipe.setIngredient('W', Material.NETHERITE_SWORD);
         return recipe;
     }
 
     @Override
     public int getWorkRadius() {
-        return 2;
-    }
-
-    public boolean hasGlow() {
-        return true;
+        return 3;
     }
 }

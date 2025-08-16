@@ -23,8 +23,8 @@ import io.github.thebusybiscuit.sensibletoolbox.items.components.SimpleCircuit;
 
 public class Smelter extends AbstractIOMachine {
 
-    private static int getProcessingTime(ItemStack stack) {
-        if (stack.getType().isEdible()) {
+    private static int getProcessingTime(ItemStack s) {
+        if (s.getType().isEdible()) {
             // food cooks a lot quicker than ores etc.
             return 40;
         }
@@ -60,8 +60,8 @@ public class Smelter extends AbstractIOMachine {
             BaseSTBItem item = SensibleToolbox.getItemRegistry().getItemById(key);
 
             if (item.getSmeltingResult() != null) {
-                ItemStack stack = item.toItemStack();
-                crm.addCustomRecipe(new SimpleCustomRecipe(this, stack, item.getSmeltingResult(), getProcessingTime(stack)));
+                ItemStack s = item.toItemStack();
+                crm.addCustomRecipe(new SimpleCustomRecipe(this, s, item.getSmeltingResult(), getProcessingTime(s)));
             }
         }
     }
@@ -159,7 +159,7 @@ public class Smelter extends AbstractIOMachine {
 
     @Override
     protected void onMachineStartup() {
-        if (SensibleToolbox.getPluginInstance().getConfigCache().isNoisyMachines()) {
+        if (SensibleToolbox.getInstance().getConfigCache().isNoisyMachines()) {
             getLocation().getWorld().playSound(getLocation(), Sound.BLOCK_FIRE_AMBIENT, 1.0F, 1.0F);
         }
     }

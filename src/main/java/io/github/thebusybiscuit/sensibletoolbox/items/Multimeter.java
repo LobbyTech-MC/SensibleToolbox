@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 
@@ -36,12 +37,12 @@ public class Multimeter extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "Multimeter";
+        return "万用表";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "Use on cabling and machines", "to check energy net connections", "and power usage", "R-Click: " + ChatColor.WHITE + "use" };
+        return new String[] { "可以对导线或机器使用", "以查看它们的能源连接和能源使用", "右键" + ChatColor.WHITE + "使用" };
     }
 
     @Override
@@ -64,41 +65,37 @@ public class Multimeter extends BaseSTBItem {
     }
 
     @Override
-    public void onInteractItem(PlayerInteractEvent event) {
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            EnergyNet net = SensibleToolbox.getEnergyNet(event.getClickedBlock());
-            Player player = event.getPlayer();
+    public void onInteractItem(PlayerInteractEvent e) {
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getHand() == EquipmentSlot.HAND) {
+            e.setCancelled(true);
+            EnergyNet net = SensibleToolbox.getEnergyNet(e.getClickedBlock());
+            Player p = e.getPlayer();
 
             if (net != null) {
-                showNetInfo(player, net, event.getClickedBlock());
+                showNetInfo(p, net, e.getClickedBlock());
             } else {
-                BaseSTBMachine machine = SensibleToolbox.getBlockAt(event.getClickedBlock().getLocation(), BaseSTBMachine.class, true);
+                BaseSTBMachine machine = SensibleToolbox.getBlockAt(e.getClickedBlock().getLocation(), BaseSTBMachine.class, true);
 
                 if (machine != null && machine.getMaxCharge() > 0) {
-                    showMachineInfo(player, machine, event.getClickedBlock());
+                    showMachineInfo(p, machine, e.getClickedBlock());
                 } else {
                     // nothing to examine here
-                    STBUtil.complain(player);
+                    STBUtil.complain(p);
                 }
             }
-            event.setCancelled(true);
         }
     }
 
-    private void showNetInfo(final Player player, EnergyNet net, Block clicked) {
-        String s1 = net.getCableCount() == 1 ? "" : "s";
-        String s2 = net.getSourceCount() == 1 ? "" : "s";
-        String s3 = net.getSinkCount() == 1 ? "" : "s";
-        String[] lines = new String[] { net.getSourceCount() + ChatColor.GOLD.toString() + " source" + s2 + ChatColor.WHITE + ", " + net.getSinkCount() + ChatColor.GOLD.toString() + " sink" + s3, net.getCableCount() + ChatColor.GOLD.toString() + " cable" + s1, String.format("Demand: " + ChatColor.GOLD + "%5.2f SCU/t", net.getDemand()), String.format("Supply: " + ChatColor.GOLD + "%5.2f SCU/t", net.getSupply()), };
-        HoloMessage.popup(player, clicked.getLocation(), lines);
-        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 2.0F);
+    private void showNetInfo(final Player p, EnergyNet net, Block clicked) {
+        String[] lines = new String[] { net.getSourceCount() + ChatColor.GOLD.toString() + " 源" + ChatColor.WHITE + ", " + net.getSinkCount() + ChatColor.GOLD.toString() + " 汇流", net.getCableCount() + ChatColor.GOLD.toString() + " 导线" + String.format("消耗: " + ChatColor.GOLD + "%5.2f SCU/t", net.getDemand()), String.format("供电: " + ChatColor.GOLD + "%5.2f SCU/t", net.getSupply()), };
+        HoloMessage.popup(p, clicked.getLocation(), 5, lines);
+        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 2.0F);
     }
 
-    private void showMachineInfo(Player player, BaseSTBMachine machine, Block clicked) {
+    private void showMachineInfo(Player p, BaseSTBMachine machine, Block clicked) {
         int n = machine.getAttachedEnergyNets().length;
-        String s = n == 1 ? "" : "s";
-        String[] lines = new String[] { ChatColor.GOLD + machine.getItemName() + ChatColor.WHITE + ": on " + n + " energy net" + s, "Charge: " + STBUtil.getChargeString(machine), "Max Charge Rate: " + ChatColor.GOLD + machine.getChargeRate() + " SCU/t", };
-        HoloMessage.popup(player, clicked.getLocation(), lines);
-        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 2.0F);
+        String[] lines = new String[] { ChatColor.GOLD + machine.getItemName() + ChatColor.WHITE + ": 连接 " + n + " 个能源网络", "已存入: " + STBUtil.getChargeString(machine), "最大充能速率: " + ChatColor.GOLD + machine.getChargeRate() + " SCU/t", };
+        HoloMessage.popup(p, clicked.getLocation(), 5, lines);
+        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 2.0F);
     }
 }

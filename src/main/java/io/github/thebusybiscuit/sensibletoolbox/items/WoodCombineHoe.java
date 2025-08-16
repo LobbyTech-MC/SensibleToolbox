@@ -22,7 +22,7 @@ public class WoodCombineHoe extends CombineHoe {
 
     @Override
     public String getItemName() {
-        return "Wooden Combine Hoe";
+        return "木质多功能锄";
     }
 
     @Override

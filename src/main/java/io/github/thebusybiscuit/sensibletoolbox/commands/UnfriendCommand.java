@@ -2,6 +2,7 @@ package io.github.thebusybiscuit.sensibletoolbox.commands;
 
 import java.util.UUID;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -26,9 +27,9 @@ public class UnfriendCommand extends STBAbstractCommand {
         Player target = getTargetPlayer(sender, getStringOption("p"));
 
         UUID id = getID(args[0]);
-        Validate.notNull(id, "Unknown player: " + args[0]);
+        Preconditions.checkArgument(id != null, "Unknown player: " + args[0]);
         fm.removeFriend(target.getUniqueId(), id);
-        MiscUtil.statusMessage(sender, target.getName() + " is no longer friends with " + args[0]);
+        MiscUtil.statusMessage(sender, target.getName() + " 不再是 " + args[0] + " 的信任者了!");
 
         return true;
     }

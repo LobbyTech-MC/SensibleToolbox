@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -55,12 +56,12 @@ public class ShowCommand extends AbstractCommand {
             showDetails(sender, pager, args[0]);
         } else if (getBooleanOption("perf")) {
             for (World w : Bukkit.getWorlds()) {
-                pager.add(w.getName() + ": " + w.getLoadedChunks().length + " loaded chunks");
+                pager.add(w.getName() + ": " + w.getLoadedChunks().length + " 个已加载区块");
             }
 
             long avg = LocationManager.getManager().getAverageTimePerTick();
             double pct = avg / 200000.0;
-            pager.add(avg + " ns/tick (" + pct + "%) spent in ticking STB blocks");
+            pager.add(avg + " ns/tick (" + pct + "%) 被用来处理 STB 方块");
         } else if (getBooleanOption("dump")) {
             dumpItemData(plugin, sender);
         } else {
@@ -68,7 +69,7 @@ public class ShowCommand extends AbstractCommand {
 
             if (hasOption("w")) {
                 World w = Bukkit.getWorld(getStringOption("w"));
-                Validate.notNull(w, "Unknown world: " + getStringOption("w"));
+                Preconditions.checkArgument(w != null, "Unknown world: " + getStringOption("w"));
                 show(pager, w, id);
             } else {
                 for (World w : Bukkit.getWorlds()) {
@@ -92,13 +93,13 @@ public class ShowCommand extends AbstractCommand {
                 String appearance = ItemUtils.getItemName(new ItemStack(item.getMaterial()));
 
                 if (item.hasGlow()) {
-                    appearance += " (glowing)";
+                    appearance += " (荧光)";
                 }
 
                 writer.println("|" + item.getItemName() + "|" + item.getItemTypeID() + "|" + appearance + "|" + lore);
             }
 
-            MiscUtil.statusMessage(sender, "STB item data dumped to " + out);
+            MiscUtil.statusMessage(sender, "STB 物品数据已打印到文件 " + out);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -110,29 +111,29 @@ public class ShowCommand extends AbstractCommand {
 
         if (locStr.equals(".")) {
             if (!(sender instanceof Player)) {
-                MiscUtil.errorMessage(sender, "This command can't be run from the console.");
+                MiscUtil.errorMessage(sender, "仅玩家可执行此命令!");
                 return;
             }
 
-            Player player = (Player) sender;
+            Player p = (Player) sender;
             // try to show either the held item or the targeted block
-            item = SensibleToolbox.getItemRegistry().fromItemStack(player.getInventory().getItemInMainHand());
+            item = SensibleToolbox.getItemRegistry().fromItemStack(p.getInventory().getItemInMainHand());
 
             if (item == null) {
-                Block b = player.getTargetBlock((Set<Material>) null, 10);
+                Block b = p.getTargetBlock((Set<Material>) null, 10);
                 item = LocationManager.getManager().get(b.getLocation(), true);
             }
         } else {
             try {
-                Location loc = MiscUtil.parseLocation(locStr);
-                item = LocationManager.getManager().get(loc);
-                Validate.notNull(item, "No STB block at " + locStr);
+                Location l = MiscUtil.parseLocation(locStr);
+                item = LocationManager.getManager().get(l);
+                Preconditions.checkArgument(item != null, "未在 " + locStr + " 找到 STB 方块");
             } catch (IllegalArgumentException e) {
                 throw new DHUtilsException(e.getMessage());
             }
         }
 
-        Validate.notNull(item, "No valid STB item/block found");
+        Preconditions.checkArgument(item != null, "No valid STB item/block found");
 
         YamlConfiguration conf = item.freeze();
         pager.add(ChatColor.AQUA.toString() + item + ":");

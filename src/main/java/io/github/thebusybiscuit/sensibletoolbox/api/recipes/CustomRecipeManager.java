@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.inventory.ItemStack;
 
 import io.github.thebusybiscuit.sensibletoolbox.api.items.BaseSTBMachine;
@@ -18,7 +19,7 @@ import io.github.thebusybiscuit.slimefun4.libraries.commons.lang.Validate;
  * machine (object which subclasses BaseSTBMachine) to produce the result.
  * Custom recipes may be shaped (ShapedCustomRecipe) or more commonly
  * shapeless (ShapelessCustomRecipe).
- * 
+ *
  * @author desht
  */
 public class CustomRecipeManager {
@@ -53,7 +54,7 @@ public class CustomRecipeManager {
      *            allow wildcarded data values
      */
     public void addCustomRecipe(@Nonnull CustomRecipe recipe, boolean allowWild) {
-        Validate.notNull(recipe, "A custom recipe cannot be null");
+        Preconditions.checkArgument(recipe != null, "A custom recipe cannot be null");
         CustomRecipeCollection collection = map.get(recipe.getProcessorID());
 
         if (collection == null) {
@@ -134,8 +135,8 @@ public class CustomRecipeManager {
     }
 
     @Nonnull
-    private static ItemStack makeSingle(@Nonnull ItemStack stack) {
-        ItemStack stack2 = stack.clone();
+    private static ItemStack makeSingle(@Nonnull ItemStack s) {
+        ItemStack stack2 = s.clone();
         stack2.setAmount(1);
         return stack2;
     }
