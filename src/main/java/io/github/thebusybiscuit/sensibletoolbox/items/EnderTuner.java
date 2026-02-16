@@ -55,12 +55,12 @@ public class EnderTuner extends BaseSTBItem {
 
     @Override
     public String getItemName() {
-        return "下界调频器";
+        return "末影调频器";
     }
 
     @Override
     public String[] getLore() {
-        return new String[] { "在六个维度中振动", "右键下界箱以" + ChatColor.WHITE + "调频", "右键另一个下界箱: " + ChatColor.WHITE + "打开调频后的 GUI"};
+        return new String[] { "在六个维度中振动", "拿着末影调频器右键后放入末影背包或量子末影箱以" + ChatColor.WHITE + "调频", "右键量子末影箱: " + ChatColor.WHITE + "打开对应量子末影箱的调频设置界面"};
     }
 
     @Override
@@ -92,7 +92,7 @@ public class EnderTuner extends BaseSTBItem {
 
     @Nonnull
     private InventoryGUI makeTuningGUI(@Nonnull Player p) {
-        InventoryGUI gui = GUIUtil.createGUI(p, this, TUNING_GUI_SIZE, ChatColor.DARK_PURPLE + "下界调频器");
+        InventoryGUI gui = GUIUtil.createGUI(p, this, TUNING_GUI_SIZE, ChatColor.DARK_PURPLE + "末影调频器");
 
         for (int slot = 0; slot < gui.getInventory().getSize(); slot++) {
             gui.setSlotType(slot, SlotType.BACKGROUND);
@@ -104,12 +104,12 @@ public class EnderTuner extends BaseSTBItem {
 
         if (tuningBlock != null) {
             gui.setItem(TUNED_ITEM_SLOT, ((BaseSTBBlock) tuningBlock).toItemStack());
-            gui.addLabel("下界箱", TUNED_ITEM_SLOT - 1, null);
+            gui.addLabel("末影调频器", TUNED_ITEM_SLOT - 1, null);
             freq = tuningBlock.getEnderFrequency();
             global = tuningBlock.isGlobal();
             gui.addGadget(new AccessControlGadget(gui, ACCESS_CONTROL_SLOT, (BaseSTBBlock) tuningBlock));
         } else {
-            gui.addLabel("下界背包", TUNED_ITEM_SLOT - 1, null, "放置下界背包或下界箱已调整它的频率");
+            gui.addLabel("末影背包", TUNED_ITEM_SLOT - 1, null, "这里放置末影背包或末影调频器已调整它的频道");
         }
 
         gui.addGadget(new ToggleButton(gui, GLOBAL_BUTTON_SLOT, global, GLOBAL_TEXTURE, PERSONAL_TEXTURE, newValue -> {

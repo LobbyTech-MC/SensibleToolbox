@@ -93,7 +93,7 @@ public class EnderBox extends BaseSTBBlock implements EnderTunable, STBInventory
 
     @Override
     public String[] getLore() {
-        return new String[] { "类似 §6末影箱 §7的移动储存器", "可以 §6储存 §7物品,并且拆下不会 §6丢失", "手持末影调频器右键以设置频道", "右键设备: 打开末影箱" };
+        return new String[] { "类似 §6末影箱 §7的移动储存器", "可以 §6储存 §7物品,并且拆下不会 §6丢失", "手持末影调频器对着它右键以设置频道", "右键设备: 打开末影箱" };
     }
 
     @Override

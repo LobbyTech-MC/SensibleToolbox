@@ -54,7 +54,7 @@ public class EnderBag extends BaseSTBItem implements EnderTunable {
 
     @Override
     public String getItemName() {
-        return "下界背包";
+        return "末影背包";
     }
 
     @Override
@@ -64,12 +64,12 @@ public class EnderBag extends BaseSTBItem implements EnderTunable {
 
     @Override
     public String[] getLore() {
-        return new String[] { "右键打开背包 ", UnicodeSymbol.ARROW_UP.toUnicode() + " 右键下界箱以链接 " + UnicodeSymbol.NUMBER.toUnicode() };
+        return new String[] { "拿在手上右键打开末影背包 ", UnicodeSymbol.ARROW_UP.toUnicode() + " 蹲下右键量子末影箱以链接 " + UnicodeSymbol.NUMBER.toUnicode() };
     }
 
     @Override
     public Recipe getMainRecipe() {
-        ShapedRecipe recipe = new ShapedRecipe(getKey(), toItemStack());
+        ShapedRecipe recipe = new ShapedRecipe(getKey(), toItemStack(1));
         recipe.shape("WDW", "GCG", "WGW");
         recipe.setIngredient('W', Material.WHITE_WOOL);
         recipe.setIngredient('D', Material.DIAMOND);
