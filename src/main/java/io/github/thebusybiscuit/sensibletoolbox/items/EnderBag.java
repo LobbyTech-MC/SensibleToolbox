@@ -54,7 +54,7 @@ public class EnderBag extends BaseSTBItem implements EnderTunable {
 
     @Override
     public String getItemName() {
-        return "末影背包";
+        return "量子末影背包";
     }
 
     @Override
@@ -64,7 +64,7 @@ public class EnderBag extends BaseSTBItem implements EnderTunable {
 
     @Override
     public String[] getLore() {
-        return new String[] { "拿在手上右键打开末影背包 ", UnicodeSymbol.ARROW_UP.toUnicode() + " 蹲下右键量子末影箱以链接 " + UnicodeSymbol.NUMBER.toUnicode() };
+        return new String[] { "拿在手上右键打开量子末影背包 ", UnicodeSymbol.ARROW_UP.toUnicode() + " 蹲下右键量子末影箱以链接 " + UnicodeSymbol.NUMBER.toUnicode() };
     }
 
     @Override
