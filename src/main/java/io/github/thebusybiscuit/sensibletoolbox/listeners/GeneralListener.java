@@ -296,7 +296,7 @@ public class GeneralListener extends STBBaseListener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPrepareItemCraft(PrepareItemCraftEvent event) {
         Debugger.getInstance().debug("resulting item: " + event.getInventory().getResult());
 
